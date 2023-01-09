@@ -1,0 +1,37 @@
+---
+title: "Rmd Example"
+author: "Your name (or leave blank for HW)"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    df_print: paged
+  pdf_document:
+    latex_engine: xelatex
+  word_document: default
+---
+
+ 
+
+## Preamble
+
+```{r setup}
+# set global chunk options: images will be 7x5 inches
+library(knitr)
+opts_chunk$set(fig.width=7, fig.height=5)
+```
+
+## Data
+
+
+
+## Analysis
+
+
+
+
+## Footer
+
+We can create a reproducible using:
+ 
+rmarkdown::render("Rcode/filename", output_dir = "Output", output_format="html_document")
+  
