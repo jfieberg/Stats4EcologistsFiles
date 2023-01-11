@@ -4,7 +4,7 @@ Folders:
 
 - slides contains slides for the course
 - FW8051Data includes data for the course
-- CodeTemplates contains templates (.R and .Rmd) to completing various exercises
+- CodeTemplates contains templates (.R and .Rmd) for completing various exercises
 
 I would encrouage you to create other folders on your local copy (not to be pushed to github):
 
