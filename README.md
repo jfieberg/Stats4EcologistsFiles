@@ -1,2 +1,13 @@
 # Stats4EcologistsFiles
-Contains files for in-class and homework exercises 
+
+Folders:
+
+- slides contains slides for the course
+- FW8051Data includes data for the course
+- CodeTemplates contains templates (.R and .Rmd) to completing various exercises
+
+I would encrouage you to create other folders on your local copy (not to be pushed to github):
+
+- MyCode to contain your R code (after modifying the code templates)
+- Output to contain reproducibel reports created by running your R code
+- MyData to contain your own data sets
