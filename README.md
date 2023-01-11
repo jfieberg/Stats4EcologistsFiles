@@ -1,8 +1,8 @@
 # Stats4EcologistsFiles
 
-Folders:
+Folders (Please do not change anything in these folders!):
 
-- slides contains slides for the course
+- Slides contains slides for the course
 - FW8051Data includes data for the course
 - CodeTemplates contains templates (.R and .Rmd) for completing various exercises
 
