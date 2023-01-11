@@ -51,9 +51,9 @@ abline(h = 0)
 #'
 #' Create a reproducible using:
 #' 
-#' rmarkdown::render("Rcode/example_roxygen.R", output_dir = "Output", output_format="html_document")
+#' rmarkdown::render("Rcode/example_roxygen.R", output_dir = "Output", output_format="pdf_document")
 #' 
-#' Alternative output formats include "pdf_document", "word_document",or "all" 
+#' Alternative output formats include "html_document", "word_document",or "all" 
 #'
 #' - Also, notice how easily you can add bullet points with roxygen!
 #' 

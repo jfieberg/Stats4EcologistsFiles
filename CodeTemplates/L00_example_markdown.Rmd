@@ -3,11 +3,11 @@ title: "Rmd Example"
 author: "Your name (or leave blank for HW)"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
+  pdf_document: default
+    latex_engine: xelatex
+  word_document: 
   html_document:
     df_print: paged
-  pdf_document:
-    latex_engine: xelatex
-  word_document: default
 ---
 
  
@@ -33,5 +33,5 @@ opts_chunk$set(fig.width=7, fig.height=5)
 
 We can create a reproducible using:
  
-rmarkdown::render("Rcode/filename", output_dir = "Output", output_format="html_document")
+rmarkdown::render("Rcode/filename", output_dir = "Output", output_format="pdf_document")
   

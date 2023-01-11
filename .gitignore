@@ -1,4 +1,11 @@
+*.*
+!.gitignore
+!CodeTemplates
+!FW8051Data
+!Slides
+!CodeTemplates/*.*
+!FW8051Data/*.*
+!Slides/*.*
 .Rproj.user
-.Rhistory
-.RData
-.Ruserdata
+!MyData
+!RCode
