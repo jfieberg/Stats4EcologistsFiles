@@ -1,5 +1,5 @@
 #' ---
-#' title: "Homework 1. Linear Regression"
+#' title: "Exercise 2.1"
 #' author: "Leave Blank for grading"
 #' date: ""
 #'---
@@ -13,9 +13,6 @@
 
 # Set knitr options
 opts_chunk$set(fig.width = 6, fig.height=5)
-
-# Clear Environment (optional)
-remove(list=ls())
 
 # Set seed 
 set.seed(314159)
@@ -76,8 +73,6 @@ confint(lmfit)
 #'
   
 
-#' ## Section 2. Kery Ch 6.3 and 6.4
-#' 
 
 #' ## Document footer 
 #' 
@@ -85,7 +80,7 @@ confint(lmfit)
 #' 
 #' Reproducible report created using:
 #' 
-#' rmarkdown::render("homework/HW01_Template.R", output_dir = "homework/output", output_format="pdf_document")
+#' rmarkdown::render(here::here("foldername", "filename", output_dir = "Output", output_format="pdf_document")
 #' 
 #' ### Session Information:
 #+ sessionInfo

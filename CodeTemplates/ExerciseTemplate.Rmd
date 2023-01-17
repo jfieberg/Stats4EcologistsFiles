@@ -1,18 +1,17 @@
 ---
-title: "Rmd Example"
+title: "Exercise X.X"
 author: "Your name (or leave blank for HW)"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: pdf_document
 ---
 
-To complete this exercise, you may need to install the following R packages:
-
-- here 
-- formatR
+ 
 
 ## Preamble
 
-```{r setup}
+Load libraries and set chunk options here.
+
+```{r setup, warning = FALSE, message = FALSE}
 # set global chunk options: images will be 7x5 inches
 # wrap output at 60 characters 
 library(knitr) # for creating reproducible reports
@@ -23,7 +22,7 @@ opts_chunk$set(fig.width=7, fig.height=5, tidy.opts = list(width.cutoff = 60), t
 
 ## Data
 
-Enter code to read in data using a relative path
+Read in data.
 
 ```{r}
 coviddat <- read.csv(here("FW8051Data", "minnesota-history.csv"))
@@ -32,12 +31,6 @@ coviddat <- read.csv(here("FW8051Data", "minnesota-history.csv"))
 
 
 ## Analysis
-
-Plot the number of deaths over time. This will require that you grapple with a date-time variable in R. Some resources that may help if you struggle to figure out how to work with dates in R include:
-
-- https://www.statmethods.net/input/dates.html
-- https://r4ds.had.co.nz/dates-and-times.html
-- your colleagues in this class!
 
 ```{r}
 
@@ -50,7 +43,6 @@ We can create a reproducible using:
  
 rmarkdown::render(here::here("Rcode", "filename"), output_dir = "Output", output_format="pdf_document")
   
-It is always a good idea to include information about your R environment at the time you produced the report.
 
 ```{r}
 sessionInfo()

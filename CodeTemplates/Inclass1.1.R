@@ -1,5 +1,5 @@
 #' ---
-#' title: "L01: Lion Nose example from class"
+#' title: "InClass1.1: Lion Nose example from class"
 #' author: "(leave blank for HW assingments)"
 #' date: ""
 #'---
