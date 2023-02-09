@@ -11,9 +11,9 @@
 
 <meta name="author" content="jfieberg" />
 
-<meta name="date" content="2023-02-02" />
+<meta name="date" content="2023-02-09" />
 
-<title>06-GeneralizedLeastSquares.R</title>
+<title>05-GeneralizedLeastSquares.R</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -350,9 +350,9 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">06-GeneralizedLeastSquares.R</h1>
+<h1 class="title toc-ignore">05-GeneralizedLeastSquares.R</h1>
 <h4 class="author">jfieberg</h4>
-<h4 class="date">2023-02-02</h4>
+<h4 class="date">2023-02-09</h4>
 
 </div>
 
@@ -408,8 +408,9 @@ AIC(lm_ttest, gls_ttest)</code></pre>
 <div id="understanding-the-variance-parameters" class="section level2">
 <h2>Understanding the variance parameters:</h2>
 <p>log(sigma_s) = log(sigma) + log(delta)*I(sex = female)</p>
+<p>log(sigma_s) = gamma0 + gamma1*I(sex=female)</p>
 <ul>
-<li>varpars[1] = delta</li>
+<li>varpars[1] = log(delta)</li>
 <li>varpars[2] = log(sigma)</li>
 </ul>
 <pre class="r"><code>(varpars&lt;-attr(summary(gls_ttest)$apVar, &quot;Pars&quot;))</code></pre>

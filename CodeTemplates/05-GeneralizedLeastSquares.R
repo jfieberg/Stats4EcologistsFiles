@@ -28,7 +28,9 @@ AIC(lm_ttest, gls_ttest)
 #'
 #' log(sigma_s) = log(sigma) + log(delta)*I(sex = female)
 #' 
-#' - varpars[1] = delta
+#' log(sigma_s) = gamma0 + gamma1*I(sex=female)
+#' 
+#' - varpars[1] = log(delta)
 #' - varpars[2] = log(sigma)
 (varpars<-attr(summary(gls_ttest)$apVar, "Pars"))
 
