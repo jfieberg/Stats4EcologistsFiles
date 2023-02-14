@@ -37,8 +37,10 @@ Now, the `tipping` data set contains the following variables:
 ```{r include=FALSE, eval=FALSE}
 library(ggdag)
 library(ggplot2)
-dag_object <- ggdag::dagify(Response1 ~ explanatory variables, 
-                            Response2 ~ explanatory variables)
+dag_object <- ggdag::dagify(tip~payment+bill+posture+gender,
+                            payment~bill+groupsize, 
+                            bill~groupsize+shift+posture,
+                            groupsize~shift)
 ggdag::ggdag(dag_object)
 ```
  
@@ -81,6 +83,14 @@ abe(fullmod, criterion = "AIC", verbose=TRUE, exp.beta=FALSE, data=tipping)
 ```
 
 
+We could also look at forward stepwise selection using:
+
+```{r}
+min.model <- lm(Tip ~ 1, data=tipping)
+step(min.model, scope=( ~ Groupsize+Bill+Shift+MaleFemale+Posture+Payment), direction="forward", data=tipping)
+```
+This gets us to the same place.
+
 # Bootstrap Stability
 
 ```{r warning=FALSE, message=FALSE}
@@ -91,3 +101,7 @@ fullmod.ols<-ols(Tip~Groupsize+Bill+Shift+MaleFemale+Posture+Payment, data=tippi
 validate(fullmod.ols, bw = TRUE) 
 ```
 
+
+## Effect of groupsize
+
+When using stepwise algorithms, groupsize is never chosen.  Use your DAG to explain why.
