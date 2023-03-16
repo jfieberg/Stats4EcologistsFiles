@@ -10,7 +10,7 @@ library(mcmcplots) # for plotting MCMC output
 library(ggplot2) # for other plots
 library(patchwork) # for multi-panel plots
 library(dplyr) # for data wrangling
-
+library(WVPlots) # for shading of posterior density
 
 #' Write out the model
 linreg<-function(){
@@ -110,11 +110,26 @@ fitstats <- MCMCpstr(lmbayes, params = c("fit", "fit.new"), type = "chains")
 T.extreme <- fitstats$fit.new >= fitstats$fit
 (p.val <- mean(T.extreme))
 
+#' Posterior for the difference in fits
+#+out.width="60%", fig.width=8, fig.height=5
+fitstats <- MCMCchains(lmbayes, params = c("fit", "fit.new")) 
+fitstats <- as.data.frame(fitstats) %>% mutate(postdiff = fit.new-fit)
+WVPlots::ShadedDensity(frame = fitstats, 
+                       xvar = "postdiff",
+                       threshold = 0,
+                       title = "Posterior distribution: SSE(sim data)-SSE(obs data)",
+                       tail = "right")+
+  annotate("text", x=85, y = 0.005, 
+           label="Better fit to \n observed data")+
+  annotate("text", x=-40, y = 0.005, 
+           label="Better fit to \n simulated data") 
 
 #' ## Confidence and prediction intervals
 #'
 #' ### Confidence intervals
-#' Store the MCMC samples from the posterior
+#' Store the MCMC samples from the posterior.  This can be done with
+#' MCMCpstr (which stores the result as a list) or MCMCchains (which 
+#' stores the results as a matrix). 
 betas <- MCMCpstr(lmbayes, params = c("beta0", "beta1"), type = "chains")
 
 #' Create a vector of observations where we want to calculate CIs and PIs 
