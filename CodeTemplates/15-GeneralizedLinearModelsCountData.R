@@ -55,7 +55,7 @@ check_model(lmdace, check = c("linearity", "homogeneity", "qq", "normality"))
 glmPdace <- glm(longnosedace ~ acreage + do2 + maxdepth + no3 + so4 + temp, 
               data = longnosedace, family = poisson())
 summary(glmPdace)
-
+check_model(glmPdace)
 
 #' ## Interpretation
 #' 
