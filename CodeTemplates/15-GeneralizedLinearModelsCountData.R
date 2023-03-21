@@ -111,6 +111,7 @@ residualPlots(glmPdace)
 #' Can also use check_model
 #+ out.width = "60%", fig.height = 9, fig.width =6 
 performance::check_model(glmPdace)
+performance::check_overdispersion(glmPdace)
 
 #' See also the Dharma package (in book) 
 
