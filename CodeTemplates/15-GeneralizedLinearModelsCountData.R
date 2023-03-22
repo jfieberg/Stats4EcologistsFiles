@@ -51,11 +51,14 @@ lmdace<-lm(longnosedace~acreage+do2+maxdepth+no3+so4+temp, data=longnosedace)
 check_model(lmdace, check = c("linearity", "homogeneity", "qq", "normality"))
 
 
+
 #' Standard Poisson glm
 glmPdace <- glm(longnosedace ~ acreage + do2 + maxdepth + no3 + so4 + temp, 
               data = longnosedace, family = poisson())
 summary(glmPdace)
 check_model(glmPdace)
+car::residualPlot(glmPdace)
+performance::check_overdispersion(glmPdace)
 
 #' ## Interpretation
 #' 
@@ -127,13 +130,16 @@ performance::check_overdispersion(glmPdace)
   
 # Extract the estimated coefficients and their asymptotic variance/covariance matrix  
 # Use these values to generate nsims new beta's  
-  beta.hat <- MASS::mvrnorm(nsims, coef(glmPdace), vcov(glmPdace))
+ # beta.hat <- MASS::mvrnorm(nsims, coef(glmPdace), vcov(glmPdace))
 
 # Design matrix for creating new lambda^'s    
   xmat <- model.matrix(glmPdace)
   for(i in 1:nsims){
+    # Pick random betas from our estimated multivariate sampling distribution
+    beta.hat <- MASS::mvrnorm(1, coef(glmPdace), vcov(glmPdace))
+    
     # Generate lambda^'s    
-    lambda.hat <- exp(xmat%*%beta.hat[i,])
+    lambda.hat <- exp(xmat%*%beta.hat)
     
     # Generate new simulated values
     new.y <- rpois(nobs, lambda = lambda.hat)

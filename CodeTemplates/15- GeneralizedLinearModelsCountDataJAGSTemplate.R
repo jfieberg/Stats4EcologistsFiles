@@ -29,28 +29,31 @@ data(slugs)
 data("longnosedace")
 
 
+
 #' ## Fit Poisson model using JAGS  
 pois.fit<-function(){
   
   # Priors for regression parameters
-  
+  for(i in 1:7){
+
+  }
   # Likelihood 
   for(i in 1:n){
-    
-  }
+
+      }
   
   # Fit assessments
   
   for(i in 1:n){
   # Calculate Pearson residuals and squared residuals
     Presi[i] <-   # Pearson residuals
-    D[i] <-  # squared residuals
+    D[i] <-  pow(Presi[i], 2) # squared residuals
       
   # Have JAGS simulate new observations and calculate
   # residuals and squared residuals
-    dace.new[i]  
-    Presi.new[i]  
-    D.new[i] 
+    dace.new[i] ~  
+    Presi.new[i] <    # Pearson residuals 
+    D.new[i] <- pow(Presi.new[i], 2)
   }
   
   # Add up discrepancy measures
@@ -60,7 +63,7 @@ pois.fit<-function(){
 
 
 # Bundle data, here we will use the design matrix from R 
-jagsdata <- list( )
+jagsdata <- list()
 
 
 # Parameters to estimate
@@ -68,8 +71,12 @@ params <- c("beta", "lambda", "Presi", "fit", "fit.new", "dace.new")
 
 
 # Start Gibbs sampler
-out.pois <- jags.parallel(data = jagsdata, parameters.to.save = params, 
-                          model.file = pois.fit, n.thin = 2, n.chains = 3, n.burnin = 5000, 
+out.pois <- jags.parallel(data = jagsdata, 
+                          parameters.to.save = params, 
+                          model.file = pois.fit, 
+                          n.thin = 2, 
+                          n.chains = 3, 
+                          n.burnin = 5000, 
                           n.iter = 20000)
 
 

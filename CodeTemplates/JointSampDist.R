@@ -7,6 +7,7 @@ sigma<-1.5
 
 #' Simulation setup
 nsims <- 5000 # number of simulations
+n<-30
 beta.hat<- matrix(NA,   nrow    =   nsims,  ncol    =   2)
 x<-runif(30, 0, 1) # single predictor
 
