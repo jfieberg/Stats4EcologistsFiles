@@ -23,7 +23,7 @@ fitoffset <- glm.nb(Seabass ~ as.factor(Year) + poly(Temperature,2) +
 summary(fitoffset)
 
 
-#' Fit the same model but estimate teh coefficient for logduration
+#' Fit the same model but estimate the coefficient for logduration
 fitpredictor <- glm.nb(Seabass ~ as.factor(Year) + poly(Temperature,2) + 
                          Depth + Doy + Hour + logduration -1, data = reeffish)
 summary(fitpredictor)
@@ -31,4 +31,4 @@ summary(fitpredictor)
 #' Profile-likelihood confidence interval
 round(confint(fitpredictor, parm = "logduration"), 2)
 AIC(fitoffset, fitpredictor)
- 
+  
