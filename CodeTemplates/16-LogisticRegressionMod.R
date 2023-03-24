@@ -75,7 +75,7 @@ mod2 <- glm(observed ~ voc + year, data = exp.m, family = binomial())
 summary(mod2)
 
 
- 
+
 #' ### Interaction model
 #' 
 #' What if we were to include an interaction between `voc` and `year`?
