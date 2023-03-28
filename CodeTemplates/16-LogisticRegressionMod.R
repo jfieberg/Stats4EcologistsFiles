@@ -249,7 +249,7 @@ ggpredict(mod2, "voc")
 
 #' To match up ggpredict and ggeffect for year:
 ggpredict(mod2, terms = "year", condition = c(voc=mean(exp.m$voc)))
-ggeffect(mod3, "year")
+ggeffect(mod2, "year")
 
 #' Or, we can predict for a range of voc's for each year by specifying
 #' both terms.

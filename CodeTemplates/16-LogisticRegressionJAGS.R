@@ -135,7 +135,9 @@ cbind(coef(mod1b), confint(mod1b))
 
 #' 
 #' 
-#' What if we had naively used extremely vague priors for our regression parameters?  We can compare the results, below, using the `MCMCplot` function in the `MCMCvis` package:
+#' What if we had naively used extremely vague priors for our regression parameters?  
+#' We can compare the results, below, using the `MCMCplot` function 
+#' in the `MCMCvis` package:
 #' 
 ## ---------------------------------------------------------------
 lrmodv<-function(){
@@ -151,7 +153,7 @@ lrmodv<-function(){
   }
 }
 
-params <- c("alpha", "beta")
+params <- c("alpha", "beta", "p")
 out.p.vague <- jags.parallel(data = jagsdata, parameters.to.save = params, 
                              model.file = lrmodv, n.thin= 2, n.chains = 3, 
                              n.burnin = 1000, n.iter = 3000)
@@ -160,3 +162,4 @@ out.p.vague <- jags.parallel(data = jagsdata, parameters.to.save = params,
 MCMCplot(object = out.p, object2=out.p.vague, params=c("alpha", "beta"), 
          offset=0.1, main='Posterior Distributions')
 
+ 
