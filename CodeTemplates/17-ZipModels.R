@@ -136,7 +136,84 @@ fish[c(ind1, ind2),]
 I.fish<-rep(NA, nrow(fish))
 I.fish[fish$count>0]<-1 # these are Not inflated zeros
 
-#' JAGS model
+# Bundle data
+jagsdata <- list(count=fish$count, child=fish$child, 
+                 camper=as.numeric(fish$camper)-1, 
+                 persons=fish$persons, n=nrow(fish), 
+                 I.fish=I.fish)
+
+#' JAGS zero-inflated Poisson model
+znb<-function(){
+  
+  # Priors for count model
+  for(i in    ){
+    beta.c[i] 
+  }
+  
+  # Priors for zero-inflation model
+  for(i in    ){
+    beta.zi[i] 
+  } 
+  
+  # Overdispersion parameter
+  theta 
+  
+  # Likelihood
+  for(i in 1:n){
+    # Zero-inflation part of the model
+    # Let psi = probability went fishing (not inflated zero) 
+      
+     
+    # Count part of the model
+    # Let mu = mean given the party went fishing
+    # Let mu.eff = marginal (or unconditional) mean number of fish 
+    # caught(pooling data from those that fished or did not fish)
+    # mu.eff = mu*I.fish   
+     
+    # Mean and variances of the observations
+    # From eq 11.23 of Zuur et al. (p. 277), but using psi = 1-pi    
+    Ey[i]<-mu[i]*psi[i]  
+    Vary[i]<-psi[i]*(mu[i])*(1+mu[i]*(1-psi[i])) 
+    
+    # Generate "new" data
+    I.fish.new[i]~dbin(psi[i],1)
+    mu.eff.new[i]<-mu[i]*I.fish.new[i]
+    count.new[i]~dpois(mu.eff.new[i])
+    
+    # Pearson residuals
+    presi[i]<-(count[i]-Ey[i])/sqrt(Vary[i]) # Pearson Resid
+    presi.new[i]<-(count.new[i]-Ey[i])/sqrt(Vary[i])
+    
+    # Discrepancy measures
+    D[i]<-pow(presi[i], 2)
+    D.new[i]<-pow(presi.new[i],2)
+  }
+  fit<-sum(D[])
+  fit.new<-sum(D.new[])
+}
+
+
+
+# Parameters to estimate
+params <- c("beta.zi", "beta.c", "Ey", "psi", "mu", "presi",
+            "presi.new", "fit", "fit.new", "theta", "I.fish")
+
+# MCMC settings
+nc <- 3
+ni <- 15000
+nb <- 4000
+nt <- 10
+
+# Start sampler 
+out.znb <- jags.parallel(data = jagsdata, parameters.to.save = params, 
+                         model.file = znb, n.thin = 10, n.chains = 3, n.burnin = 4000, 
+                         n.iter= 15000)
+MCMCsummary(out.znb, params = c("beta.zi", "beta.c", "theta"))
+
+
+
+
+#' JAGS zero-inflated negative binomial model
 znb<-function(){
   
 # Priors for count model
@@ -155,8 +232,7 @@ znb<-function(){
 # Likelihood
   for(i in 1:n){
   # zero-inflation part (logit prob NOT inflated 0, i.e., "went fishing"))  
-    logitpsi[i]<-beta.zi[1]+beta.zi[2]*child[i] 
-    psi[i]<-exp(logitpsi[i])/(1+exp(logitpsi[i])) # prob Not inflated 0
+    logit(psi[i])<-beta.zi[1]+beta.zi[2]*child[i] 
     I.fish[i]~dbern(psi[i]) # NOt zero-inflated (i.e., "went fishing") 
      
   # Count part
@@ -169,7 +245,7 @@ znb<-function(){
   # Mean and variances of the observations
   # From eq 11.23 of Zuur et al. (p. 277), but using psi = 1-pi    
     Ey[i]<-mu[i]*psi[i]  
-    Vary[i]<-psi[i]*(mu[i]+mu[i]^2/theta)+mu[i]^2*(1-psi[i])*(1-psi[i])^2  
+    Vary[i]<-psi[i]*(mu[i]+mu[i]^2/theta)+mu[i]^2*((1-psi[i])^2 +(1-psi[i])) 
   
   # Generate "new" data
     I.fish.new[i]~dbin(psi[i],1)
