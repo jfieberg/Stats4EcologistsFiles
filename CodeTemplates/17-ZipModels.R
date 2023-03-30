@@ -89,12 +89,29 @@ summary(m.zip)
 
 #' Calculate the probability of a non-inflated zero (get to go fishing)
 #' when you have 3 children 
-(     )
+1-plogis(coef(m.zip)[5]+  3*coef(m.zip)[6])
 
 #' Calculate the multiplicative effect on the mean number of fish 
-#' caught for every 1 unit increase in the number of children in your party. 
-( ) 
+#' caught for every additional child in your party. 
+exp(coef(m.zip)[2]) 
 
+#' Calculate the expected number of fish caught if you:
+#' 
+#' - have 3 children
+#' - have a camper
+#' - have 4 in your group
+#'
+#' E[count] = P(not inflated)*E[Count | not inflated]
+#' 
+beta.hat<-coef(m.zip)
+(1-plogis(beta.hat[5]+3*beta.hat[6]))*exp(beta.hat[1]+
+                                            3*beta.hat[2]+
+                                            beta.hat[3]+
+                                            4*beta.hat[4])
+
+#' We can also use the predict function
+newdat<-data.frame(camper=1, child=3, persons=4)
+predict(m.zip, newdata=newdat, type="response")
 
 
 #' ## Zero-inflated negative binomial
@@ -128,6 +145,13 @@ p1+p2
 ind1<-which.max(fish$count) # Max count
 ind2<-which.max(fish$presiduals.m.zinb) # Max Pearson residual
 fish[c(ind1, ind2),] 
+
+#' Also, note that we can get predicted values for the
+#' zeroinflated part of the model and count part of the model
+#' using the predict function.
+phat <- predict(m.zinb, type = "zero")
+mu <- predict(m.zinb, type = "count")
+mu*(1-phat) - predict(m.zinb, type = "response") 
 
 
 #' ## Bayesian implementation 
@@ -171,7 +195,8 @@ znb<-function(){
     # mu.eff = mu*I.fish   
      
     # Mean and variances of the observations
-    # From eq 11.23 of Zuur et al. (p. 277), but using psi = 1-pi    
+    # See https://grodri.github.io/glms/notes/countmoments or 
+    # Derive using:  Var(count) = E[var(count | z)] + Var[E(count|z)]
     Ey[i]<-mu[i]*psi[i]  
     Vary[i]<-psi[i]*(mu[i])*(1+mu[i]*(1-psi[i])) 
     
@@ -243,9 +268,9 @@ znb<-function(){
     count[i]~dnegbin(p[i], theta)
   
   # Mean and variances of the observations
-  # From eq 11.23 of Zuur et al. (p. 277), but using psi = 1-pi    
     Ey[i]<-mu[i]*psi[i]  
-    Vary[i]<-psi[i]*(mu[i]+mu[i]^2/theta)+mu[i]^2*((1-psi[i])^2 +(1-psi[i])) 
+    Vary[i]<-psi[i]*(mu[i])*(1+mu[i]*(1-psi[i] + 1/theta))
+    
   
   # Generate "new" data
     I.fish.new[i]~dbin(psi[i],1)
