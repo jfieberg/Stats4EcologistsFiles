@@ -153,7 +153,6 @@ phat <- predict(m.zinb, type = "zero")
 mu <- predict(m.zinb, type = "count")
 mu*(1-phat) - predict(m.zinb, type = "response") 
 
-
 #' ## Bayesian implementation 
 #' 
 #' First, create an indicator variable for "not inflated zero" (i.e., went fishing)
@@ -268,9 +267,11 @@ znb<-function(){
     count[i]~dnegbin(p[i], theta)
   
   # Mean and variances of the observations
+  # Can derive using Var(Y)= E[Var[Y|Z]]+Var[E[Y|z]]
+  # Gives equivalent as psi*(mu+mu^2/theta)+mu^2*(psi*(1-psi))
     Ey[i]<-mu[i]*psi[i]  
     Vary[i]<-psi[i]*(mu[i])*(1+mu[i]*(1-psi[i] + 1/theta))
-    
+   
   
   # Generate "new" data
     I.fish.new[i]~dbin(psi[i],1)
