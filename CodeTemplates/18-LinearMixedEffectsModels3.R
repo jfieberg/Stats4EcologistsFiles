@@ -93,8 +93,11 @@ AIC(randcoef.model, lmer.ri2)
 library(lmerTest)
 anova(lmer.ri2) 
 
-
-## ----comment=NA-----------------------------------------------------------------------
+## ------------------------------------------------------------
+#'
+#' ## Marginal model
+#' 
+#' Marginal model fit using GLS 
 gls.fit<-gls(dbh ~ agec, method="REML",
              correlation=corCompSymm(form= ~ 1 | site),
              data=pines)
@@ -114,11 +117,13 @@ sqrt(variancepars[1,4]+variancepars[2,4])
 
 
 ## -------------------------------------------------------------------------------------
+#'
+#' ## Multiple crossed random effects
 library(Data4Ecologists)
 data(HRData)
 
 
-## ----wolfclust, fig.cap = "(ref:Dickie)", fig.align='center', out.width = "70%", fig.height = 8, fig.width =8----
+# fig.align='center', out.width = "70%", fig.height = 8, fig.width =8
 HRsummary <- HRData %>% group_by(PackID, Year) %>%
   count()
 ggplot(HRsummary, aes(Year, PackID, size = n)) + geom_point() + 

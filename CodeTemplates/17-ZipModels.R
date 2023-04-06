@@ -169,30 +169,36 @@ jagsdata <- list(count=fish$count, child=fish$child,
 znb<-function(){
   
   # Priors for count model
-  for(i in    ){
-    beta.c[i] 
+  for(i in 1:4){
+    beta.c[i] ~ dnorm(0, 0.001) 
   }
   
   # Priors for zero-inflation model
-  for(i in    ){
-    beta.zi[i] 
+  for(i in 1:2){
+    beta.zi[i] ~ dnorm(0, 1/3)
   } 
   
   # Overdispersion parameter
-  theta 
+  theta ~ dunif(0, 100)
   
   # Likelihood
   for(i in 1:n){
     # Zero-inflation part of the model
     # Let psi = probability went fishing (not inflated zero) 
-      
+    I.fish[i] ~ dbern(psi[i])
+    logit(psi[i]) <- beta.zi[1] + beta.zi[2]*child[i]
      
     # Count part of the model
     # Let mu = mean given the party went fishing
     # Let mu.eff = marginal (or unconditional) mean number of fish 
     # caught(pooling data from those that fished or did not fish)
     # mu.eff = mu*I.fish   
-     
+    log(mu[i]) <- beta.c[1] + beta.c[2]*child[i] + beta.c[3]*camper[i] + 
+      beta.c[4]*persons[i]
+    mu.eff[i] <- mu[i]*I.fish[i]
+    p[i] <- theta/(theta+mu.eff[i])
+    count[i] ~ dnegbin(p[i],theta)
+    
     # Mean and variances of the observations
     # See https://grodri.github.io/glms/notes/countmoments or 
     # Derive using:  Var(count) = E[var(count | z)] + Var[E(count|z)]
@@ -200,9 +206,10 @@ znb<-function(){
     Vary[i]<-psi[i]*(mu[i])*(1+mu[i]*(1-psi[i])) 
     
     # Generate "new" data
-    I.fish.new[i]~dbin(psi[i],1)
+    I.fish.new[i]~dbern(psi[i])
     mu.eff.new[i]<-mu[i]*I.fish.new[i]
-    count.new[i]~dpois(mu.eff.new[i])
+    p.new[i] <- theta/(theta+mu.eff[i])
+    count.new[i]~dnegbin(p.new[i], theta)
     
     # Pearson residuals
     presi[i]<-(count[i]-Ey[i])/sqrt(Vary[i]) # Pearson Resid
