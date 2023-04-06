@@ -1,0 +1,195 @@
+#' ---
+#' title: "17-LinearMixedEffectsModels3.R"
+#' author: "John Fieberg"
+#' output: 
+#'    html_document:
+#'      toc: true
+#'      toc_depth: 2
+#'      toc_float: true
+#' ---
+
+
+#' ## Load libraries
+#+ warning=FALSE,message=FALSE
+library(ggplot2);theme_set(theme_bw())
+knitr::opts_chunk$set(fig.align='center', 
+                      out.width = "55%", 
+                      fig.height = 5, 
+                      fig.width =6,
+                      error = FALSE)
+library(tidyverse) # for data wrangling
+library(gridExtra) # for multi-panel plots
+library(lme4)  # for fitting random-effects models
+library(nlme) # for fitting random-effects models
+library(glmmTMB) # for fitting random-effects models
+library(sjPlot) # for visualizing fitted models
+library(modelsummary) # for creating output tables
+library(kableExtra) # for tables 
+options(kableExtra.html.bsTable = T)
+library(ggplot2)# for plotting
+library(performance) # for model diagnostics
+
+#' Load data sets
+#+warning=FALSE, message=FALSE 
+library(Data4Ecologists) # for data
+data("RIKZdatdat")
+
+#' Only 1 beach has the lowest exposure level:  Recode exposure to have only 2 levels.	
+RIKZdat$exposure.c<-"High"	  
+RIKZdat$exposure.c[RIKZdat$exposure%in%c(8,10)]<-"Low"	
+RIKZdat$NAPc = RIKZdat$NAP-mean(RIKZdat$NAP) #center NAP variable	
+
+#' Models fit using lme 
+lme.fit<-lme(Richness~NAPc+exposure.c, random=~1|Beach, data=RIKZdat)
+summary(lme.fit)
+
+ 
+#' Degrees of freedom approximation using lme
+nrow(pines) - length(unique(pines$site))- 1
+length(unique(pines$site))- 3 -1
+
+
+#' Better options are available (and implemented) when lmerTest has been
+#' lodaed.
+#+ warning=FALSE, message=FALSE
+library(lmerTest)
+lmer.ri <- lmer( ) #lme4 package
+summary(lmer.ri)
+summary(lmer.ri,  ddf = "Kenward-Roger")
+
+
+#' Loading lmerTest also changes the way `anova` works (it uses different
+#' degrees of freedom calculations and no longer implements sequential tests)
+anova(lmer.ri)
+
+#' Compare results for random intercept versus random slope model
+#' for predictors that do and do not vary withing a beach (exposure.c versus 
+#' NAPc) 
+lmer.ri <- lmer(Richness ~ NAPc + exposure.c + (1 |Beach), data=RIKZdat)
+lmer.rc <- lmer(Richness ~ NAPc + exposure.c + (1 +NAPc |Beach), data=RIKZdat)
+
+#' Simulation-based likelihood ratio test
+lrsimtest <- pbkrtest::PBmodcomp(lmer.rc, lmer.ri, nsim = 500)
+summary(lrsimtest)
+
+
+#' AIC is possible, but several caveats apply - see Bolker's GLMM FAQ
+AIC(lmer.ri, lmer.rc)
+
+
+#' Jack Weiss's strategy 
+## -------------------------------------------------------------------------------------
+pooled.model <- lm(Richness ~ NAPc, data = RIKZdat)
+uncond.means.model <- lmer(Richness ~ 1 + (1 | Beach), data = RIKZdat)
+randint.model <- lmer(Richness ~ 1 + NAPc + (1 | Beach), data = RIKZdat)
+randcoef.model <- lmer(Richness ~ 1 + NAPc + (NAPc | Beach), data = RIKZdat)
+AIC(pooled.model, uncond.means.model, randint.model, randcoef.model)
+
+#' So, random coefficient model, then consider exposure.c
+lmer.ri2 <- lmer(Richness ~ 1 + NAPc + exposure.c + (NAPc | Beach), data = RIKZdat)
+AIC(randcoef.model, lmer.ri2)
+
+#+ warning=FALSE, message = FALSE
+library(lmerTest)
+anova(lmer.ri2) 
+
+
+## ----comment=NA-----------------------------------------------------------------------
+gls.fit<-gls(dbh ~ agec, method="REML",
+             correlation=corCompSymm(form= ~ 1 | site),
+             data=pines)
+summary(gls.fit)
+fixef(lmer.ri)
+
+
+## -------------------------------------------------------------------------------------
+# Extract variance parameters from the random intercept model
+variancepars<-as.data.frame(VarCorr(lmer.ri))
+
+# rho calculated from random intercept model
+variancepars[1,4]/(variancepars[1,4]+variancepars[2,4])
+
+# residual standard error in marginal model
+sqrt(variancepars[1,4]+variancepars[2,4])
+
+
+## -------------------------------------------------------------------------------------
+library(Data4Ecologists)
+data(HRData)
+
+
+## ----wolfclust, fig.cap = "(ref:Dickie)", fig.align='center', out.width = "70%", fig.height = 8, fig.width =8----
+HRsummary <- HRData %>% group_by(PackID, Year) %>%
+  count()
+ggplot(HRsummary, aes(Year, PackID, size = n)) + geom_point() + 
+  ylab("Pack ID")
+
+
+## -------------------------------------------------------------------------------------
+model1 <- lmer(log(HRsize) ~ Season + StudyArea + DiffDTScaled + LFD*EVIScaled + 
+                 (1 | AnimalId) + (1 | Year),  REML=TRUE, data = HRData)
+summary(model1)
+
+
+## -------------------------------------------------------------------------------------
+model2 <- lmer(log(HRsize) ~ Season + StudyArea + DiffDTScaled + LFD*EVIScaled + 
+                 (1 | PackID) + (1 | Year),  REML=TRUE, data = HRData)
+
+
+## -------------------------------------------------------------------------------------
+model3 <- lmer(log(HRsize) ~ Season + StudyArea + DiffDTScaled + LFD*EVIScaled + 
+                 (1 | AnimalId) + (1 | PackID ) + (1 | Year), REML=TRUE, data = HRData)
+
+
+## -------------------------------------------------------------------------------------
+summary(model3)
+
+
+## -------------------------------------------------------------------------------------
+HRData <- HRData %>% mutate(AnimalYear = paste(HRData$AnimalId, HRData$Year, sep=""),
+                            PackYear = paste(HRData$PackID, HRData$Year, sep=""))
+
+
+
+## -------------------------------------------------------------------------------------
+model4 <- lmer(log(HRsize) ~ Season + StudyArea + DiffDTScaled + LFD*EVIScaled + 
+                 (1 | AnimalYear), REML=TRUE, data = HRData)
+model5 <- lmer(log(HRsize) ~ Season + StudyArea + DiffDTScaled + LFD*EVIScaled + 
+                 (1 | PackYear), REML=TRUE, data = HRData)
+model6 <- lmer(log(HRsize) ~ Season + StudyArea + DiffDTScaled + LFD*EVIScaled + 
+                 (1 | AnimalYear/PackID), REML=TRUE, data = HRData)
+
+
+
+## -------------------------------------------------------------------------------------
+model6b <- lmer(log(HRsize) ~ Season + StudyArea + DiffDTScaled + LFD*EVIScaled + (1|AnimalYear)
+                + (1 | AnimalYear:PackID), REML=TRUE, data = HRData)
+AIC(model6, model6b)
+all.equal(fixef(model6), fixef(model6b))
+print(VarCorr(model6), comp = "Variance")
+print(VarCorr(model6b), comp = "Variance")
+
+
+## -------------------------------------------------------------------------------------
+Npacks <- HRData %>% group_by(AnimalYear) %>% dplyr::summarize(npacks = length(unique(PackID))) 
+table(Npacks$npacks) 
+
+
+## -------------------------------------------------------------------------------------
+model4 <- lmer(log(HRsize) ~ Season + StudyArea + DiffDTScaled + LFD*EVIScaled + 
+                 (1 | AnimalYear), REML=TRUE, data = HRData)
+model4b <- lmer(log(HRsize) ~ Season + StudyArea + DiffDTScaled + LFD*EVIScaled + 
+                  (1 | AnimalYear:PackID), REML=TRUE, data = HRData)
+all.equal(fixef(model4), fixef(model4b))
+AIC(model4, model4b)
+print(VarCorr(model4), comp = "Variance")
+print(VarCorr(model4b), comp = "Variance")
+
+
+## -------------------------------------------------------------------------------------
+print(VarCorr(model4), comp = "Variance")
+print(VarCorr(model6), comp = "Variance")
+
+
+
+
