@@ -130,71 +130,28 @@ ggplot(HRsummary, aes(Year, PackID, size = n)) + geom_point() +
   ylab("Pack ID")
 
 
-## -------------------------------------------------------------------------------------
+#' Models with multiple random effects
 model1 <- lmer(log(HRsize) ~ Season + StudyArea + DiffDTScaled + LFD*EVIScaled + 
                  (1 | AnimalId) + (1 | Year),  REML=TRUE, data = HRData)
 summary(model1)
 
-
-## -------------------------------------------------------------------------------------
 model2 <- lmer(log(HRsize) ~ Season + StudyArea + DiffDTScaled + LFD*EVIScaled + 
                  (1 | PackID) + (1 | Year),  REML=TRUE, data = HRData)
+summary(model2)
 
-
-## -------------------------------------------------------------------------------------
 model3 <- lmer(log(HRsize) ~ Season + StudyArea + DiffDTScaled + LFD*EVIScaled + 
                  (1 | AnimalId) + (1 | PackID ) + (1 | Year), REML=TRUE, data = HRData)
 
-
-## -------------------------------------------------------------------------------------
 summary(model3)
+AIC(model1, model2, model3)
 
+# Model with "PackYear" 
+HRData <- HRData %>% mutate(PackYear = paste(HRData$PackID, HRData$Year, sep=""))
 
-## -------------------------------------------------------------------------------------
-HRData <- HRData %>% mutate(AnimalYear = paste(HRData$AnimalId, HRData$Year, sep=""),
-                            PackYear = paste(HRData$PackID, HRData$Year, sep=""))
-
-
-
-## -------------------------------------------------------------------------------------
-model4 <- lmer(log(HRsize) ~ Season + StudyArea + DiffDTScaled + LFD*EVIScaled + 
-                 (1 | AnimalYear), REML=TRUE, data = HRData)
 model5 <- lmer(log(HRsize) ~ Season + StudyArea + DiffDTScaled + LFD*EVIScaled + 
                  (1 | PackYear), REML=TRUE, data = HRData)
-model6 <- lmer(log(HRsize) ~ Season + StudyArea + DiffDTScaled + LFD*EVIScaled + 
-                 (1 | AnimalYear/PackID), REML=TRUE, data = HRData)
+summary(model5)
+AIC(model2, model5)
+ 
 
-
-
-## -------------------------------------------------------------------------------------
-model6b <- lmer(log(HRsize) ~ Season + StudyArea + DiffDTScaled + LFD*EVIScaled + (1|AnimalYear)
-                + (1 | AnimalYear:PackID), REML=TRUE, data = HRData)
-AIC(model6, model6b)
-all.equal(fixef(model6), fixef(model6b))
-print(VarCorr(model6), comp = "Variance")
-print(VarCorr(model6b), comp = "Variance")
-
-
-## -------------------------------------------------------------------------------------
-Npacks <- HRData %>% group_by(AnimalYear) %>% dplyr::summarize(npacks = length(unique(PackID))) 
-table(Npacks$npacks) 
-
-
-## -------------------------------------------------------------------------------------
-model4 <- lmer(log(HRsize) ~ Season + StudyArea + DiffDTScaled + LFD*EVIScaled + 
-                 (1 | AnimalYear), REML=TRUE, data = HRData)
-model4b <- lmer(log(HRsize) ~ Season + StudyArea + DiffDTScaled + LFD*EVIScaled + 
-                  (1 | AnimalYear:PackID), REML=TRUE, data = HRData)
-all.equal(fixef(model4), fixef(model4b))
-AIC(model4, model4b)
-print(VarCorr(model4), comp = "Variance")
-print(VarCorr(model4b), comp = "Variance")
-
-
-## -------------------------------------------------------------------------------------
-print(VarCorr(model4), comp = "Variance")
-print(VarCorr(model6), comp = "Variance")
-
-
-
-
+ 

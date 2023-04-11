@@ -57,7 +57,7 @@ fishse.avg <- Selake %>% group_by(Lake) %>%
 fit.avg <- lm(fish.avg.se ~ Log_Water_Se, data=fishse.avg)
 
 #' Fit a model where each lake has its own random intercept
-fit.mixed <- lmer(Log_fish_Se ~ Log_Water_Se + (1|Lake), data=Selake)
+fit.mixed <- lme4::lmer(Log_fish_Se ~ Log_Water_Se + (1|Lake), data=Selake)
 
 #' Compare results
 modelsummary(list("Naive linear model" = fit.naive, 
