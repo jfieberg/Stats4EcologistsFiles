@@ -107,21 +107,24 @@ summary(lm(slope ~ exposure.c, data = betadat))
 lmer.ri <- lmer( ) #lme4 package
 summary(lmer.ri)
 
-#' Try to write down an equation describing the model.
+#' Try to write down an equation describing the model. This will be easiest
+#' to explore using an R Markdown (.Rmd) document open in a separate
+#' window.
 
 
 #' Random intercept and slope model
 lmer.rc <- lmer( )
 summary(lmer.rc)
 
+
+#' Try to write down an equation describing the model.
+
+
 #' Confidence intervals (see Section 18.12.4) for a comparison of methods
 #' The default is method = "profile" (profile likelihood). Other options
 #' are method = "boot" or method = "wald" (based on a Normal sampling
 #' distribution).
 confint(fit.mixed)
-
-#' Try to write down an equation describing the model.
-
 
 
 ## -------------------------------------------------------------------

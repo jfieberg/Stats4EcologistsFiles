@@ -45,8 +45,8 @@ summary(lme.fit)
 
  
 #' Degrees of freedom approximation using lme
-nrow(pines) - length(unique(pines$site))- 1
-length(unique(pines$site))- 3 -1
+nrow(RIKZdat) - length(unique(RIKZdat$Beach))- 1
+length(unique(RIKZdat$Beach))- 1 -1
 
 
 #' Better options are available (and implemented) when lmerTest has been
@@ -65,8 +65,7 @@ anova(lmer.ri)
 #' Compare results for random intercept versus random slope model
 #' for predictors that do and do not vary withing a beach (exposure.c versus 
 #' NAPc) 
-lmer.ri <- lmer(Richness ~ NAPc + exposure.c + (1 |Beach), data=RIKZdat)
-lmer.rc <- lmer(Richness ~ NAPc + exposure.c + (1 +NAPc |Beach), data=RIKZdat)
+lmer.rc <- lmer()
 
 #' Simulation-based likelihood ratio test
 lrsimtest <- pbkrtest::PBmodcomp(lmer.rc, lmer.ri, nsim = 500)
@@ -85,22 +84,33 @@ randint.model <- lmer(Richness ~ 1 + NAPc + (1 | Beach), data = RIKZdat)
 randcoef.model <- lmer(Richness ~ 1 + NAPc + (NAPc | Beach), data = RIKZdat)
 AIC(pooled.model, uncond.means.model, randint.model, randcoef.model)
 
-#' So, random coefficient model, then consider exposure.c
-lmer.ri2 <- lmer(Richness ~ 1 + NAPc + exposure.c + (NAPc | Beach), data = RIKZdat)
-AIC(randcoef.model, lmer.ri2)
+#' So, random coefficient model, then consider exposure.c, but fit 
+#' both models using ML rather than REML
+lmer.ri.MLa <- lmer(Richness ~ 1 + NAPc + (NAPc | Beach), 
+                 REML = FALSE, data = RIKZdat)
+lmer.ri.MLb <- lmer(Richness ~ 1 + NAPc + exposure.c + (NAPc | Beach),
+                 REML = FALSE, data = RIKZdat)
+AIC(lmer.ri.MLa, lmer.ri.MLb)
+
+#' What if we had used REML?
+lmer.ri.REMLa <- lmer(Richness ~ 1 + NAPc + (NAPc | Beach), 
+                 data = RIKZdat)
+lmer.ri.REMLb <- lmer(Richness ~ 1 + NAPc + exposure.c + (NAPc | Beach),
+                 data = RIKZdat)
+AIC(lmer.ri.REMLa, lmer.ri.REMLb)
 
 #+ warning=FALSE, message = FALSE
 library(lmerTest)
-anova(lmer.ri2) 
+anova(lmer.ri.REMLb) 
 
 ## ------------------------------------------------------------
 #'
 #' ## Marginal model
 #' 
 #' Marginal model fit using GLS 
-gls.fit<-gls(dbh ~ agec, method="REML",
-             correlation=corCompSymm(form= ~ 1 | site),
-             data=pines)
+gls.fit<-gls(Richness ~ NAPc + exposure.c, method="REML",
+             correlation=corCompSymm(form= ~ 1 | Beach),
+             data=RIKZdat)
 summary(gls.fit)
 fixef(lmer.ri)
 

@@ -36,73 +36,39 @@ library(mcmcplots)# summarize JAGS output
 library(Data4Ecologists) # for data
 data("RIKZdatdat")
 
+#' Specify the model similar to lmer (in terms of betas and b's)
+#' How many priors do we need?
 
 jags.lme<-function(){   
   
-  # Priors for the intercepts   
+  # Priors for the b's
   for (i in 1:n.groups){        
-    b0[i] ~ dnorm(0, tau.b0)   # Random intercepts 
+   
   } 
   
-  # Hyper priors that describe the distribution of the site-specific intercepts   
-  beta0 ~ dnorm(0, 0.001)      # Mean intercept
-  tau.b0 <- 1 / (sigma.b0 * sigma.b0)    
-  sigma.b0 ~ dunif(0, 100)     # SD of the random intercepts   
+  # Priors for the betas
+ 
   
-  # Priors for fixed effect regression parameters 
-  beta1 ~ dnorm(0, 0.001)           # Common slope agec 
-  tau.eps <- 1 / ( sigma.eps * sigma.eps)       # Residual precision    
-  sigma.eps ~ dunif(0, 100)         # Residual standard deviation   
+  # Priors for the variance parameters
+  
   
   # Calculate site specific intercepts
   for (i in 1:n.groups){        
-    beta0i[i] <- beta0 + b0[i] 
+     
   } 
   
   # Likelihood  
   for (i in 1:nobs) {   
-    dbh[i] ~ dnorm(mu[i], tau.eps)     # The random variable   
-    mu[i] <- beta0 + b0[site[i]] + beta1*agec[i]  # Expectation   
+  
+    
   } 
 }
 
-
-## -------------------------------------------------------------------------------------
-jags.lme.alt<-function(){   
-  
-  # Priors for the intercepts   
-  for (i in 1:n.groups){        
-    alpha[i] ~ dnorm(beta0, tau.b0)   # Random intercepts 
-  } 
-  
-  # Hyper priors that describe the distribution of the site-specific intercepts   
-  beta0 ~ dnorm(0, 0.001)      # Mean intercept
-  tau.b0 <- 1 / (sigma.b0 * sigma.b0)    
-  sigma.b0 ~ dunif(0, 100)     # SD of the random intercepts   
-  
-  # Priors for fixed effect regression parameters 
-  beta1 ~ dnorm(0, 0.001)           # Common slope agec 
-  tau.eps <- 1 / ( sigma.eps * sigma.eps)       # Residual precision    
-  sigma.eps ~ dunif(0, 100)         # Residual standard deviation   
-  
-  # Likelihood  
-  for (i in 1:nobs) {   
-    dbh[i] ~ dnorm(mu[i], tau.eps)     # The random variable   
-    mu[i] <- alpha[site[i]] + beta1*agec[i]  # Expectation   
-  } 
-}     
-
-
-## ----jagspineri, cache=TRUE-----------------------------------------------------------
 # Bundle data   
-jags.data <- list(dbh = pines$dbh, agec = as.numeric(pines$agec), 
-                  site = as.numeric(as.factor(pines$site)),
-                  n.groups=length(unique(pines$site)),  
-                  nobs = nrow(pines))   
-
+jags.data <- list( )
 
 # Parameters to estimate    
-parameters <- c("beta0i", "beta0", "beta1", "sigma.b0", "sigma.eps")    
+parameters <- c( )    
 
 
 # Start Gibbs sampling  
@@ -113,79 +79,43 @@ out.ri <- jags.parallel(data=jags.data,
 
 
 ## -------------------------------------------------------------------------------------
-MCMCsummary(out.ri, params=c("beta0", "beta1", "sigma.b0", "sigma.eps"), round=3)
-summary(lmer.ri)
 
-
-## -------------------------------------------------------------------------------------
-MCMCsummary(out.ri, params="beta0i", round=3)
-
-
-## -------------------------------------------------------------------------------------
-denplot(out.ri, parms=c("sigma.b0", "sigma.eps"))
-
-
-## ----jagsrc1, cache=TRUE--------------------------------------------------------------
-jags.lme.rc<-function(){
+#' Specify the model in terms of $\beta_{0i} = \beta_0 + b_{0i}$
+jags.lme.alt<-function(){   
   
-  # Priors for the intercepts
-  for (i in 1:n.groups){    
-    # To allow for correlation between alpha[i] and beta1[i], we need to model
-    # their joint (multivariate) distribution 
-    beta0i[i] <- B[i,1] # Random intercepts
-    beta1i[i] <- B[i,2] # Random slopes for age
-    B[i,1:2]~ dmnorm(B.hat[i,], Tau.B[,]) # distribution of the vector (beta0[i], beta1[i])
-    B.hat[i,1]<-beta0 # mean for intercepts
-    B.hat[i,2]<-beta1 # mean for slopes
-  }
+  # Priors for the intercepts   
+  for (i in 1:n.groups){        
+
+  } 
   
-  # Hyperpriors for intercepts and slopes
-  beta0 ~ dnorm(0, 0.001)       
-  beta1 ~ dnorm(0, 0.001)
+  # Hyper priors that describe the distribution 
+  # of the site-specific intercepts (their mean and variance)  
+   
   
-  # Hyperpriors for Sigma =  var/cov matrix of the slope/intercept parameters
-  sigma.b0 ~ dunif(0,100) # sd intercepts
-  sigma.b1 ~ dunif(0,100) # sd of slopes
-  cor.b0.b1 ~ dunif(-1,1) # correlation among intercepts and slopes
-  Sigma.B[1,1]<-pow(sigma.b0,2)
-  Sigma.B[2,2]<-pow(sigma.b1,2)
-  Sigma.B[1,2]<-cor.b0.b1*sigma.b0*sigma.b1
-  Sigma.B[2,1]<-Sigma.B[1,2]
+  # Priors for other fixed effect regression parameters (exposure)
+
   
-  # Tau = inverse of Sigma (analogous to precision for univariate normal distribution)
-  Tau.B[1:2,1:2]<-inverse(Sigma.B[,])
+  # Priors for within beach residuals 
   
-  # Prior for within-site errors 
-  tau.eps <- 1 / ( sigma.eps * sigma.eps)       # Residual precision
-  sigma.eps ~ dunif(0, 100)         # Residual standard deviation
   
-  # Likelihood
-  for (i in 1:nobs) {
-    dbh[i] ~ dnorm(mu[i], tau.eps)  
-    mu[i] <- beta0i[site[i]] + beta1i[site[i]]*agec[i]  
-  }
-} 
+  # Likelihood  
+  for (i in 1:nobs) {   
+
+  } 
+}     
+
+# Bundle data   
+jags.data <- list( )
+
+# Parameters to estimate    
+parameters <- c( )    
 
 
-# Parameters to estimate
-parameters <- c("beta0", "beta1", "betaoi", "beta1i", "sigma.b0", 
-                "sigma.b1", "sigma.eps", "cor.b0.b1")
-
-
-# Start Gibbs sampling
-out.rc <- jags.parallel(data = jags.data,
+# Start Gibbs sampling  
+out.ri <- jags.parallel(data=jags.data,  
                         parameters.to.save=parameters, 
-                        model=jags.lme.rc, 
-                        n.thin=1, n.chains=3, n.burnin=100, n.iter=10000) 
+                        model=jags.lme, 
+                        n.thin=1, n.chains=3, n.burnin=1000, n.iter=10000)   
 
 
-## -------------------------------------------------------------------------------------
-MCMCsummary(out.rc, params=c("beta0", "beta1", "sigma.b0", 
-                             "sigma.b1", "cor.b0.b1", "sigma.eps"), round=3)
-summary(lmer.rc)
-
-
-## -------------------------------------------------------------------------------------
-lmer.rc.ind <- lmer(dbh ~ agec + (1 | site) + (0 + agec | site), data=pines)
-summary(lmer.rc.ind)
-
+ 
