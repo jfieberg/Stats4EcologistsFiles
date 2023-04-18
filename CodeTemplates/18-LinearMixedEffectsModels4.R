@@ -1,5 +1,5 @@
 #' ---
-#' title: "17-LinearMixedEffectsModels3.R"
+#' title: "17-LinearMixedEffectsModels4.R"
 #' author: "John Fieberg"
 #' output: 
 #'    html_document:
