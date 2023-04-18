@@ -27,7 +27,7 @@ library(performance) # for model diagnostics
 #' Load data sets
 #+warning=FALSE, message=FALSE 
 library(Data4Ecologists) # for data
-data("RIKZdatdat")
+data("RIKZdat")
 
 #' Only 1 beach has the lowest exposure level:  Recode exposure to have only 2 levels.	
 RIKZdat$exposure.c<-"High"	  
@@ -61,3 +61,51 @@ check_model(glmer.rc)
 
 #' Compare using AIC
 AIC(glmer.ri, glmer.rc, glmmtmb.ri, glmmtmb.rc)
+
+
+
+#' ## Generalized Estimating Equations
+
+#'
+#'#' Load libraries (geepack) for model fitting, MuMIn for QIC function
+#+warning=FALSE, message=FALSE  
+library(geepack)
+#library(MuMIn)
+
+#' Full independence
+glmind <- glm(Richness~ NAPc + exposure.c, family=poisson(), data=RIKZdat)
+  
+#' Independent working correlation 
+gee.ind<-geeglm(Richness ~ NAPc + exposure.c, id=Beach, corstr="independence",
+                family=poisson(), data=RIKZdat)
+summary(gee.ind)
+
+#' Exchangeable working correlation structure  
+gee.exc<-geeglm(Richness ~ NAPc + exposure.c,id=Beach, corstr="exchangeable",
+                family=poisson(), data=RIKZdat)
+summary(gee.exc)
+
+#' Compare fit  
+QIC(gee.ind, gee.exc)
+
+# Compare to glmer.rc  (coefficients )
+summary(glmer.rc) 
+
+#' Compare using ggplot (after constructing intervals for each approach)
+ests<-c(coef(glmind), fixef(glmer.ri), fixef(glmer.rc), coef(gee.ind), coef(gee.exc))
+se.gee.ind<-summary(gee.ind)$coef[,2]
+se.gee.exc<-summary(gee.exc)$coef[,2]
+cis.glm<-confint(glmind)
+cis.glmer.rc<-confint(glmer.rc)
+cis.glmer.ri<-confint(glmer.ri)
+cis.glmer<-cis.glmer.rc[4:6,]
+cis.glmer2<-cis.glmer.ri[2:4,]
+lcl<-c(cis.glm[,1], cis.glmer2[,1], cis.glmer[,1], coef(gee.ind)-1.96*se.gee.ind, coef(gee.exc)-1.96*se.gee.exc)
+ucl<-c(cis.glm[,2], cis.glmer2[,2], cis.glmer[,2], coef(gee.ind)+1.96*se.gee.ind, coef(gee.exc)+1.96*se.gee.exc)
+parmest<-data.frame(ests=ests, ucl=ucl,lcl=lcl, parm=rep(names(gee.ind$coef),5), 
+                    type=rep(c("glm","glmer.ri", "glmer.rc", "GEE.ind", "GEE.exc"), each=3))
+
+ggplot(parmest, aes(x=type, y=ests, group=type)) +
+  geom_errorbar(width=.1, aes(ymin=lcl, ymax=ucl), colour="blue") + 
+  geom_point(shape=21, size=3, fill="white")+
+  facet_wrap(~parm, ncol=2, scales="free")+ylab("Estimate")
