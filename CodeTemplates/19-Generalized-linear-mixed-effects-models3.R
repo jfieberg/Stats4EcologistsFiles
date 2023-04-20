@@ -55,7 +55,8 @@ skatedat <- data.frame(Y = Y, practice.num = practice.num, individual = individu
 #' 
 #' We can then fit the GLMM used to generate the data and show that we can recover the simulation parameters:
 
-glmermod <- glmer(Y ~ practice.num + (1 | individual), family = binomial(), data = skatedat)
+glmermod <- glmer(Y ~ practice.num + (1 | individual), family = binomial(),
+                  data = skatedat)
 summary(glmermod)
 
  

@@ -1,5 +1,5 @@
 #' ---
-#' title: "17-LinearMixedEffectsModels3.R"
+#' title: "17-LinearMixedEffectsModelsJAGS.R"
 #' author: "John Fieberg"
 #' output: 
 #'    html_document:
@@ -36,7 +36,14 @@ library(mcmcplots)# summarize JAGS output
 library(Data4Ecologists) # for data
 data("RIKZdatdat")
 
-lmer.ri <- lmer(Richness ~ NAPc + exposure.c + (1|Beach), data=RIKZdat)
+#' Only 1 beach has the lowest exposure level:  Recode exposure to have only 2 levels.	
+RIKZdat$exposure.c<-"High"	  
+RIKZdat$exposure.c[RIKZdat$exposure%in%c(8,10)]<-"Low"	
+RIKZdat$NAPc = RIKZdat$NAP-mean(RIKZdat$NAP) #center NAP variable	
+
+
+glmer.ri <- glmer(Richness ~ NAPc + exposure.c + (1|Beach),
+                 family=poisson(), data=RIKZdat)
 
 #' Specify the model similar to lmer (in terms of betas and b's)
 #' How many priors do we need?
