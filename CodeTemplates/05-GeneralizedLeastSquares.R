@@ -91,6 +91,12 @@ ggplot(sockeye, aes(sample = stdresids)) +
   stat_qq() +
   stat_qq_line()
 
+#' Scale-location plot
+sockeye <- sockeye %>% 
+  mutate(absstdresids  = abs(stdresids))
+
+ggplot(sockeye, aes(fitted, absstdresids)) + geom_point() +
+  geom_smooth() 
 
 #' More complicated models can also be considered
 varconstp2 <- gls(SpnEsc ~ MisEsc, weights = varConstPower(form = ~ MisEsc | Run), 
