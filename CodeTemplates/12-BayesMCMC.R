@@ -2,6 +2,9 @@
 
 #' ## Preamble
 
+#' To install BEST package (since no longer on CRAN)
+#remotes::install_version("BEST", version = "0.1.0")
+
 #' Increase width of output
 options(width=150)
 
@@ -11,7 +14,7 @@ library(R2jags) # for interfacing with JAGS
 library(mcmcplots) # for plotting results
 library(ggplot2) # for some later plotting
 library(MCMCvis) # for summarizing MCMC results
-library(BEST) # for prior / posterior overlap
+#library(BEST) # for prior / posterior overlap
 library(dplyr) # for data wrangling
 library(knitr) # for options when knitting
 library(ggplot2) # for plotting
@@ -25,19 +28,19 @@ females<-c(110, 111, 107, 108, 110, 105, 107, 106, 111, 111)
 #' JAGS/Bugs model for jaw data
 jaw.mod<-function(){
   
-  # Priors 
-    mu.male ~ dnorm(100, 0.001) # mean of male jaw lengths
-    mu.female ~ dnorm(100, 0.001) # mean of female jaw lengths
-    sigma ~ dunif(0, 30) # common sigma
-    tau <- 1/(sigma*sigma) #precision
-
-  # Likelihood (Y | mu) = normal(mu[gender], sigma^2)  
+  # Likelihood (Y | mu) = normal(mu[sex], sigma^2)  
     for(i in 1:nmales){
       males[i] ~ dnorm(mu.male, tau) 
     }
     for(i in 1:nfemales){
       females[i] ~ dnorm(mu.female, tau)
     }
+  
+  # Priors 
+  mu.male ~ dnorm(100, 0.001) # mean of male jaw lengths
+  mu.female ~ dnorm(100, 0.001) # mean of female jaw lengths
+  sigma ~ dunif(0, 30) # common sigma
+  tau <- 1/(sigma*sigma) #precision
   
   # Derived quantities:  difference in means
     mu.diff <- mu.male - mu.female
@@ -49,7 +52,9 @@ init.vals<-function(){
     mu.male <- rnorm(1, 100, 100)
     mu.female <- rnorm(1, 100, 100)
     sigma <- runif(1, 0, 10) 
-    out <- list(mu.male = mu.male, mu.female = mu.female, sigma = sigma)
+    out <- list(mu.male = mu.male, 
+                mu.female = mu.female, 
+                sigma = sigma)
 }
 
 
@@ -168,7 +173,7 @@ sigpost<-MCMCvis::MCMCchains(t.test.jags, params="sigma")
 #' Then generate the same number of samples from the prior distribution
 niters<-nrow(sigpost)
 Prior.samples<-runif(niters, 0,30)
-postPriorOverlap(sigpost, Prior.samples) 
+#postPriorOverlap(sigpost, Prior.samples) 
 
 #' Using MCMCtrace  
 MCMCtrace(t.test.jags, params = c("sigma"),
