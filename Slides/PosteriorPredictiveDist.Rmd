@@ -1,0 +1,15 @@
+---
+output: beamer_presentation
+---
+
+\small
+
+$$p(Y_{new}| X_{obs}, Y_{obs}) = \int_{\theta}p(Y_{new} | \theta, X_{obs})p(\theta | Y_{obs})$$
+
+where:
+
+- $p(Y_{new}| X_{obs}, Y_{obs})$ is the posterior predictive distribution for a new observation or set of observations with predictors, $X_{obs}$
+
+- $p(Y_{new} | \theta, X_{obs})$ gives the predictive distribution conditional on a set of parameters $\theta$
+
+- $p(\theta | Y_{obs})$ is the posterior distribution of our parameters (and captures our uncertainty about them after collecting data, $Y_{obs}$)
