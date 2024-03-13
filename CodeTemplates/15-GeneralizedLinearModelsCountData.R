@@ -56,9 +56,6 @@ check_model(lmdace, check = c("linearity", "homogeneity", "qq", "normality"))
 glmPdace <- glm(longnosedace ~ acreage + do2 + maxdepth + no3 + so4 + temp, 
               data = longnosedace, family = poisson())
 summary(glmPdace)
-check_model(glmPdace)
-car::residualPlot(glmPdace)
-performance::check_overdispersion(glmPdace)
 
 #' ## Interpretation
 #' 
@@ -114,7 +111,8 @@ residualPlots(glmPdace)
 #' Can also use check_model
 #+ out.width = "60%", fig.height = 9, fig.width =6 
 performance::check_model(glmPdace)
-performance::check_overdispersion(glmPdace)
+performance::check_model(glmPdace, check = c("pp_check", "overdispersion", "qq", "homogeneity"))
+performance::check_overdispersion(glmPdace) 
 
 #' See also the Dharma package (in book) 
 
