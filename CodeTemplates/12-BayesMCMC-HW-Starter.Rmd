@@ -75,12 +75,6 @@ summary(lmmeans)
         alpha[i] ~ dnorm(0, 0.001) # intercepts for each pop
         beta[i] ~ dnorm(0, 0.001) # slopes for each pop
       }
-    ## alpha[1] ~ dnorm(0, 0.001)
-    ## alpha[2] ~ dnorm(0, 0.001)
-    ## alpha[3] ~ dnorm(0, 0.001)
-    ## beta[1] ~ dnorm(0, 0.001)
-    ## beta[2] ~ dnorm(0, 0.001)
-    ## beta[3] ~ dnorm(0, 0.001)
       sigma ~ dunif(0, 100)
       tau <- 1/(sigma*sigma)
     # Likelihood
