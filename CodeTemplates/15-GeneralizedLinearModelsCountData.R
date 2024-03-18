@@ -153,7 +153,8 @@ performance::check_overdispersion(glmPdace)
   
   g1<-ggplot() 
   nsims=100
-  for(i in 1:nsims){
+  beta.hat <- MASS::mvrnorm(nsims, coef(glmPdace), vcov(glmPdace))
+    for(i in 1:nsims){
     
     # Generate E[Y|X] and var[Y|X], mu.hat and var.hat below    
     lambda.hat <- exp(xmat%*%beta.hat[i,])
