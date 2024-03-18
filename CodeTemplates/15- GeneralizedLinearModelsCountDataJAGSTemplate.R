@@ -62,7 +62,8 @@ pois.fit<-function(){
 } 
 
 
-# Bundle data, here we will use the design matrix from R 
+# Bundle data, here we need to list our response variable,
+# all of our predictor variables, and n= nrow(longnosedace)
 jagsdata <- list()
 
 
