@@ -192,7 +192,8 @@ residualPlot(glmNBdace, main = "Negative Binomial model")
 
 #+ out.width = "90%", fig.height = 9, fig.width =6 
 check_model(glmNBdace) 
- 
+performance::check_model(glmNBdace, check = c("pp_check", "overdispersion", "qq", "homogeneity"))
+
 
 #' ## Goodness of fit test for negative binomial model
 # Number of simulations
