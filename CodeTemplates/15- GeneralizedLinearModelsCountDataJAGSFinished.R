@@ -136,9 +136,9 @@ nb.fit<-function(){
     p[i] <- theta/(theta+mu[i])
    
     # Fit assessments
-    Presi[i] <- (longnosedace[i] - mu[i]) /   # Pearson residuals
+    Presi[i] <- (longnosedace[i] - mu[i]) / sqrt(mu[i]+mu[i]*mu[i]/theta)   # Pearson residuals
     dace.new[i] ~ dnegbin(p[i],theta)    # Replicate data set
-    Presi.new[i] <- (dace.new[i] - mu[i]) /   # Pearson residuals
+    Presi.new[i] <- (dace.new[i] - mu[i]) / sqrt(mu[i]+mu[i]*mu[i]/theta)   # Pearson residuals
     D[i] <- pow(Presi[i], 2)
     D.new[i] <- pow(Presi.new[i], 2)
   }
@@ -169,6 +169,11 @@ ggplot(jagsnbfit, aes(fitted, resid)) + geom_point() +
   geom_hline(yintercept = 0) + geom_smooth() +
   xlab("Fitted value") + ylab("Pearson Residual")
 
+#' Plot to look at the variance assumption
+jagsnbfit <- jagsnbfit %>% mutate(absresids = sqrt(abs(resid)))
+ggplot(jagsnbfit, aes(fitted, absresids)) + geom_point() + 
+  geom_hline(yintercept = 0) + geom_smooth() +
+  xlab("Fitted value") + ylab("sqrt(|Pearson Residual|)")
 
 # GOF test
 fitstats <- MCMCpstr(out.nb, params = c("fit", "fit.new"), type = "chains") 
