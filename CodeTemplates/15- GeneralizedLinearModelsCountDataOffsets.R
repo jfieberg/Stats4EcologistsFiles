@@ -11,7 +11,9 @@
 
 #' Load data
 #+ warning=FALSE, message=FALSE
-library(Data4Ecologists)
+library(Data4Ecologists) # for data
+library(dplyr) # for data wrangling
+library(MASS) #for glm.nb
 data(reeffish)
 head(reeffish)
 
