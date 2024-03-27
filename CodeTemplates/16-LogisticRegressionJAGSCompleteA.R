@@ -52,7 +52,7 @@ hist(beta0, xlab=expression(beta[0]),
      main=expression(paste("Prior distribution for ", beta[0])), 
      col="gray")
 hist(p, xlab="p", main="Prior distribution for p", col="gray")
-
+par(mfrow=c(1,1))
 
 #' 
 #' Gelman's recommendations: 
@@ -85,13 +85,13 @@ lrmod<-function(){
   
   # Likelihood
   for(i in 1:n){
-    logit(p[i]) <-  
-    observed[i]  
-    
-    # GOF test
-    presi[i] <- 
+    observed[i] ~ dbern(p[i]) # or dbin(p[i], 1)
+    logit(p[i]) <- alpha + beta*voc[i]
       
-    obs.new[i]  
+    # GOF test
+    presi[i] <- (observed[i] - p[i])/sqrt(p[i] * (1 - p[i]))
+      
+    obs.new[i]  ~ dbern(p[i])
     presi.new[i] <- (obs.new[i] - p[i]) / sqrt(p[i] * (1 - p[i]))
   
     D[i] <- pow(presi[i], 2)
@@ -110,15 +110,10 @@ jagsdata <- list(observed = exp.m$observed, voc = voc.scaled, n = nrow(exp.m))
 # Parameters to estimate
 params <- c("alpha", "beta", "p", "presi", "fit", "fit.new")
 
-# MCMC settings
-nc <- 3
-ni <- 3000
-nb <- 1000
-nt <- 2
 
 out.p <- jags.parallel(data = jagsdata, parameters.to.save = params, 
                        model.file = lrmod, n.thin= 2, n.chains = 3, 
-                       n.burnin = 1000, n.iter = 3000)
+                       n.burnin = 1000, n.iter = 5000)
 
 #Goodness-of-fit test
 fitstats <- MCMCpstr(out.p, params = c("fit", "fit.new"), type = "chains") 
@@ -147,19 +142,19 @@ lrmodv<-function(){
   
   # Likelihood
   for(i in 1:n){
-    logitp[i]<-alpha+beta*voc[i]
-    p[i]<-exp(logitp[i])/(1+exp(logitp[i]))
-    observed[i]~dbin(p[i],1)
+    observed[i]~dbin(p[i],1) # or dbern(p[i])
+    logit(p[i])<-alpha+beta*voc[i]
   }
 }
 
 params <- c("alpha", "beta", "p")
 out.p.vague <- jags.parallel(data = jagsdata, parameters.to.save = params, 
                              model.file = lrmodv, n.thin= 2, n.chains = 3, 
-                             n.burnin = 1000, n.iter = 3000)
+                             n.burnin = 1000, n.iter = 5000)
 
 #' Compare the two posterior distributions (using different priors)
+#' Blue = original priors, red = vague priors
 MCMCplot(object = out.p, object2=out.p.vague, params=c("alpha", "beta"), 
-         offset=0.1, main='Posterior Distributions')
+         offset=0.1, main='Posterior Distributions', col = "blue", col2 = "red")
 
  

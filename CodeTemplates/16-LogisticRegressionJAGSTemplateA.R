@@ -80,19 +80,18 @@ legend(2, 0.15, c("Normal", "t"), lty=c(1,2), bty="n")
 lrmod<-function(){
   
   # Priors
-  beta.voc ~ dt(0, pow(2.5, -2), 1)
-  for(i in 1:3){
-    alpha[i] ~ dnorm(0, 1/3)
-  }
+  alpha ~ dt(0, pow(2.5, -2), 1)
+  beta ~ dt(0, pow(2.5, -2), 1)
+  
   # Likelihood
   for(i in 1:n){
-    logit(p[i]) <- alpha[yearind[i]] + beta.voc*voc.scaled[i] 
-    observed[i] ~ dbern(p[i]) 
     
-    # GOF test
-    presi[i] <- (observed[i]-p[i])/sqrt(p[i]*(1-p[i]))
+    
       
-    obs.new[i] ~ dbern(p[i])  
+    # GOF test
+    presi[i] <- 
+      
+    obs.new[i]  
     presi.new[i] <- (obs.new[i] - p[i]) / sqrt(p[i] * (1 - p[i]))
   
     D[i] <- pow(presi[i], 2)
@@ -105,25 +104,15 @@ lrmod<-function(){
 
 # Bundle data
 voc.scaled <- (exp.m$voc - mean(exp.m$voc)) / (0.5 * sd(exp.m$voc))
-yearind <- exp.m$year -2004
-jagsdata <- list(observed = exp.m$observed,
-                 voc.scaled = voc.scaled, n = nrow(exp.m),
-                 yearind = yearind)
+jagsdata <- list(observed = exp.m$observed, voc = voc.scaled, n = nrow(exp.m))
 
 
 # Parameters to estimate
-params <- c("alpha", "beta.voc", "p", "presi", "fit", "fit.new")
-params <- c("alpha", "beta.voc", "p")
-
-# MCMC settings
-nc <- 3
-ni <- 3000
-nb <- 1000
-nt <- 2
+params <- c("alpha", "beta", "p", "presi", "fit", "fit.new")
 
 out.p <- jags.parallel(data = jagsdata, parameters.to.save = params, 
                        model.file = lrmod, n.thin= 2, n.chains = 3, 
-                       n.burnin = 1000, n.iter = 3000)
+                       n.burnin = 1000, n.iter = 5000)
 
 #Goodness-of-fit test
 fitstats <- MCMCpstr(out.p, params = c("fit", "fit.new"), type = "chains") 
@@ -147,37 +136,24 @@ cbind(coef(mod1b), confint(mod1b))
 ## ---------------------------------------------------------------
 lrmodv<-function(){
   
-  # Priors
-  beta.voc ~ dt(0, pow(2.5, -2), 1)
-  for(i in 1:3){
-    alpha[i] ~ dnorm(0, 0.000001)
-  }
+  alpha~dnorm(0, 0.0001)
+  beta~dnorm(0, 0.0001)
+  
   # Likelihood
   for(i in 1:n){
-    logit(p[i]) <- alpha[yearind[i]] + beta.voc*voc.scaled[i] 
-    observed[i] ~ dbern(p[i]) 
-    
-    # GOF test
-    presi[i] <- (observed[i]-p[i])/sqrt(p[i]*(1-p[i]))
-    
-    obs.new[i] ~ dbern(p[i])  
-    presi.new[i] <- (obs.new[i] - p[i]) / sqrt(p[i] * (1 - p[i]))
-    
-    D[i] <- pow(presi[i], 2)
-    D.new[i] <- pow(presi.new[i], 2)
+    observed[i]~dbin(p[i],1) # or dbern(p[i])
+    logit(p[i])<-alpha+beta*voc[i]
   }
-  fit <- sum(D[])
-  fit.new <- sum(D.new[])
 }
 
-
-params <- c("alpha", "beta.voc", "p")
+params <- c("alpha", "beta", "p")
 out.p.vague <- jags.parallel(data = jagsdata, parameters.to.save = params, 
                              model.file = lrmodv, n.thin= 2, n.chains = 3, 
-                             n.burnin = 1000, n.iter = 3000)
+                             n.burnin = 1000, n.iter = 5000)
 
 #' Compare the two posterior distributions (using different priors)
-MCMCplot(object = out.p, object2=out.p.vague, params=c("alpha", "beta.voc"), 
-         offset=0.1, main='Posterior Distributions')
+#' Blue = original priors, red = vague priors
+MCMCplot(object = out.p, object2=out.p.vague, params=c("alpha", "beta"), 
+         offset=0.1, main='Posterior Distributions', col = "blue", col2 = "red")
 
  
