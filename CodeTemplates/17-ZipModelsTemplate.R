@@ -89,11 +89,13 @@ summary(m.zip)
 
 #' Calculate the probability of a non-inflated zero (get to go fishing)
 #' when you have 3 children 
-1-plogis(coef(m.zip)[5]+  3*coef(m.zip)[6])
+
+
 
 #' Calculate the multiplicative effect on the mean number of fish 
 #' caught for every additional child in your party. 
-exp(coef(m.zip)[2]) 
+
+
 
 #' Calculate the expected number of fish caught if you:
 #' 
@@ -103,11 +105,8 @@ exp(coef(m.zip)[2])
 #'
 #' E[count] = P(not inflated)*E[Count | not inflated]
 #' 
-beta.hat<-coef(m.zip)
-(1-plogis(beta.hat[5]+3*beta.hat[6]))*exp(beta.hat[1]+
-                                            3*beta.hat[2]+
-                                            beta.hat[3]+
-                                            4*beta.hat[4])
+
+
 
 #' We can also use the predict function
 newdat<-data.frame(camper=1, child=3, persons=4)
@@ -165,84 +164,61 @@ jagsdata <- list(count=fish$count, child=fish$child,
                  persons=fish$persons, n=nrow(fish), 
                  I.fish=I.fish)
 
-#' JAGS zero-inflated Poisson model
-znb<-function(){
+
+#' JAGS zero-inflated poisson
+zp<-function(){
   
   # Priors for count model
   for(i in 1:4){
-    beta.c[i] ~ dnorm(0, 0.001) 
+    beta.c[i]~dnorm(0,0.001)
   }
   
   # Priors for zero-inflation model
   for(i in 1:2){
-    beta.zi[i] ~ dnorm(0, 1/3)
+    beta.zi[i]~dnorm(0,1/3)
   } 
-  
-  # Overdispersion parameter
-  theta ~ dunif(0, 100)
-  
+   
   # Likelihood
   for(i in 1:n){
-    # Zero-inflation part of the model
-    # Let psi = probability went fishing (not inflated zero) 
-    I.fish[i] ~ dbern(psi[i])
-    logit(psi[i]) <- beta.zi[1] + beta.zi[2]*child[i]
-     
-    # Count part of the model
-    # Let mu = mean given the party went fishing
-    # Let mu.eff = marginal (or unconditional) mean number of fish 
-    # caught(pooling data from those that fished or did not fish)
-    # mu.eff = mu*I.fish   
-    log(mu[i]) <- beta.c[1] + beta.c[2]*child[i] + beta.c[3]*camper[i] + 
-      beta.c[4]*persons[i]
-    mu.eff[i] <- mu[i]*I.fish[i]
-    p[i] <- theta/(theta+mu.eff[i])
-    count[i] ~ dnegbin(p[i],theta)
+    # zero-inflation part (logit prob NOT inflated 0, i.e., "went fishing"))  
+    I.fish[i]~ dbern(psi[i]) # NOt zero-inflated (i.e., "went fishing") 
+    logit(psi[i])<-beta.zi[1]+beta.zi[2]*child[i] 
     
-    # Mean and variances of the observations
-    # See https://grodri.github.io/glms/notes/countmoments or 
-    # Derive using:  Var(count) = E[var(count | z)] + Var[E(count|z)]
-    Ey[i]<-mu[i]*psi[i]  
-    Vary[i]<-psi[i]*(mu[i])*(1+mu[i]*(1-psi[i])) 
-    
-    # Generate "new" data
-    I.fish.new[i]~dbern(psi[i])
-    mu.eff.new[i]<-mu[i]*I.fish.new[i]
-    p.new[i] <- theta/(theta+mu.eff[i])
-    count.new[i]~dnegbin(p.new[i], theta)
-    
-    # Pearson residuals
-    presi[i]<-(count[i]-Ey[i])/sqrt(Vary[i]) # Pearson Resid
-    presi.new[i]<-(count.new[i]-Ey[i])/sqrt(Vary[i])
-    
-    # Discrepancy measures
-    D[i]<-pow(presi[i], 2)
-    D.new[i]<-pow(presi.new[i],2)
+    # Count part
+    log(lambda[i])<-beta.c[1]+beta.c[2]*child[i] + beta.c[3]*camper[i]+beta.c[4]*persons[i]
+    lambda.eff[i]<-lambda[i]*I.fish[i]
+    count[i]~dpois(lambda.eff[i])
   }
-  fit<-sum(D[])
-  fit.new<-sum(D.new[])
 }
 
-
+# Bundle data
+jagsdata <- list(count=fish$count, child=fish$child, 
+                 camper=as.numeric(fish$camper)-1, 
+                 persons=fish$persons,n=nrow(fish), 
+                 I.fish=I.fish )
 
 # Parameters to estimate
-params <- c("beta.zi", "beta.c", "Ey", "psi", "mu", "presi",
-            "presi.new", "fit", "fit.new", "theta", "I.fish")
+params <- c("beta.zi", "beta.c", "Ey", "psi", "lambda", "I.fish")
 
 # MCMC settings
 nc <- 3
-ni <- 15000
+ni <- 12000
 nb <- 4000
 nt <- 10
 
 # Start sampler 
-out.znb <- jags.parallel(data = jagsdata, parameters.to.save = params, 
-                         model.file = znb, n.thin = 10, n.chains = 3, n.burnin = 4000, 
+out.zp <- jags.parallel(data = jagsdata, parameters.to.save = params, 
+                         model.file = zp, n.thin = 10, n.chains = 3, n.burnin = 4000, 
                          n.iter= 15000)
-MCMCsummary(out.znb, params = c("beta.zi", "beta.c", "theta"))
+MCMCsummary(out.zp, params = c("beta.zi", "beta.c"))
 
 
+#' Plot output
+#+ out.width = "100%" 
+denplot(out.zp, parms=c("beta.zi", "beta.c"), ask=FALSE)
+traplot(out.zp, parms=c("beta.zi", "beta.c"), ask=FALSE)
 
+ 
 
 #' JAGS zero-inflated negative binomial model
 znb<-function(){
@@ -263,9 +239,9 @@ znb<-function(){
 # Likelihood
   for(i in 1:n){
   # zero-inflation part (logit prob NOT inflated 0, i.e., "went fishing"))  
+    I.fish[i]~ dbern(psi[i]) # NOt zero-inflated (i.e., "went fishing") 
     logit(psi[i])<-beta.zi[1]+beta.zi[2]*child[i] 
-    I.fish[i]~dbern(psi[i]) # NOt zero-inflated (i.e., "went fishing") 
-     
+    
   # Count part
     log.mu[i]<-beta.c[1]+beta.c[2]*child[i] + beta.c[3]*camper[i]+beta.c[4]*persons[i]
     mu[i]<-exp(log.mu[i])
