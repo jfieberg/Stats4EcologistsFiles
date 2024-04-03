@@ -82,7 +82,7 @@ data(fish)
 
 
 #' ## Zero-inflated Poisson 
-m.zip <- zeroinfl(count ~ child + camper +persons | child, 
+m.zip <- zeroinfl(count ~ child + camper + persons |  child, 
                   data = fish, dist="poisson")
 summary(m.zip)
 
@@ -93,7 +93,9 @@ summary(m.zip)
 
 
 #' Calculate the multiplicative effect on the mean number of fish 
-#' caught for every additional child in your party. 
+#' caught for every additional child in your party, given that you 
+#' went fishing. 
+
 
 
 
@@ -105,7 +107,7 @@ summary(m.zip)
 #'
 #' E[count] = P(not inflated)*E[Count | not inflated]
 #' 
-
+ 
 
 
 #' We can also use the predict function
@@ -155,14 +157,8 @@ mu*(1-phat) - predict(m.zinb, type = "response")
 #' ## Bayesian implementation 
 #' 
 #' First, create an indicator variable for "not inflated zero" (i.e., went fishing)
-I.fish<-rep(NA, nrow(fish))
+I.fish<-rep(NA, nrow(fish)) # These are our Zi's
 I.fish[fish$count>0]<-1 # these are Not inflated zeros
-
-# Bundle data
-jagsdata <- list(count=fish$count, child=fish$child, 
-                 camper=as.numeric(fish$camper)-1, 
-                 persons=fish$persons, n=nrow(fish), 
-                 I.fish=I.fish)
 
 
 #' JAGS zero-inflated poisson
@@ -175,7 +171,8 @@ zp<-function(){
   
   # Priors for zero-inflation model
   for(i in 1:2){
-    beta.zi[i]~dnorm(0,1/3)
+    #beta.zi[i]~dnorm(0,1/3)
+    beta.zi[i]~dnorm(0,0.001)
   } 
    
   # Likelihood
@@ -185,26 +182,21 @@ zp<-function(){
     logit(psi[i])<-beta.zi[1]+beta.zi[2]*child[i] 
     
     # Count part
+    count[i]~dpois(lambda.eff[i])
     log(lambda[i])<-beta.c[1]+beta.c[2]*child[i] + beta.c[3]*camper[i]+beta.c[4]*persons[i]
     lambda.eff[i]<-lambda[i]*I.fish[i]
-    count[i]~dpois(lambda.eff[i])
   }
 }
 
 # Bundle data
 jagsdata <- list(count=fish$count, child=fish$child, 
                  camper=as.numeric(fish$camper)-1, 
-                 persons=fish$persons,n=nrow(fish), 
-                 I.fish=I.fish )
+                 persons=fish$persons, n=nrow(fish), 
+                 I.fish=I.fish)
 
 # Parameters to estimate
-params <- c("beta.zi", "beta.c", "Ey", "psi", "lambda", "I.fish")
+params <- c("beta.zi", "beta.c", "psi", "lambda", "I.fish")
 
-# MCMC settings
-nc <- 3
-ni <- 12000
-nb <- 4000
-nt <- 10
 
 # Start sampler 
 out.zp <- jags.parallel(data = jagsdata, parameters.to.save = params, 
@@ -231,6 +223,7 @@ znb<-function(){
 # Priors for zero-inflation model
  for(i in 1:2){
    beta.zi[i]~dnorm(0,1/3)
+   #beta.zi[i]~dnorm(0,0.001)
  } 
   
 # Overdispersion parameter
