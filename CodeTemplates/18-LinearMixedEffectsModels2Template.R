@@ -32,7 +32,7 @@ library(performance) # for model diagnostics
 #' Load data sets
 #+warning=FALSE, message=FALSE 
 library(Data4Ecologists) # for data
-data("RIKZdatdat")
+data("RIKZdat")
 
 
 #' Note that NAP is a "level-1" covariate (it varies within each cluster),
@@ -51,55 +51,6 @@ ggplot(RIKZdat, aes(NAP, Richness, col=exposure.c)) +
   geom_smooth(method="lm", formula = y ~ x) +
   facet_wrap(~Beach)
 
-
-#' ## 2-Stage approach to constructing a mixed-model	
-#'
-#' Fit models to individual beaches  	
-RIKZdat$NAPc = RIKZdat$NAP-mean(RIKZdat$NAP) #center NAP variable	
-Beta<-matrix(NA, 9,2) # to hold slope and intercepts	
-Exposure<-matrix(NA,9,1) # to hold exposure level for each beach	
-for(i in 1:9){	
-  Mi<-lm(Richness~NAPc, data=subset(RIKZdat, Beach==i))	
-  Beta[i,]<-coef(Mi)	
-  Exposure[i]<-subset(RIKZdat, Beach==i)$exposure.c[1]	
-}	
-betadat <- data.frame(Beach = 1:9, 
-                      intercept = Beta[,1], 
-                      slope = Beta[,2], 
-                      exposure.c = Exposure)
-betadat
-
-#' Or, without a loop
-betadat2 <- RIKZdat %>% nest_by(Beach) %>%
-  mutate(mod = list(lm(Richness ~ NAPc, data = data))) %>%
-  dplyr::reframe(tidy(mod))
-betadat2 <- left_join(betadat2, unique(RIKZdat[,c("Beach", "exposure.c")]))
-betadat2
-
-#' Then translate to wide format
-betacoefswide <- betadat2 %>%
-  dplyr::select(Beach, estimate, exposure.c, term) %>%
-  pivot_wider(names_from = "term", values_from = "estimate") %>%
-  rename(intercept = `(Intercept)`, slope = "NAPc")
-
-#' Let's look at variability in the slopes and intercepts across beaches
-#+ fig.align='center', out.width= "100%" 
-ggplot(betadat2, aes(exposure.c, estimate)) + geom_point() + facet_wrap(~term)
-
-#' Translate to wide format and then fit statistical models relating
-#' beach-level parameters to beach-specific predictors
-betacoefswide <- betadat2 %>%
-  dplyr::select(Beach, estimate, exposure.c, term) %>%
-  pivot_wider(names_from = "term", values_from = "estimate") %>%
-  rename(intercept = `(Intercept)`, slope = "NAPc")
-
-
-#' Statistical models relating beach-specific parameters to Beach-specific predictors
-#' (i.e., level-2 predictors that are constant within each Beach)
-summary(lm(intercept ~ exposure.c, data = betadat))
-summary(lm(slope ~ exposure.c, data = betadat))
- 
-## -------------------------------------------------------------------
 
 #' ## LME4 models 
 #'

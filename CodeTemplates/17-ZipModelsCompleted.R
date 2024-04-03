@@ -92,7 +92,8 @@ summary(m.zip)
 1-plogis(coef(m.zip)[5]+  3*coef(m.zip)[6])
 
 #' Calculate the multiplicative effect on the mean number of fish 
-#' caught for every additional child in your party. 
+#' caught for every additional child in your party given that you
+#' went fishing. 
 exp(coef(m.zip)[2]) 
 
 #' Calculate the expected number of fish caught if you:
