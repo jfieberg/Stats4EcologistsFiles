@@ -32,7 +32,7 @@ library(performance) # for model diagnostics
 #' Load data sets
 #+warning=FALSE, message=FALSE 
 library(Data4Ecologists) # for data
-data("RIKZdatdat")
+data("RIKZdat")
 
 #' Only 1 beach has the lowest exposure level:  Recode exposure to have only 2 levels.	
 RIKZdat$exposure.c<-"High"	  
@@ -53,7 +53,7 @@ length(unique(RIKZdat$Beach))- 1 -1
 #' lodaed.
 #+ warning=FALSE, message=FALSE
 library(lmerTest)
-lmer.ri <- lmer( ) #lme4 package
+lmer.ri <- lmer(Richness ~ exposure.c + NAPc + (1|Beach), data=RIKZdat) #lme4 package
 summary(lmer.ri)
 summary(lmer.ri,  ddf = "Kenward-Roger")
 
@@ -65,7 +65,8 @@ anova(lmer.ri)
 #' Compare results for random intercept versus random slope model
 #' for predictors that do and do not vary withing a beach (exposure.c versus 
 #' NAPc) 
-lmer.rc <- lmer()
+lmer.rc <- lmer(Richness ~ exposure.c + NAPc + (1+NAPc | Beach), data=RIKZdat)
+summary(lmer.rc)
 
 #' Simulation-based likelihood ratio test
 lrsimtest <- pbkrtest::PBmodcomp(lmer.rc, lmer.ri, nsim = 500)
@@ -117,7 +118,7 @@ fixef(lmer.ri)
 
 ## -------------------------------------------------------------------------------------
 # Extract variance parameters from the random intercept model
-variancepars<-as.data.frame(VarCorr(lmer.ri))
+(variancepars<-as.data.frame(VarCorr(lmer.ri)))
 
 # rho calculated from random intercept model
 variancepars[1,4]/(variancepars[1,4]+variancepars[2,4])

@@ -75,7 +75,7 @@ summary(lmer.rc)
 #' The default is method = "profile" (profile likelihood). Other options
 #' are method = "boot" or method = "wald" (based on a Normal sampling
 #' distribution).
-confint(fit.mixed)
+confint(lmer.rc)
 
 
 ## -------------------------------------------------------------------

@@ -1,5 +1,5 @@
 #' ---
-#' title: "17-LinearMixedEffectsModels3.R"
+#' title: "17-LinearMixedEffectsModels4.R"
 #' author: "John Fieberg"
 #' output: 
 #'    html_document:
@@ -34,54 +34,49 @@ library(mcmcplots)# summarize JAGS output
 #' Load data sets
 #+warning=FALSE, message=FALSE 
 library(Data4Ecologists) # for data
-data("RIKZdatdat")
-
-lmer.ri <- lmer(Richness ~ NAPc + exposure.c + (1|Beach), data=RIKZdat)
+data("RIKZdat")
 
 #' Specify the model similar to lmer (in terms of betas and b's)
 #' How many priors do we need?
 
 jags.lme<-function(){   
   
-  # Distribution of the b's
-  for (i in 1:n.groups){        
-   b[i] ~ dnorm(0, taub)
+  # Priors for the b's
+  for (i in 1:9){        
+    b0[i] ~ dnorm(0, tau.b0)
   } 
   
   # Priors for the betas
-  beta0 ~ dnorm(0, 0.0001)
-  beta1 ~ dnorm(0, 0.0001)
-  beta2 ~ dnorm(0, 0.0001)
+  beta0 ~ dnorm(0, 0.001)
+  beta1 ~ dnorm(0, 0.001)
+  beta2 ~ dnorm(0, 0.001)
   
   # Priors for the variance parameters
-  sigmab ~ dunif(0, 5)
-  taub <-1/(pow(sigmab, 2))
-  
-  sigeps ~ dunif(0, 5)
-  taueps <- 1/(pow(sigeps, 2))
+  sigma ~ dunif(0, 10)
+  sigma.b0 ~ dunif(0, 10)
+  tau<-1/(sigma*sigma)
+  tau.b0 <- 1/(sigma.b0*sigma.b0)
   
   # Calculate site specific intercepts
-  for (i in 1:n.groups){        
-    Beach.int[i] <-beta0 + b[i]  
+  for (i in 1:9){        
+     gamma[i]<- beta0 + b0[i]
   } 
   
   # Likelihood  
   for (i in 1:nobs) {   
-    Richness[i] ~ dnorm(mu[i], taueps)
-    mu[i] <- beta0 +  b[Beach[i]] + beta1*NAPc[i] + beta2*exposure[i]
+    Richness[i] ~ dnorm(mu[i], tau)
+    mu[i] <- beta0 + b0[Beach[i]] + beta1*NAPc[i] 
   } 
 }
 
 # Bundle data   
-jags.data <- list(n.groups = length(unique(RIKZdat$Beach)), 
-                  nobs = nrow(RIKZdat), 
-                  Richness = RIKZdat$Richness, 
-                  NAPc = RIKZdat$NAPc,
-                  exposure = ifelse(RIKZdat$exposure.c=="High", 0, 1),
-                  Beach = as.numeric(RIKZdat$Beach))
+jags.data <- list(nobs = nrow(RIKZdat), 
+                  NAPc = as.numeric(scale(RIKZdat$NAP)), 
+                  Beach = RIKZdat$Beach, 
+                  Richness = RIKZdat$Richness)
 
 # Parameters to estimate    
-parameters <- c("beta0", "beta1", "beta2", "sigmab", "sigeps", "Beach.int")    
+parameters <- c("beta0", "beta1", "beta2", "sigma", "sigma.b0" )    
 
 
 # Start Gibbs sampling  
@@ -94,37 +89,40 @@ out.ri <- jags.parallel(data=jags.data,
 ## -------------------------------------------------------------------------------------
 
 #' Specify the model in terms of $\beta_{0i} = \beta_0 + b_{0i}$
-jags.lme.alt<-function(){   
+
+jags.lme<-function(){   
   
-  # Beach-level the intercepts   
-  for (i in 1:n.groups){        
-     Beach.int ~ dnorm(beta0, taub)
+  # Priors for the b's
+  for (i in 1:9){        
+    gamma[i] ~ dnorm(beta0, tau.b0)
   } 
   
   # Priors for the betas
-  beta0 ~ dnorm(0, 0.0001)
-  beta1 ~ dnorm(0, 0.0001)
-  beta2 ~ dnorm(0, 0.0001)
+  beta0 ~ dnorm(0, 0.001)
+  beta1 ~ dnorm(0, 0.001)
+  beta2 ~ dnorm(0, 0.001)
   
   # Priors for the variance parameters
-  sigmab ~ dunif(0, 5)
-  taub <-1/(pow(sigmab, 2))
-  
-  sigeps ~ dunif(0, 5)
-  taueps <- 1/(pow(sigeps, 2))
+  sigma ~ dunif(0, 10)
+  sigma.b0 ~ dunif(0, 10)
+  tau<-1/(sigma*sigma)
+  tau.b0 <- 1/(sigma.b0*sigma.b0)
   
   # Likelihood  
   for (i in 1:nobs) {   
-    Richness[i] ~ dnorm(mu[i], taueps)
-    mu[i] <- beta0 +  b[Beach[i]] + beta1*NAPc[i] + beta2*exposure[i]
+    Richness[i] ~ dnorm(mu[i], tau)
+    mu[i] <- gamma[Beach[i]] + beta1*NAPc[i] 
   } 
-}     
+}
 
 # Bundle data   
-jags.data <- list( )
+jags.data <- list(nobs = nrow(RIKZdat), 
+                  NAPc = as.numeric(scale(RIKZdat$NAP)), 
+                  Beach = RIKZdat$Beach, 
+                  Richness = RIKZdat$Richness)
 
 # Parameters to estimate    
-parameters <- c( )    
+parameters <- c("beta0", "beta1", "beta2", "sigma", "sigma.b0", "gamma" )    
 
 
 # Start Gibbs sampling  
@@ -132,6 +130,3 @@ out.ri <- jags.parallel(data=jags.data,
                         parameters.to.save=parameters, 
                         model=jags.lme, 
                         n.thin=1, n.chains=3, n.burnin=1000, n.iter=10000)   
-
-
-denplot(out.ri) 

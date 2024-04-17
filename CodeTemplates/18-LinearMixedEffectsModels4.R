@@ -34,7 +34,7 @@ library(mcmcplots)# summarize JAGS output
 #' Load data sets
 #+warning=FALSE, message=FALSE 
 library(Data4Ecologists) # for data
-data("RIKZdatdat")
+data("RIKZdat")
 
 #' Specify the model similar to lmer (in terms of betas and b's)
 #' How many priors do we need?
