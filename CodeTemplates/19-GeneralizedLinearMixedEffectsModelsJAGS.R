@@ -1,5 +1,5 @@
 #' ---
-#' title: "17-LinearMixedEffectsModelsJAGS.R"
+#' title: "19-GeneraizedLinearMixedEffectsModelsJAGS.R"
 #' author: "John Fieberg"
 #' output: 
 #'    html_document:
