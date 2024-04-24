@@ -158,8 +158,8 @@ grid.arrange(m1, m2, ncol = 2)
 pa.rate<-matrix(NA,10,1)  
 sigma2b0 <- as.data.frame(VarCorr(glmermod))[1, 4]
 for(i in 1:10){
-  intfun<-function(x){
-    plogis(fixef(glmermod)[1] + x + practice.num[i]*fixef(glmermod)[2])*dnorm(x,0,sqrt(sigma2b0))}
+  intfun<-function(b0){
+    plogis(fixef(glmermod)[1] + b0 + practice.num[i]*fixef(glmermod)[2])*dnorm(b0,0,sqrt(sigma2b0))}
   pa.rate[i]<-integrate(intfun,-Inf, Inf)[1]
 }              
 mdat4<-rbind(mdat2, 

@@ -1,5 +1,5 @@
 #' ---
-#' title: "19-LinearMixedEffectsModels2.R"
+#' title: "19-GeneralizedLinearMixedEffectsModels2.R"
 #' author: "John Fieberg"
 #' output: 
 #'    html_document:
@@ -38,10 +38,14 @@ RIKZdat$NAPc = RIKZdat$NAP-mean(RIKZdat$NAP) #center NAP variable
 #' Fit Poisson-Normal models using glmer to RIKZdat.
 #' First, fit the random intercept model
 glmer.ri <- glmer( ) #lme4 package
-summary(gmer.ri)
+summary(glmer.ri)
+
+# Expected species richness will decrease by a factor of 0.604 for every
+# 1 unit increase in NAP, holding Beach and Exposure constant.
+exp(-0.50383)
  
 #' Now, fit the random intercept and slope model
-glmer.rc <- glmer( ) #lme4 package
+glmer.rc <- glmer(Richness ~ ) 
 summary(glmer.rc)
 
 #' Check assumptions using the performance package
@@ -49,7 +53,8 @@ check_model(glmer.ri)
 check_model(glmer.rc)
 
 #' Fit negative binomial models using glmmTMB
-glmmtmb.ri <- glmmTMB(  , family = "nbinom2")
+glmmtmb.ri <- glmmTMB( , 
+                      data=RIKZdat, family = "nbinom2")
 summary(glmmtmb.ri)
 
 glmmtmb.rc <- glmmTMB(  , family = "nbinom2") 
