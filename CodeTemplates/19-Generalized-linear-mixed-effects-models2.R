@@ -1,5 +1,5 @@
 #' ---
-#' title: "17-LinearMixedEffectsModels2.R"
+#' title: "19-LinearMixedEffectsModels2.R"
 #' author: "John Fieberg"
 #' output: 
 #'    html_document:
@@ -38,7 +38,7 @@ RIKZdat$NAPc = RIKZdat$NAP-mean(RIKZdat$NAP) #center NAP variable
 #' Fit Poisson-Normal models using glmer to RIKZdat.
 #' First, fit the random intercept model
 glmer.ri <- glmer( ) #lme4 package
-summary(lmer.ri)
+summary(gmer.ri)
  
 #' Now, fit the random intercept and slope model
 glmer.rc <- glmer( ) #lme4 package
@@ -56,8 +56,8 @@ glmmtmb.rc <- glmmTMB(  , family = "nbinom2")
 summary(glmmtmb.ri)
 
 #' Check assumptions
-check_model(glmer.ri)
-check_model(glmer.rc)
+check_model(glmmtmb.ri)
+check_model(glmmtmb.rc)
 
 #' Compare using AIC
 AIC(glmer.ri, glmer.rc, glmmtmb.ri, glmmtmb.rc)
