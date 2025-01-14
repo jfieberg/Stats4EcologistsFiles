@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="L18_IntroMixedModels_files/libs/clipboard/clipboard.min.js"></script>
+<script src="L18_IntroMixedModels_files/libs/quarto-html/tabby.min.js"></script>
+<script src="L18_IntroMixedModels_files/libs/quarto-html/popper.min.js"></script>
+<script src="L18_IntroMixedModels_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="L18_IntroMixedModels_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="L18_IntroMixedModels_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="L18_IntroMixedModels_files/libs/quarto-html/quarto-syntax-highlighting-dark-8b864f0777c60eecff11d75b6b2e1175.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.33">
+
+  <meta name="author" content="FW8051 Statistics for Ecologists">
+  <title>Linear Mixed Effects Models</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="L18_IntroMixedModels_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="L18_IntroMixedModels_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+      }
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #f8f8f2;  }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #f8f8f2; } /* Normal */
+    code span.al { color: #f07178; background-color: #2a0f15; font-weight: bold; } /* Alert */
+    code span.an { color: #d4d0ab; } /* Annotation */
+    code span.at { color: #00e0e0; } /* Attribute */
+    code span.bn { color: #d4d0ab; } /* BaseN */
+    code span.bu { color: #abe338; } /* BuiltIn */
+    code span.cf { color: #ffa07a; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #abe338; } /* Char */
+    code span.cn { color: #ffd700; } /* Constant */
+    code span.co { color: #f8f8f2; font-style: italic; } /* Comment */
+    code span.cv { color: #ffd700; } /* CommentVar */
+    code span.do { color: #f8f8f2; } /* Documentation */
+    code span.dt { color: #ffa07a; } /* DataType */
+    code span.dv { color: #d4d0ab; } /* DecVal */
+    code span.er { color: #f07178; text-decoration: underline; } /* Error */
+    code span.ex { color: #00e0e0; font-weight: bold; } /* Extension */
+    code span.fl { color: #d4d0ab; } /* Float */
+    code span.fu { color: #ffa07a; } /* Function */
+    code span.im { color: #abe338; } /* Import */
+    code span.in { color: #d4d0ab; } /* Information */
+    code span.kw { color: #ffa07a; font-weight: bold; } /* Keyword */
+    code span.op { color: #ffa07a; } /* Operator */
+    code span.ot { color: #00e0e0; } /* Other */
+    code span.pp { color: #dcc6e0; } /* Preprocessor */
+    code span.re { color: #00e0e0; background-color: #f8f8f2; } /* RegionMarker */
+    code span.sc { color: #abe338; } /* SpecialChar */
+    code span.ss { color: #abe338; } /* SpecialString */
+    code span.st { color: #abe338; } /* String */
+    code span.va { color: #00e0e0; } /* Variable */
+    code span.vs { color: #abe338; } /* VerbatimString */
+    code span.wa { color: #dcc6e0; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="L18_IntroMixedModels_files/libs/revealjs/dist/theme/quarto-c89a7e063782379d64767b77f736f9e1.css">
+  <link href="L18_IntroMixedModels_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="L18_IntroMixedModels_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="L18_IntroMixedModels_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="L18_IntroMixedModels_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="L18_IntroMixedModels_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="L18_IntroMixedModels_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-dark">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Linear Mixed Effects Models</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+FW8051 Statistics for Ecologists 
+</div>
+</div>
+</div>
+
+</section>
+<section id="learning-objectives" class="slide level2" style="font-size: 80%;">
+<h2>Learning objectives</h2>
+<div>
+<ul>
+<li class="fragment"><p>Understand some relatively simple ways to deal with correlated data (bootstrap, Generalized Estimating Equations [later])</p></li>
+<li class="fragment"><p>Be able to identify when to use a mixed model</p></li>
+<li class="fragment"><p>Learn how to implement mixed models in R/JAGs when the response is Normally distributed (linear mixed effect models, lme)</p></li>
+<li class="fragment"><p>Be able to describe models and their assumptions using equations and text and match parameters in these equations to estimates in computer output.</p></li>
+</ul>
+</div>
+<div class="fragment">
+<p>Next chapter:</p>
+<div>
+<ul>
+<li class="fragment">Learn how to implement mixed models in R/JAGs for count, presence absence data (generalized linear mixed effect models, glmms)</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="selenium-and-fish" class="slide level2" style="font-size: 80%;">
+<h2>Selenium and Fish</h2>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Data4Ecologists) <span class="co"># for data</span></span>
+<span id="cb1-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Selake)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+
+<img data-src="L18_IntroMixedModels_files/figure-revealjs/unnamed-chunk-3-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:100.0%" alt="Left panel contains a scatterplot of log selenium in fish (y-axis) versus log selenium in water (x-axis). The points follow a linear relationship, but observations from the same lake tend to cluster on the same side of the regression line. This clustering is also present in aresiduals versus fitted values plot (right panel)."><p>Selenium, Se, a bi-product of burning coal is measured in…</p>
+<ul>
+<li>A set of 9 lakes</li>
+<li>1 to 34 fish in each lake (total of 83 observations)</li>
+</ul>
+<p>Goal: determine the relationship between mean (log) Se in lake and mean (log) Se in fish.</p>
+</section>
+<section id="selenium-example" class="slide level2">
+<h2>Selenium Example</h2>
+<p><em>What are the consequences of ignoring the fact that we have multiple observations from each lake?</em></p>
+<div class="fragment">
+<ul>
+<li>If we use linear regression (assuming independence), our SE’s will be too small (observations from the same lake are not independent)</li>
+</ul>
+</div>
+<div class="fragment">
+<p><em>What strategies might we use to analyze these data?</em></p>
+</div>
+<div class="fragment">
+<p>Note: our main question involves a predictor-response relationship in which the predictor is constant within each cluster or sample unit</p>
+</div>
+</section>
+<section id="selenium-example-1" class="slide level2">
+<h2>Selenium Example</h2>
+<p>Strategies:</p>
+<ul>
+<li>Fit a linear regression model, but use a cluster-level bootstrap for inference</li>
+</ul>
+<div class="fragment">
+<ul>
+<li>Calculate averages of <span class="math inline">\(Y\)</span> for each cluster, then fit linear regression models to these averages (will have 1 observation per cluster)</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Use a mixed model with a random intercept for each cluster (i.e., lake)</li>
+</ul>
+</div>
+<div class="fragment">
+<p>Lets do this!</p>
+<!---
+## 
+
+
+[\textit{Correlated Data: Folklore Theorem]{style="color:red;"}: regression parameter estimators will be unbiased, but standard errors  will be too small (if we assume data are independent) 
+...
+
+
+- Can use cluster-level bootstrap for inference
+- Generalized estimating equations (that treat clusters as independent sample units...more later) 
+...
+
+
+These above methods are most appropriate when:  
+
+- The degree of missingness (or amount of data for each cluster) is 'completely random' 
+...
+ (we don't have more data from lakes where Se seems to be having a bigger impact on fish)
+...
+
+- We are interested in the effects of covariates to do not vary within a cluster (rather than relationships within particular lakes) 
+...
+
+- Correlation is just a nuisance (we don't care about within-lake variability in Se measurements)  
+--->
+</div>
+</section>
+<section>
+<section id="mixed-models" class="title-slide slide level1 center">
+<h1>Mixed models</h1>
+
+</section>
+<section id="when-to-use-a-mixed-model" class="slide level2" style="font-size: 80%;">
+<h2>When to use a mixed model</h2>
+<p>When you have more than one measurement on the same observational unit</p>
+<div class="fragment">
+<ul>
+<li>Multiple observations per lake, animal, study site, etc.</li>
+</ul>
+</div>
+<div class="fragment">
+<p>Experiments or surveys with multiple sizes of sample units</p>
+</div>
+<div class="fragment">
+<ul>
+<li>Split-plot designs (treatments applied to whole plots and subplots)</li>
+<li>Cluster samples (samples of households, individuals within households)</li>
+</ul>
+</div>
+<div class="fragment">
+<p>When you want to generalize to a larger population of sample units</p>
+</div>
+<div class="fragment">
+<ul>
+<li><span style="color:red;">Fixed effects</span>: allow inference to only the sample units in the data set</li>
+<li><span style="color:red;">Random effects</span>: allow us to generalize to a population of sample units by assuming cluster-specific regression parameters come from a common distribution</li>
+</ul>
+</div>
+</section>
+<section id="multi-level-mixed-effects-or-hierarchical-models" class="slide level2" style="font-size: 75%;">
+<h2>Multi-level, Mixed Effects, or Hierarchical models</h2>
+<p>Key features:</p>
+<ul>
+<li>Regression parameters vary by cluster (e.g., population, individual animal, etc.)</li>
+</ul>
+<div class="fragment">
+<ul>
+<li>Regression parameters are assumed to come from a common probability distribution (usually Normal)</li>
+</ul>
+</div>
+<div class="fragment">
+<p>Why are they so popular:</p>
+<ul>
+<li>Many ecological data sets are hierarchically structured data (e.g., wolves in packs, populations)</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Allows partitioning variance into different components (e.g., variance among individuals, within-individuals)</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Provides a framework for modeling data where the independence assumption is violated</li>
+</ul>
+</div>
+</section>
+<section id="pines-data-book-example" class="slide level2" style="font-size: 80%;">
+<h2>Pines data (book example)</h2>
+<p>Study objective: investigate tradeoffs between growth rate, size, and lifespan of Mountain pines (Pinus montana) in Switzerland (Bigler, 2016).</p>
+<p>Is it better to grow quick but die young? Grow more slowly and live longer?</p>
+<p>Sample units:</p>
+<ul>
+<li>160 dead standing trees sampled at 20 sites</li>
+</ul>
+<p>Variables:</p>
+<ul>
+<li>dbh = diameter at breast height (size of tree)</li>
+<li>maximum age (i.e., lifespan)</li>
+<li>Aspect of study site</li>
+</ul>
+</section>
+<section id="rikzdat" class="slide level2" style="font-size: 80%;">
+<h2>RIKZdat</h2>
+<p>Sampling Effort:</p>
+<ul>
+<li>9 beaches (high, medium, low exposure)</li>
+<li>5 stations at each beach.</li>
+</ul>
+<p>Interest lies in modeling:</p>
+<ul>
+<li>Richness = species richness (number of species counted).</li>
+</ul>
+<p>Using macro-fauna and abiotic variables:</p>
+<ul>
+<li>Exposure = low or high exposure to waves, length of surf zone, slope, grain size, and depth of the anaerobic layer</li>
+<li>NAP = height of the sampling station compared to mean tidal level</li>
+</ul>
+</section>
+<section id="Mixed1" class="slide level2" data-menu-title="RIKZ sampling design" style="font-size: 80%;">
+<h2></h2>
+
+<img data-src="Graphics/RIKZ.jpg" class="quarto-figure quarto-figure-center r-stretch" style="width:100.0%" alt="Depiction of the sampling design for the RIKZ data, showing 5 beaches, with 5 sample sites at each beach."><p>Linear regression assumes that observations are independent. Is that reasonable in this case?</p>
+<div class="fragment">
+<ul>
+<li>2 observations from the same beach may be more alike than 2 observations taken from 2 different beaches.</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(\Rightarrow\)</span> observations from the same beach are likely correlated</li>
+</ul>
+</div>
+</section>
+<section id="multi-level-model" class="slide level2">
+<h2>Multi-level model</h2>
+<p>Think of models at 2 levels:</p>
+<ul>
+<li>Level 1: model the how individual observations vary within a cluster</li>
+</ul>
+<div class="fragment">
+<ul>
+<li>Level 2: model how (cluster-specific) parameters, in the level-1 model, vary (across clusters)</li>
+</ul>
+</div>
+</section>
+<section id="stage-multi-level-modeling-approach" class="slide level2">
+<h2>2-stage multi-level modeling approach</h2>
+<p>Stage 1 (level 1 model):</p>
+<ul>
+<li>Build a separate model for each cluster (beach)</li>
+<li>Only consider variables that are NOT constant within a cluster</li>
+</ul>
+<div class="fragment">
+<p>Stage 2 (level 2 model):</p>
+<ul>
+<li>Treat the coefficients from stage 1 as `data’</li>
+<li>Model the coefficients as a function of variables that are constant within a cluster</li>
+</ul>
+<p>Can be useful exploratory approach when you have lots of data for each cluster, but few clusters</p>
+</div>
+</section>
+<section id="rikzdat-1" class="slide level2">
+<h2>RIKZdat</h2>
+<p><code>NAP</code> is a “level-1” covariate (it varies within each cluster)</p>
+
+<img data-src="L18_IntroMixedModels_files/figure-revealjs/unnamed-chunk-5-1.png" class="quarto-figure quarto-figure-center r-stretch" alt="Boxplot of NAP values at each beach, show that NAP varies within a beach." width="960"></section>
+<section id="rikzdat-2" class="slide level2">
+<h2>RIKZdat</h2>
+<p><code>exposure</code> is a “level-2” covariate (it is constant within a cluster)</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">xtabs</span>(<span class="sc">~</span> exposure <span class="sc">+</span> Beach, <span class="at">data=</span>RIKZdat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        Beach
+exposure 1 2 3 4 5 6 7 8 9
+      8  0 5 0 0 0 0 0 0 0
+      10 5 0 0 0 5 0 0 5 5
+      11 0 0 5 5 0 5 5 0 0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Only 1 beach with lowest exposure level: modify to have 2 categories</span></span>
+<span id="cb4-2"><a href="" aria-hidden="true" tabindex="-1"></a>RIKZdat<span class="sc">$</span>exposure.c<span class="ot">&lt;-</span><span class="st">"High"</span></span>
+<span id="cb4-3"><a href="" aria-hidden="true" tabindex="-1"></a>RIKZdat<span class="sc">$</span>exposure.c[RIKZdat<span class="sc">$</span>exposure<span class="sc">%in%</span><span class="fu">c</span>(<span class="dv">8</span>,<span class="dv">10</span>)]<span class="ot">&lt;-</span><span class="st">"Low"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="stage-approach" class="slide level2" style="font-size: 80%;">
+<h2>2-Stage approach</h2>
+<p>Let <span class="math inline">\(R_{ij}\)</span> = the species richness for the <span class="math inline">\(j^{th}\)</span> sample on the <span class="math inline">\(i^{th}\)</span> beach (note: we now need two subscripts!)</p>
+<div class="fragment">
+<p><br></p>
+<p>Level 1 model: model for observations within each cluster (i.e., for each beach)</p>
+<p><span class="math inline">\(R_{ij} = \beta_{0i} + \beta_{1i}NAP_{ij} + \epsilon_{ij}\)</span>; (<span class="math inline">\(j = 1, 2, \ldots, 5\)</span> observations for each Beach)</p>
+<p><br></p>
+<p>Each beach has its own intercept <span class="math inline">\(\beta_{0i}\)</span> and slope <span class="math inline">\(\beta_{1i}\)</span></p>
+</div>
+</section>
+<section id="modified-r-code" class="slide level2" style="font-size: 80%;">
+<h2>Modified R code</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="" aria-hidden="true" tabindex="-1"></a>RIKZdat<span class="sc">$</span>NAPc <span class="ot">=</span> RIKZdat<span class="sc">$</span>NAP<span class="sc">-</span><span class="fu">mean</span>(RIKZdat<span class="sc">$</span>NAP) <span class="co">#center NAP variable   </span></span>
+<span id="cb5-2"><a href="" aria-hidden="true" tabindex="-1"></a>Beta<span class="ot">&lt;-</span><span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="dv">9</span>,<span class="dv">2</span>) <span class="co"># to hold slope and intercepts    </span></span>
+<span id="cb5-3"><a href="" aria-hidden="true" tabindex="-1"></a>Exposure<span class="ot">&lt;-</span><span class="fu">matrix</span>(<span class="cn">NA</span>,<span class="dv">9</span>,<span class="dv">1</span>) <span class="co"># to hold exposure level for each beach    </span></span>
+<span id="cb5-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>){  </span>
+<span id="cb5-5"><a href="" aria-hidden="true" tabindex="-1"></a>  Mi<span class="ot">&lt;-</span><span class="fu">lm</span>(Richness<span class="sc">~</span>NAPc, <span class="at">data=</span><span class="fu">subset</span>(RIKZdat, Beach<span class="sc">==</span>i)) </span>
+<span id="cb5-6"><a href="" aria-hidden="true" tabindex="-1"></a>  Beta[i,]<span class="ot">&lt;-</span><span class="fu">coef</span>(Mi)    </span>
+<span id="cb5-7"><a href="" aria-hidden="true" tabindex="-1"></a>  Exposure[i]<span class="ot">&lt;-</span><span class="fu">subset</span>(RIKZdat, Beach<span class="sc">==</span>i)<span class="sc">$</span>exposure.c[<span class="dv">1</span>]  </span>
+<span id="cb5-8"><a href="" aria-hidden="true" tabindex="-1"></a>}   </span>
+<span id="cb5-9"><a href="" aria-hidden="true" tabindex="-1"></a>betadat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Beach =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">intercept =</span> Beta[,<span class="dv">1</span>], </span>
+<span id="cb5-10"><a href="" aria-hidden="true" tabindex="-1"></a>                      <span class="at">slope =</span> Beta[,<span class="dv">2</span>], <span class="at">exposure.c =</span> Exposure)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note: I have centered the NAP variable</p>
+<ul>
+<li>Makes intercept more meaningful = <span class="math inline">\(R_{ij}\)</span> at the mean value of <code>NAP</code></li>
+<li>Helps avoid numerical problems and identifiability problems due to correlation of <span class="math inline">\(\hat{\beta}_{0i}\)</span> and <span class="math inline">\(\hat{\beta}_{1i}\)</span></li>
+</ul>
+</section>
+<section id="mixed4" class="slide level2" data-menu-title="Data frame of coef">
+<h2></h2>
+<p>This gives us a data frame of coefficients and level-2 predictors for a level-2 model:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="" aria-hidden="true" tabindex="-1"></a>betadat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Beach intercept      slope exposure.c
+1     1 10.692614 -0.3718279        Low
+2     2 11.893999 -4.1752712        Low
+3     3  2.790385 -1.7553529       High
+4     4  2.653600 -1.2485766       High
+5     5  9.688335 -8.9001779        Low
+6     6  3.841864 -1.3885120       High
+7     7  2.992969 -1.5176126       High
+8     8  4.293257 -1.8930665        Low
+9     9  5.263276 -2.9675304        Low</code></pre>
+</div>
+</div>
+<p>For a tidyverse solution - see book/R code.</p>
+</section>
+<section id="mixed5" class="slide level2" data-menu-title="Distribution of coefs">
+<h2></h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2); <span class="fu">library</span>(patchwork)</span>
+<span id="cb8-2"><a href="" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span><span class="fu">ggplot</span>(betadat, <span class="fu">aes</span>(exposure.c, intercept)) <span class="sc">+</span> <span class="fu">geom_point</span>() </span>
+<span id="cb8-3"><a href="" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span><span class="fu">ggplot</span>(betadat, <span class="fu">aes</span>(exposure.c, slope)) <span class="sc">+</span> <span class="fu">geom_point</span>() </span>
+<span id="cb8-4"><a href="" aria-hidden="true" tabindex="-1"></a>g1<span class="sc">+</span>g2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="L18_IntroMixedModels_files/figure-revealjs/unnamed-chunk-9-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:90.0%" alt="Dotplot showing individual estimates of the intercepts (left panel) and slopes (right panel) separately for low and high exposure beaches.  High exposure beaches have smaller (and less variable) intercepts. High exposure beaches also have less variable slopes but the means appear similar for low and high exposure beaches."></section>
+<section id="level-2-model" class="slide level2">
+<h2>Level-2 model</h2>
+<p>Model for the slope and intercept parameters (analyze the summary statistics, <span class="math inline">\(\hat{\beta}_{0i},  \hat{\beta}_{1i})\)</span> using level-2 predictors (ones that are constant within a cluster)</p>
+<ul>
+<li><span class="math inline">\(\hat{\beta}_{0i} = \beta_0 + \gamma_{0}Exposure_i+b_{0i}\)</span></li>
+<li><span class="math inline">\(\hat{\beta}_{1i} = \beta_1 + \gamma_{1}Exposure_i + b_{1i}\)</span></li>
+</ul>
+<p>For now, ignore the fact that the variability of <span class="math inline">\(b_{0i}, b_{1i}\)</span> seems to depend on exposure level (“low”, “high”).</p>
+</section>
+<section id="level-2-model-intercepts" class="slide level2">
+<h2>Level-2 Model: Intercepts</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(intercept <span class="sc">~</span> exposure.c, <span class="at">data =</span> betadat))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = intercept ~ exposure.c, data = betadat)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.0730 -0.4161 -0.0767  1.3220  3.5277 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)  
+(Intercept)      3.070      1.291   2.378   0.0491 *
+exposure.cLow    5.297      1.732   3.058   0.0184 *
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.582 on 7 degrees of freedom
+Multiple R-squared:  0.5719,    Adjusted R-squared:  0.5107 
+F-statistic: 9.349 on 1 and 7 DF,  p-value: 0.01838</code></pre>
+</div>
+</div>
+</section>
+<section id="level-2-model-slopes" class="slide level2">
+<h2>Level-2 Model: Slopes</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(slope <span class="sc">~</span> exposure.c, <span class="at">data =</span> betadat))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = slope ~ exposure.c, data = betadat)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-5.2386 -0.2778  0.0890  0.6940  3.2897 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)
+(Intercept)     -1.478      1.229  -1.202    0.268
+exposure.cLow   -2.184      1.649  -1.325    0.227
+
+Residual standard error: 2.458 on 7 degrees of freedom
+Multiple R-squared:  0.2005,    Adjusted R-squared:  0.08625 
+F-statistic: 1.755 on 1 and 7 DF,  p-value: 0.2268</code></pre>
+</div>
+</div>
+</section>
+<section id="putting-things-together-composite-equation" class="slide level2" style="font-size: 75%;">
+<h2>Putting things together: Composite Equation</h2>
+<p>Level-1 Model:</p>
+<ul>
+<li><span class="math inline">\(R_{ij} = \beta_{0i} + \beta_{1i}NAP_{ij} + \epsilon_{ij}\)</span></li>
+</ul>
+<p>Level-2 Model:</p>
+<ul>
+<li><span class="math inline">\(\beta_{0i} = \beta_0 + \gamma_{0}Exposure_i+b_{0i}\)</span></li>
+<li><span class="math inline">\(\beta_{1i} = \beta_1 + b_{1i}\)</span></li>
+</ul>
+<div class="fragment">
+<p>Substitute into level-1 equation to get the <em>composite equation</em></p>
+<p><span class="math display">\[R_{ij} = (\beta_0 + \gamma_{0}Exposure_i+b_{0i}) + (\beta_1+b_{1i})NAP_{ij} + \epsilon_{ij}\]</span></p>
+</div>
+<div class="fragment">
+<p><span class="math display">\[R_{ij} = (\beta_0 + b_{0i}) + (\beta_1+b_{1i})NAP_{ij} +  \gamma_0Exposure_{i}  + \epsilon_{ij}\]</span></p>
+</div>
+<div class="fragment">
+<p><span class="math inline">\(\Rightarrow\)</span> <em>random intercepts and slopes model</em> (or <em>random coefficients</em> model)</p>
+</div>
+</section>
+<section id="mixed-models-1" class="slide level2 smaller">
+<h2>Mixed Models</h2>
+<p>Rather than use a 2-stage approach, we could just posit a model for the data using random and fixed effects.</p>
+<p><strong>Random Intercepts Model</strong>:</p>
+<p><span class="math display">\[R_{ij} = \beta_0 + b_{0i}+  \beta_1NAP_{ij}   + \beta_2Exposure_i + \epsilon_{ij}\]</span> <span class="math display">\[b_{0i} \sim N(0,\tau^2)\]</span> <span class="math display">\[\epsilon_{ij} \sim N(0, \sigma^2)\]</span></p>
+<div class="fragment">
+<p><strong>Random Intercepts and Slopes Model</strong>:</p>
+<p><span class="math display">\[R_{ij} = (\beta_0 + b_{0i}) + (\beta_1+b_{1i})NAP_{ij} +  \beta_2Exposure_{i}  + \epsilon_{ij}\]</span> <span class="math display">\[(b_{0i}, b_{1i}) \sim N(0,D)\]</span> <span class="math display">\[\epsilon_{ij} \sim N(0, \sigma^2)\]</span></p>
+</div>
+</section>
+<section id="mixed6" class="slide level2 smaller" data-menu-title="Model specification">
+<h2></h2>
+<p><strong>Random Intercepts and Slopes Model</strong>:</p>
+<p><span class="math display">\[R_{ij} = (\beta_0 + b_{0i}) + (\beta_1+b_{1i})NAP_{ij} +  \beta_2Exposure_{i}  + \epsilon_{ij}\]</span> <span class="math display">\[(b_{0i}, b_{1i}) \sim N(0,D)\]</span> <span class="math display">\[\epsilon_{ij} \sim N(0, \sigma^2)\]</span></p>
+<p>We can think of <span class="math inline">\(b_{0i}\)</span> and <span class="math inline">\(b_{1i}\)</span> as deviations from the average intercept (<span class="math inline">\(\beta_0\)</span>) and slope (<span class="math inline">\(\beta_1\)</span>), respectively.</p>
+<div class="fragment">
+<p><br></p>
+<p>Or, we can think in terms of beach-level intercepts and slopes:</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li><span class="math inline">\(\beta_{0i}=\beta_0+b_{0i}\)</span></li>
+<li><span class="math inline">\(\beta_{1i}=\beta_1 + b_{1i}\)</span>, with</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<ul>
+<li><span class="math inline">\((\beta_{0i}, \beta_{1i}) \sim MVN(\beta, D)\)</span>, with <span class="math inline">\(\beta = \begin{bmatrix}
+\beta_0\\
+\beta_1
+\end{bmatrix}\)</span></li>
+</ul>
+</div></div>
+</div>
+<div class="fragment">
+<p><span class="math display">\[R_{ij} = (\beta_{0i}) + (\beta_{1i})NAP_{ij} +  \beta_2Exposure_{i}  + \epsilon_{ij}\]</span> <!---
+## Linear Mixed Effects Models
+
+
+
+Let $Y_i$ be a vector of observations for subject $i$
+
+$$Y_{i} = X_{i}\beta + z_ib + \epsilon_{i}$$
+$$\epsilon_i \sim N(0, \Sigma_i)$$
+$$b \sim N(0, D)$$\\
+$b_1, ..., b_N, \epsilon_1, ..., \epsilon_N$ independent
+  
+
+- Fixed effects: $\beta$
+- Random effects: $b$
+- Variance components: elements in $\Sigma_i$, D 
+
+[ Hierarchical Model]{style="color:red;"}
+
+- $Y_i | b \sim N(X_{i}\beta + z_ib, \Sigma_i)$ (model for data from subject $i$, given $b$)
+- $b \sim N(0,D)$ (model for $b$)
+
+---></p>
+</div>
+</section>
+<section id="fitting-mixed-effects-models-in-r" class="slide level2" style="font-size: 80%;">
+<h2>Fitting Mixed Effects Models in R</h2>
+<p>Two popular packages: <code>nlme</code> and <code>lme4</code>:</p>
+<p><code>nlme</code> (older)</p>
+<ul>
+<li>More flexibility for modeling within-cluster correlation and heterogeneity (e.g., time series data, spatial data), but slowly being replaced by other options (e.g., <code>glmmTMB</code>, <code>INLA</code>);<br>
+</li>
+<li>Responses must be Normally distributed</li>
+</ul>
+<div class="fragment">
+<p><code>lme4</code> (newer)</p>
+<ul>
+<li>Better options for fitting non-normal data: generalized linear mixed effects models [GLMMS] for count or binary data<br>
+</li>
+<li>Easier to fit non-nested or ‘crossed’ random effects (e.g., <code>year</code> and <code>Beach</code> if we had many years of data).<br>
+</li>
+<li>Cannot handle within-cluster correlation or heterogeneity</li>
+</ul>
+</div>
+</section>
+<section id="other-packages" class="slide level2">
+<h2>Other Packages</h2>
+<p>Many others too…see <a href="http://glmm.wikidot.com/pkg-comparison">glmm wikidot</a></p>
+<p>Two others that we will consider:</p>
+<ul>
+<li>glmmTMB</li>
+<li>GLMMadaptive</li>
+</ul>
+<p>For now, let’s fit the random intercept and random intercept and slope models using the <code>lmer</code> function in the <code>lme4</code> package!</p>
+</section>
+<section id="mixed7" class="slide level2" data-menu-title="Random intercepts">
+<h2></h2>
+<p><strong>Random Intercepts Model</strong>:</p>
+<p><span class="math display">\[R_{ij} = \beta_0 + b_{0i}+  \beta_1NAP_{ij}   + \beta_2Exposure_i + \epsilon_{ij}\]</span> <span class="math display">\[b_{0i} \sim N(0,\tau^2)\]</span> <span class="math display">\[\epsilon_{ij} \sim N(0, \sigma^2)\]</span></p>
+<p>Fit this model in R using <code>lmer</code> and identify <span class="math inline">\(\hat{\beta}_0\)</span>, <span class="math inline">\(\hat{\beta}_1\)</span>, <span class="math inline">\(\hat{\sigma}\)</span>, <span class="math inline">\(\hat{\tau}\)</span>!</p>
+</section>
+<section id="mixed8" class="slide level2" data-menu-title="Random slopes" style="font-size: 80%;">
+<h2></h2>
+<p><strong>Random Intercepts and Slopes Model</strong>:</p>
+<p><span class="math display">\[R_{ij} = (\beta_0 + b_{0i}) + (\beta_1+b_{1i})NAP_{ij} +  \beta_2Exposure_{i}  + \epsilon_{ij}\]</span> <span class="math display">\[(b_{0i}, b_{1i}) \sim N(0,D)\]</span></p>
+<p><span class="math display">\[D = \begin{bmatrix}
+    var(b_{0i}) &amp; cov(b_{0i},b_{1i}) \\
+    cov(b_{0i},b_{1i}) &amp; var(b_{1,i})
+  \end{bmatrix}\]</span></p>
+<p>Fit this model in R and identify the different parameters:</p>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(var(\epsilon_{ij}) = \sigma^2\)</span> = 6.50 (variance within a Beach)</li>
+<li><span class="math inline">\(var(b_{0i})  = 4.750\)</span> (variance among beach intercepts)</li>
+<li><span class="math inline">\(var(b_{1i})  = 3.567\)</span> (variance among beach slopes)</li>
+<li>Cor<span class="math inline">\((b_{0i}, b_{1i}) = \frac{Cov(b_{0i}, b_{1i})}{\sqrt{var(b_{0i})var(b_{1i})}} = -0.557\)</span></li>
+</ul>
+</div>
+</section>
+<section id="cluster-specific-parameters" class="slide level2" style="font-size: 75%;">
+<h2>Cluster-specific parameters</h2>
+<ul>
+<li>We estimate <span class="math inline">\(\tau^2\)</span>, not the individual <span class="math inline">\(b_{0i}\)</span></li>
+</ul>
+<div class="fragment">
+<ul>
+<li>Since the <span class="math inline">\(b_{0i}\)</span> are assumed to be “random”, we “predict” them (similar to “estimating” errors, <span class="math inline">\(\epsilon_i\)</span> using residuals)</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>BLUPS = best linear unbiased predictions (see Book section 18.8 for details on how they are calculated).</li>
+</ul>
+</div>
+<div class="fragment">
+<p>If you are a Bayesian, you can ignore the distinction between “prediction” and “estimation”…ALL parameters are random variables!</p>
+</div>
+</section>
+<section id="fixed-versus-random-comparison" class="slide level2">
+<h2>Fixed versus Random Comparison</h2>
+<p>Each beach also has its own intercept. What if we modeled <code>Beach</code> using fixed effects? . . .</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="" aria-hidden="true" tabindex="-1"></a>lm.fe <span class="ot">&lt;-</span> <span class="fu">lm</span>(Richness<span class="sc">~</span><span class="fu">factor</span>(Beach)<span class="sc">-</span><span class="dv">1</span><span class="sc">+</span>NAPc, <span class="at">data=</span>RIKZdat)</span>
+<span id="cb13-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm.fe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Richness ~ factor(Beach) - 1 + NAPc, data = RIKZdat)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.8518 -1.5188 -0.1376  0.7905 11.8384 
+
+Coefficients:
+               Estimate Std. Error t value Pr(&gt;|t|)    
+factor(Beach)1   8.9392     1.4301   6.251 3.61e-07 ***
+factor(Beach)2  12.0173     1.3690   8.778 2.29e-10 ***
+factor(Beach)3   2.5343     1.3796   1.837 0.074716 .  
+factor(Beach)4   2.9063     1.3723   2.118 0.041364 *  
+factor(Beach)5   8.0409     1.3746   5.850 1.22e-06 ***
+factor(Beach)6   3.7161     1.3697   2.713 0.010271 *  
+factor(Beach)7   3.5025     1.3934   2.514 0.016705 *  
+factor(Beach)8   4.3862     1.3707   3.200 0.002920 ** 
+factor(Beach)9   5.1572     1.3731   3.756 0.000629 ***
+NAPc            -2.4928     0.5023  -4.963 1.79e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.06 on 35 degrees of freedom
+Multiple R-squared:  0.8719,    Adjusted R-squared:  0.8353 
+F-statistic: 23.82 on 10 and 35 DF,  p-value: 9.56e-13</code></pre>
+</div>
+</div>
+</section>
+<section id="fixed-versus-random" class="slide level2" style="font-size: 80%;">
+<h2>Fixed versus random</h2>
+<p>Fixed effects:</p>
+<ul>
+<li>lm.fe &lt;- lm(Richness~factor(Beach)-1+NAPc, data=RIKZdat)</li>
+<li>Each beach has its own intercept which we estimate</li>
+</ul>
+<div class="fragment">
+<p>Random effects:</p>
+<ul>
+<li>lme.fit&lt;-lme(Richness~NAPc+exposure.c + (1|Beach), data=RIKZdat)</li>
+<li>Each beach has its own intercept</li>
+<li>We further assume <span class="math inline">\(\beta_i \sim N(\beta, \sigma^2_{b_{oi}})\)</span> or equivalently <span class="math inline">\(b_{oi}\sim N(0, \sigma^2_{b_{oi}})\)</span></li>
+<li>we estimate the variance of the intercepts and “predict” the beach-level intercepts</li>
+</ul>
+</div>
+</section>
+<section id="downsides-to-fixed-effects-model" class="slide level2 smaller">
+<h2>Downsides to fixed effects model</h2>
+<ul>
+<li>Requires estimation of 8 parameters</li>
+</ul>
+<div class="fragment">
+<ul>
+<li>Cannot include <code>exposure.c</code> since it is constant for each Beach (and therefore, confounded with the Beach coefficients)</li>
+</ul>
+</div>
+<div class="fragment">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="" aria-hidden="true" tabindex="-1"></a>lm.fe2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Richness<span class="sc">~</span><span class="fu">factor</span>(Beach)<span class="sc">-</span><span class="dv">1</span><span class="sc">+</span>NAPc<span class="sc">+</span>exposure.c, <span class="at">data=</span>RIKZdat)</span>
+<span id="cb15-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(lm.fe2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>factor(Beach)1 factor(Beach)2 factor(Beach)3 factor(Beach)4 factor(Beach)5 
+      8.939200      12.017303       2.534266       2.906323       8.040936 
+factor(Beach)6 factor(Beach)7 factor(Beach)8 factor(Beach)9           NAPc 
+      3.716094       3.502535       4.386168       5.157177      -2.492836 
+ exposure.cLow 
+            NA </code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<ul>
+<li>Random coefficients would require interactions between <code>Beach</code> and <code>NAP</code> (another 8 parameters)</li>
+</ul>
+</div>
+</section>
+<section id="shrinkage-demonstration-in-r" class="slide level2" style="font-size: 80%;">
+<h2>Shrinkage (demonstration in R!)</h2>
+
+<img data-src="Graphics/shrink.jpg" class="quarto-figure quarto-figure-center r-stretch" style="width:60.0%" alt="Demonstration of shrinkage.  Cluster-specific parameters are assume to come from a common normal distribution. Cluster-specific estimates get &quot;shrunk&quot; towards the overall population mean, with those estimates that have the most uncertainty or that are farthest from the population mean exhibiting the most shrinkage."><p>Shrinkage depends on:</p>
+<ul>
+<li>how variable the coefficients are across clusters</li>
+<li>the degree of uncertainty associated with individual estimates</li>
+</ul>
+</section>
+<section id="predicted-values" class="slide level2" style="font-size: 60%;">
+<h2>Predicted values</h2>
+<p><span class="math display">\[R_{ij}|b_i \sim N(\mu_i, \sigma^2)\]</span> <span class="math display">\[\mu_i = (\beta_0 + b_{0i}) + (\beta_1+b_{1i})NAP_{ij} +  \beta_2Exposure_{i}\]</span> <span class="math display">\[b_i = (b_{0i}, b_{1i}) \sim N(0, D) \text{ with}\]</span> <span class="math display">\[D = \begin{bmatrix}
+    var(b_{0i}) &amp; cov(b_{0i},b_{1i}) \\
+    cov(b_{0i},b_{1i}) &amp; var(b_{1,i})
+  \end{bmatrix}\]</span></p>
+<div class="fragment">
+<p><strong>Subject-Specific</strong> (lines for a particular beach):</p>
+<ul>
+<li><span class="math inline">\(E[R_{ij} | X_{ij}, b_{i}] = \mu_i = \beta_0 + b_{0i} + (\beta_1 + b_{1i})NAP + \beta_2\)</span>(exposure=“LOW”)</li>
+</ul>
+</div>
+<div class="fragment">
+<p><strong>Subject-Specific</strong> (line for a “typical” beach with <span class="math inline">\(b_{0i} = b_{1i} = 0)\)</span>:</p>
+<ul>
+<li><span class="math inline">\(E[R_{ij} | X_{ij}, b_{i}] = \beta_0  + \beta_1NAP + \beta_2\)</span>(exposure=“LOW”)</li>
+</ul>
+</div>
+<div class="fragment">
+<p><strong>Population Average</strong> (averages over beaches):</p>
+<ul>
+<li><span class="math inline">\(E[R_{ij} | X_{ij}] = E(E[R_{ij} | X_{ij}, b_{i}])) = \beta_0 + \beta_1NAP + \beta_2(exposure="low")\)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<p>R for a demonstration!</p>
+</div>
+</section>
+<section id="diagnostics" class="slide level2" style="font-size: 80%;">
+<h2>Diagnostics</h2>
+<p><strong>Random Intercepts and Slopes Model</strong>:</p>
+<p><span class="math display">\[R_{ij} = (\beta_0 + b_{0i}) + (\beta_1+b_{1i})NAP_{ij} +  \beta_2Exposure_{i}  + \epsilon_{ij}\]</span> <span class="math inline">\((b_{0i}, b_{1i}) \sim N(0,D)\)</span>$</p>
+<p>What are our assumptions?</p>
+<div class="fragment">
+<ol type="1">
+<li>Linearity: <span class="math inline">\(E[Richness|NAP, Exposure]= \beta_0+\beta_1NAP+ \beta_pExposure\)</span></li>
+<li>Residuals are Normally distributed with constant variance: <span class="math inline">\(\epsilon_{ij} \sim N(0, \sigma^2_{\epsilon})\)</span></li>
+</ol>
+</div>
+<div class="fragment">
+<ol start="3" type="1">
+<li>Beaches are independent</li>
+</ol>
+</div>
+<div class="fragment">
+<ol start="3" type="1">
+<li><span class="math inline">\((b_{0i}, b_{1i}) \sim MVN(0, D)\)</span>, independent of <span class="math inline">\(\epsilon_{ij}\)</span></li>
+</ol>
+</div>
+</section>
+<section id="diagnostic-plots" class="slide level2" style="font-size: 80%;">
+<h2>Diagnostic plots</h2>
+<ul>
+<li>Default plot method: plot of within beach residuals, <span class="math inline">\(\hat{\epsilon_{ij}}\)</span> versus beach-level predictions <span class="math inline">\({\hat{R}_{ij}} = \hat{\beta}_0 + \hat{b}_{0i} + (\hat{\beta}_1+\hat{b}_{1i})NAP + \hat{\beta}_2(exposure=low)\)</span></li>
+</ul>
+<div class="fragment">
+<ul>
+<li><p><code>check_model</code> function offers many more checks</p>
+<ul>
+<li>QQplots to evaluate Normality of residuals</li>
+<li>QQplots to evaluate Normality of the random effects</li>
+<li>Residual versus fitted values and scale-location plot for constant variance</li>
+<li>Posterior predictive checks</li>
+<li>Collinearity, influential observation</li>
+</ul></li>
+</ul>
+<p>See R for a demonstration!</p>
+</div>
+</section>
+<section id="degrees-of-freedom-lme" class="slide level2">
+<h2>Degrees of Freedom (lme)</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nlme)</span>
+<span id="cb17-2"><a href="" aria-hidden="true" tabindex="-1"></a>lme.fit<span class="ot">&lt;-</span><span class="fu">lme</span>(Richness<span class="sc">~</span>NAPc<span class="sc">+</span>exposure.c, <span class="at">random=</span><span class="sc">~</span><span class="dv">1</span><span class="sc">|</span>Beach, <span class="at">data=</span>RIKZdat)</span>
+<span id="cb17-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lme.fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed-effects model fit by REML
+  Data: RIKZdat 
+       AIC      BIC    logLik
+  240.5538 249.2422 -115.2769
+
+Random effects:
+ Formula: ~1 | Beach
+        (Intercept) Residual
+StdDev:    1.907175 3.059089
+
+Fixed effects:  Richness ~ NAPc + exposure.c 
+                  Value Std.Error DF   t-value p-value
+(Intercept)    3.170680 1.1739987 35  2.700752  0.0106
+NAPc          -2.581708 0.4883901 35 -5.286160  0.0000
+exposure.cLow  4.532777 1.5755610  7  2.876929  0.0238
+ Correlation: 
+              (Intr) NAPc  
+NAPc          -0.028       
+exposure.cLow -0.746  0.037
+
+Standardized Within-Group Residuals:
+       Min         Q1        Med         Q3        Max 
+-1.5163203 -0.4815106 -0.1218700  0.2922854  3.8777562 
+
+Number of Observations: 45
+Number of Groups: 9 </code></pre>
+</div>
+</div>
+</section>
+<section id="Mixed10" class="slide level2" data-menu-title="Degrees of freedom" style="font-size: 80%;">
+<h2></h2>
+<p>Degrees of Freedom (differ for level-1 and level-2 predictors):</p>
+<ul>
+<li><code>NAPc</code> = 35<br>
+</li>
+<li><code>exposure.cLow</code> = 7</li>
+</ul>
+<p>Level-1: within-subjects degrees of freedom calculated as the number of observations minus the number of groups minus the number of level-1 regressors in the model.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(RIKZdat) <span class="sc">-</span> <span class="fu">length</span>(<span class="fu">unique</span>(RIKZdat<span class="sc">$</span>Beach))<span class="sc">-</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 35</code></pre>
+</div>
+</div>
+<div class="fragment">
+<p>Level-2: among-subjects degrees of freedom calculated as the number of groups minus the number of level-2 regressors in the model - 1 for the intercept.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(RIKZdat<span class="sc">$</span>Beach))<span class="sc">-</span> <span class="dv">1</span> <span class="sc">-</span><span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="degrees-of-freedom" class="slide level2">
+<h2>Degrees of Freedom</h2>
+<p>The formula are not important….what is:</p>
+<div class="fragment">
+<ul>
+<li>we have more information about the effect of <code>NAP</code> on species richness than <code>exposure</code> since <code>NAP</code> varies between and within beaches.</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li><code>lme</code> accounts for the data structure when carrying out statistical tests.</li>
+</ul>
+</div>
+</section>
+<section id="degrees-of-freedom-more-accurately" class="slide level2">
+<h2>Degrees of Freedom: More accurately</h2>
+<p>Note: <code>lme</code>’s df are essentially correct for <span style="color:red;">balanced data</span> (all clusters have an equal number of observations). For unbalanced data, the tests (and df) are only approximate.</p>
+<div class="fragment">
+<ul>
+<li>thus, a decision was made to NOT report p-values for models fit with <code>lmer</code> in <code>lme4</code></li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>there are “better” degrees of freedom approximations for unbalanced data (see, e.g., <code>lmerTest</code> package and Section 18.12.3 of the book and R code).</li>
+</ul>
+</div>
+</section></section>
+<section>
+<section id="model-selectionmodel-building-strategies" class="title-slide slide level1 center">
+<h1>Model Selection/Model Building Strategies</h1>
+
+</section>
+<section id="comparing-the-2-models" class="slide level2" style="font-size: 80%;">
+<h2>Comparing the 2 Models</h2>
+<p>AIC comparisons and likelihood ratio tests are complicated by the fact that the variance parameter is “on the boundary”</p>
+<p>See <a href="https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#testing-significance-of-random-effects">Bolker’s FAQ</a></p>
+<div class="fragment">
+<p>Number of parameters for calculating AIC also depends on focus (on individual subjects or population)</p>
+<p>See <a href="http://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#can-i-use-aic-for-mixed-models-how-do-i-count-the-number-of-degrees-of-freedom-for-a-random-effect">Bolker’s FAQ</a></p>
+</div>
+</section>
+<section id="simulation-based-testing" class="slide level2" style="font-size: 80%;">
+<h2>Simulation-based testing</h2>
+<p>See <code>LectureMixedMods.Rmd</code> for an option, or have a look at the <code>RLRsim</code> or <code>pbkrtest</code> packages for simulation-based alternatives.</p>
+<div class="fragment">
+<p>For nested models, generate a null distribution for likelihood ratio test statistic = - 2(LogL(model1)-LogL(model2)).</p>
+<ul>
+<li>Simulate data from the simpler model</li>
+<li>Fit both models to the simulated data</li>
+<li>Calculate the likelihood ratio statistic</li>
+<li>Repeat many times.</li>
+</ul>
+</div>
+<div class="fragment">
+<p>p-value = proportion of simulated observations that are as extreme, or more extreme than the likelihood ratio statistic calculated using the observed data.</p>
+</div>
+</section>
+<section id="reml-versus-ml" class="slide level2" style="font-size: 75%;">
+<h2>REML versus ML</h2>
+<p>REML = Restricted Maximum Likelihood (usual default method)</p>
+<div class="fragment">
+<ul>
+<li>Variance components estimated using ML are biased high, REML nearly unbiased</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>REML maximizes a modified form of the likelihood that depends on the fixed effects components</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Comparisons of models with different fixed effects are not valid when using REML</li>
+</ul>
+</div>
+<div class="fragment">
+<p><em>General Recommendation</em></p>
+<ul>
+<li>Determine random effects structure by comparing models fit using REML (all w/ the same fixed effects)</li>
+<li>Then, test fixed effects structure using models fit using ML (keeping random effects the same)</li>
+</ul>
+</div>
+</section>
+<section id="zuurs-modeling-strategy" class="slide level2" style="font-size: 80%;">
+<h2>Zuur’s Modeling Strategy</h2>
+<p>Fixed and random effects can “compete” to explain patterns in your response variable… . . .</p>
+<ol type="1">
+<li>Start with as many covariates in the fixed component as possible</li>
+</ol>
+<div class="fragment">
+<ol start="2" type="1">
+<li>Compare models with different random effects structures (via AIC, LR tests). Use method = “REML” and keep fixed component constant.</li>
+</ol>
+</div>
+<div class="fragment">
+<ol start="3" type="1">
+<li>Compare fixed effects models (using AIC, LR tests) using the random structure from step [2]. Use method = “ML”and keep random component constant.</li>
+</ol>
+</div>
+<div class="fragment">
+<ol start="4" type="1">
+<li>Refit the ‘best’ model from step [4] using method = “REML”.</li>
+</ol>
+</div>
+<div class="fragment">
+<ol start="5" type="1">
+<li>Look at diagnostic plots, and modify model as needed</li>
+</ol>
+</div>
+</section>
+<section id="mixedstrat" class="slide level2" data-menu-title="Mixed modeling strategy" style="font-size: 60%;  code-font-size=60%;">
+<h2></h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<ul>
+<li>Pooled model (assuming independence), include level-1 predictors (predictors that vary within clusters)
+<ul>
+<li><code>lm(y ~ x1)</code></li>
+</ul></li>
+<li>Unconditional means model or variance components model (no predictors, just random intercepts)
+<ul>
+<li><code>lmer(y ~ 1 + (1 | site))</code></li>
+</ul></li>
+<li>Random intercepts (with level 1 predictors )
+<ul>
+<li><code>lmer(y ~ x1 + (1 | site))</code></li>
+</ul></li>
+<li>Random intercepts and slopes (with level 1 predictors)
+<ul>
+<li><code>lmer(y ~ x1+(1+x1|site))</code></li>
+</ul></li>
+</ul>
+</div><div class="column" style="width:40%;">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="Graphics/mixedw.jpg" class="quarto-figure quarto-figure-center" style="width:100.0%" alt="Schematic of the model selection strategy outlined in the other column."></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="center" style="font-size: 60%;">
+<p>Schematic from Jack Weiss’s course site.</p>
+</div>
+</div></div>
+<div class="fragment">
+<p>Pick the best of these, then add level-2 predictors (predictors that are constant within clusters).</p>
+<p>Strategy outlined by: Singer, J. D. and Willett, J. B. (2003) Applied Longitudinal Data Analysis: Modeling Change and Event Occurrence. (Oxford University Press, Oxford, UK).</p>
+</div>
+</section>
+<section id="random-intercepts-versus-random-coefficient-models" class="slide level2" style="font-size: 80%;">
+<h2>Random intercepts versus random coefficient models</h2>
+<p>Although random intercepts models are common. . .</p>
+<p>Schielzeth and Forstmeier (2009) suggest random slopes are usually appropriate for level-1 predictors (i.e., when x varies within a subject).</p>
+
+<img data-src="Graphics/rslopes.jpg" class="quarto-figure quarto-figure-center r-stretch" style="width:60.0%" alt="Schematic illustrations of more (A) and less (B) problematic cases for the estimation of fixed-effect covariates in random-intercept models. (a) Regression lines for several individuals with high (A) and low (B) between-individual variation in slopes. (b) Two individual regression slopes with low (A) and high (B) scatter around the regression line. (c) Regression lines with (A) many and (B) few measurements per individual (independent of the number of levels of the covariate)."></section>
+<section id="maximal-model" class="slide level2">
+<h2>Maximal model</h2>
+<p>Attempt to make inference from a maximal model:</p>
+<ul>
+<li>Include all random slopes that you can for level 1 predictors</li>
+<li>Simplify as needed when encountering convergence problems.</li>
+</ul>
+<div class="fragment">
+<p>Lots of debate on how best to approach model building/selection.</p>
+</div>
+</section></section>
+<section>
+<section id="dealing-with-statistical-dependence" class="title-slide slide level1 center">
+<h1>Dealing with statistical dependence</h1>
+
+</section>
+<section id="induced-correlation-random-intercepts-model" class="slide level2" style="font-size: 80%;">
+<h2>Induced correlation: random intercepts model</h2>
+<p><span class="math display">\[R_{ij} = \beta_0 + b_{0i}+  \beta_1NAP_{ij}   + \beta_2Exposure_i + \epsilon_{ij}\]</span></p>
+<p>Variance of <span class="math inline">\(R_{ij} = var(b_{0i}+\epsilon_{ij}) =  var(b_{0i}) +var(\epsilon_{ij}) =  \tau^2 + \sigma^2\)</span></p>
+<p><br></p>
+<div class="fragment">
+<p>Covariance (<span class="math inline">\(Y_{ij}, Y_{ij^\prime}) = \tau^2\)</span> (2 observations, same cluster [beach] since they share <span class="math inline">\(b_{0i}\)</span>)</p>
+</div>
+<div class="fragment">
+<p><br></p>
+<p>Covariance (<span class="math inline">\(Y_{ij}, Y_{i^\prime j}) = 0\)</span> (2 observations taken from 2 different clusters [beaches])</p>
+</div>
+<div class="fragment">
+<p><br></p>
+<p>Intraclass correlation = Cor<span class="math inline">\((Y_{ij}, Y_{ij^\prime})\)</span> = <span class="math inline">\(\frac{\tau^2}{\tau^2+\sigma^2} = 0.28\)</span>, correlation among observations taken from the same cluster.</p>
+</div>
+</section>
+<section id="multiple-random-effects" class="slide level2">
+<h2>Multiple random effects</h2>
+
+<img data-src="L18_IntroMixedModels_files/figure-revealjs/unnamed-chunk-20-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:70.0%" alt="Study design for a wolf telemetry study showing that individuals were followed over many years, allowing opportunities to model individual-specific and year-specific parameters."></section>
+<section id="crossed-random-effects-year-and-packid" class="slide level2">
+<h2>Crossed random effects Year and PackID</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(<span class="fu">log</span>(HRsize) <span class="sc">~</span> Season <span class="sc">+</span> StudyArea <span class="sc">+</span> DiffDTScaled <span class="sc">+</span> LFD<span class="sc">*</span>EVIScaled <span class="sc">+</span></span>
+<span id="cb23-2"><a href="" aria-hidden="true" tabindex="-1"></a>                 (<span class="dv">1</span> <span class="sc">|</span> PackID) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Year),  <span class="at">REML=</span><span class="cn">TRUE</span>, <span class="at">data =</span> HRData)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Different levels of correlation induced by <code>(1 | PACKID) + (1 | Year)</code></p>
+<ul>
+<li>two observations from same pack will be correlated due to sharing a “PackID” random effect</li>
+<li>two observations from same year will be correlated due to sharing a random a Year random effect.</li>
+</ul>
+<p>R for demonstration!</p>
+</section>
+<section id="marginal-distribution" class="slide level2" style="font-size: 80%;">
+<h2>Marginal Distribution</h2>
+<p><span class="math display">\[Y_{i} = X_{i}\beta + Z_ib + \epsilon_{i}\]</span> <span class="math display">\[\epsilon_i \sim N(0, \Sigma_i)\]</span> <span class="math display">\[b \sim N(0, D)\]</span></p>
+<div class="fragment">
+<p><span class="math display">\[Y_i|b \sim N(X_i\beta+Z_ib, \Sigma_i)\]</span> <span class="math display">\[b \sim N(0, D)\]</span></p>
+</div>
+<div class="fragment">
+<p>If we average over (or integrate out) the random effects, we get the <span style="color:red;">marginal Distribution of <span class="math inline">\(Y\)</span></span>.</p>
+<p><span class="math display">\[Y_i \sim N(X_i\beta, V_i), V_i = Z_iDZ_i^\prime + \Sigma_i\]</span></p>
+<p>This is actually what R uses to fit the data.</p>
+</div>
+</section>
+<section id="marginal-model-is-what-r-is-fitting" class="slide level2" style="font-size: 75%;">
+<h2>Marginal model is what R is fitting</h2>
+<p>For random intercepts model:</p>
+<p><span class="math display">\[Y_{i}\sim N(X_i\beta, V_i)\]</span></p>
+<p><span class="math inline">\(V_i = \begin{bmatrix}
+    \sigma^2 &amp; \rho &amp; \cdots &amp; \rho \\
+        \rho &amp; \ddots &amp; \ddots &amp; \vdots \\
+        \vdots &amp; \ddots &amp; \ddots &amp; \rho \\
+        \rho &amp; \cdots &amp; \rho &amp; \sigma^2
+    \end{bmatrix}\)</span> <span class="math inline">\(\rho = \frac{\tau^2}{\tau^2+\sigma^2}\)</span></p>
+<div class="fragment">
+<p>Var/Cov matrix for <span class="math inline">\(Y\)</span> (all data) = <span class="math inline">\(\begin{bmatrix}
+    V_i &amp; 0 &amp; \cdots &amp; 0 \\
+        0 &amp; \ddots &amp; \ddots &amp; \vdots \\
+        \vdots &amp; \ddots &amp; \ddots &amp; 0 \\
+        0 &amp; \cdots &amp; 0 &amp; V_i
+    \end{bmatrix}\)</span></p>
+</div>
+</section>
+<section id="fitting-the-marginal-model-using-gls" class="slide level2" style="font-size: 75%;">
+<h2>Fitting the marginal model using <code>gls</code></h2>
+<p>We might have posited this model directly.</p>
+<div class="fragment">
+<p>We can fit it using the <code>gls</code> function in the <code>nlme</code> library</p>
+<p>The <code>gls</code> function also allows for:</p>
+<ul>
+<li>A variety of assumptions for capturing within-subject correlation
+<ul>
+<li>ar(1) time series</li>
+<li>Spatial covariance</li>
+</ul></li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Methods for modeling heterogeneous variance
+<ul>
+<li>can allow the variance to differ by group (e.g., by exposure level)</li>
+<li>can allow the variance to depend on a continuous predictor, <span class="math inline">\(x\)</span> (e.g., var = <span class="math inline">\(\sigma^2 x^{2\theta}\)</span>)</li>
+</ul></li>
+</ul>
+</div>
+<div class="fragment">
+<p>See Ch 4 Zuur et al.&nbsp;and the section of the course on gls models.</p>
+</div>
+</section>
+<section id="marginal-model-fit-using-gls" class="slide level2">
+<h2>Marginal Model fit using <code>gls</code></h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="" aria-hidden="true" tabindex="-1"></a>gls.fit<span class="ot">&lt;-</span><span class="fu">gls</span>(Richness<span class="sc">~</span>NAPc<span class="sc">+</span>exposure.c, <span class="at">method=</span><span class="st">"REML"</span>,</span>
+<span id="cb24-2"><a href="" aria-hidden="true" tabindex="-1"></a>             <span class="at">correlation=</span><span class="fu">corCompSymm</span>(<span class="at">form=</span><span class="sc">~</span><span class="dv">1</span><span class="sc">|</span>Beach),</span>
+<span id="cb24-3"><a href="" aria-hidden="true" tabindex="-1"></a>            <span class="at">data=</span>RIKZdat)</span>
+<span id="cb24-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(gls.fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generalized least squares fit by REML
+  Model: Richness ~ NAPc + exposure.c 
+  Data: RIKZdat 
+       AIC      BIC    logLik
+  240.5538 249.2422 -115.2769
+
+Correlation Structure: Compound symmetry
+ Formula: ~1 | Beach 
+ Parameter estimate(s):
+      Rho 
+0.2798938 
+
+Coefficients:
+                  Value Std.Error   t-value p-value
+(Intercept)    3.170680 1.1739987  2.700752  0.0099
+NAPc          -2.581708 0.4883901 -5.286160  0.0000
+exposure.cLow  4.532777 1.5755610  2.876929  0.0063
+
+ Correlation: 
+              (Intr) NAPc  
+NAPc          -0.028       
+exposure.cLow -0.746  0.037
+
+Standardized residuals:
+       Min         Q1        Med         Q3        Max 
+-1.5551728 -0.6415409 -0.1554932  0.4150315  3.3566242 
+
+Residual standard error: 3.604905 
+Degrees of freedom: 45 total; 42 residual</code></pre>
+</div>
+</div>
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="L18_IntroMixedModels_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="L18_IntroMixedModels_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="L18_IntroMixedModels_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="L18_IntroMixedModels_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="L18_IntroMixedModels_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="L18_IntroMixedModels_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="L18_IntroMixedModels_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="L18_IntroMixedModels_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="L18_IntroMixedModels_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="L18_IntroMixedModels_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="L18_IntroMixedModels_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'fade',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 5.0e-2,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+
+    <script>
+
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
+      // slide changes (different for each slide format).
+
+      (function () {
+
+        // dispatch for htmlwidgets
+
+        function fireSlideEnter() {
+
+          const event = window.document.createEvent("Event");
+
+          event.initEvent("slideenter", true, true);
+
+          window.document.dispatchEvent(event);
+
+        }
+
+    
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+
+          fireSlideEnter();
+
+    
+
+          // dispatch for shiny
+
+          if (window.jQuery) {
+
+            if (previousSlide) {
+
+              window.jQuery(previousSlide).trigger("hidden");
+
+            }
+
+            if (currentSlide) {
+
+              window.jQuery(currentSlide).trigger("shown");
+
+            }
+
+          }
+
+        }
+
+    
+
+        // hookup for slidy
+
+        if (window.w3c_slidy) {
+
+          window.w3c_slidy.add_observer(function (slide_num) {
+
+            // slide_num starts at position 1
+
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
+          });
+
+        }
+
+    
+
+      })();
+
+    </script>
+
+    
+
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        // For code content inside modals, clipBoardJS needs to be initialized with a container option
+        // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>

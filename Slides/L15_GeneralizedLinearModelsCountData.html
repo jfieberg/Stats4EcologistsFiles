@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="L15_GeneralizedLinearModelsCountData_files/libs/clipboard/clipboard.min.js"></script>
+<script src="L15_GeneralizedLinearModelsCountData_files/libs/quarto-html/tabby.min.js"></script>
+<script src="L15_GeneralizedLinearModelsCountData_files/libs/quarto-html/popper.min.js"></script>
+<script src="L15_GeneralizedLinearModelsCountData_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="L15_GeneralizedLinearModelsCountData_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="L15_GeneralizedLinearModelsCountData_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="L15_GeneralizedLinearModelsCountData_files/libs/quarto-html/quarto-syntax-highlighting-dark-8b864f0777c60eecff11d75b6b2e1175.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.33">
+
+  <meta name="author" content="FW8051 Statistics for Ecologists">
+  <title>Models for Count Data</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="L15_GeneralizedLinearModelsCountData_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="L15_GeneralizedLinearModelsCountData_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+      }
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #f8f8f2;  }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #f8f8f2; } /* Normal */
+    code span.al { color: #f07178; background-color: #2a0f15; font-weight: bold; } /* Alert */
+    code span.an { color: #d4d0ab; } /* Annotation */
+    code span.at { color: #00e0e0; } /* Attribute */
+    code span.bn { color: #d4d0ab; } /* BaseN */
+    code span.bu { color: #abe338; } /* BuiltIn */
+    code span.cf { color: #ffa07a; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #abe338; } /* Char */
+    code span.cn { color: #ffd700; } /* Constant */
+    code span.co { color: #f8f8f2; font-style: italic; } /* Comment */
+    code span.cv { color: #ffd700; } /* CommentVar */
+    code span.do { color: #f8f8f2; } /* Documentation */
+    code span.dt { color: #ffa07a; } /* DataType */
+    code span.dv { color: #d4d0ab; } /* DecVal */
+    code span.er { color: #f07178; text-decoration: underline; } /* Error */
+    code span.ex { color: #00e0e0; font-weight: bold; } /* Extension */
+    code span.fl { color: #d4d0ab; } /* Float */
+    code span.fu { color: #ffa07a; } /* Function */
+    code span.im { color: #abe338; } /* Import */
+    code span.in { color: #d4d0ab; } /* Information */
+    code span.kw { color: #ffa07a; font-weight: bold; } /* Keyword */
+    code span.op { color: #ffa07a; } /* Operator */
+    code span.ot { color: #00e0e0; } /* Other */
+    code span.pp { color: #dcc6e0; } /* Preprocessor */
+    code span.re { color: #00e0e0; background-color: #f8f8f2; } /* RegionMarker */
+    code span.sc { color: #abe338; } /* SpecialChar */
+    code span.ss { color: #abe338; } /* SpecialString */
+    code span.st { color: #abe338; } /* String */
+    code span.va { color: #00e0e0; } /* Variable */
+    code span.vs { color: #abe338; } /* VerbatimString */
+    code span.wa { color: #dcc6e0; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="L15_GeneralizedLinearModelsCountData_files/libs/revealjs/dist/theme/quarto-c89a7e063782379d64767b77f736f9e1.css">
+  <link href="L15_GeneralizedLinearModelsCountData_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="L15_GeneralizedLinearModelsCountData_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="L15_GeneralizedLinearModelsCountData_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="L15_GeneralizedLinearModelsCountData_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="L15_GeneralizedLinearModelsCountData_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="L15_GeneralizedLinearModelsCountData_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-dark">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Models for Count Data</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+FW8051 Statistics for Ecologists 
+</div>
+</div>
+</div>
+
+</section>
+<section id="learning-objectives" class="slide level2 smaller">
+<h2>Learning Objectives</h2>
+<div>
+<ul>
+<li class="fragment">Be able to fit regression models appropriate for count data in R and JAGS
+<ul>
+<li class="fragment">Poisson regression models</li>
+<li class="fragment">Quasi-Poisson (R only)</li>
+<li class="fragment">Negative Binomial regression</li>
+</ul></li>
+<li class="fragment">Be able to evaluate model fit
+<ul>
+<li class="fragment">Residual plots</li>
+<li class="fragment">Goodness-of-fit tests</li>
+</ul></li>
+<li class="fragment">Use deviances and AIC to compare models.</li>
+<li class="fragment">Use an offset to model rates and densities, accounting for variable survey effort</li>
+<li class="fragment">Be able to describe statistical models and their assumptions using equations and text and match parameters in these equations to estimates in computer output.</li>
+</ul>
+</div>
+</section>
+<section id="section" class="slide level2" style="font-size: 80%;">
+<h2></h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="" aria-hidden="true" tabindex="-1"></a>glmPdace<span class="ot">&lt;-</span><span class="fu">glm</span>(longnosedace<span class="sc">~</span>acreage<span class="sc">+</span>do2<span class="sc">+</span>maxdepth<span class="sc">+</span>no3<span class="sc">+</span>so4<span class="sc">+</span>temp, </span>
+<span id="cb1-2"><a href="" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>longnosedace, <span class="at">family=</span><span class="fu">poisson</span>())</span>
+<span id="cb1-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(glmPdace)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = longnosedace ~ acreage + do2 + maxdepth + no3 + 
+    so4 + temp, family = poisson(), data = longnosedace)
+
+Coefficients:
+              Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) -1.564e+00  2.818e-01  -5.551 2.83e-08 ***
+acreage      3.843e-05  2.079e-06  18.480  &lt; 2e-16 ***
+do2          2.259e-01  2.126e-02  10.626  &lt; 2e-16 ***
+maxdepth     1.155e-02  6.688e-04  17.270  &lt; 2e-16 ***
+no3          1.813e-01  1.068e-02  16.974  &lt; 2e-16 ***
+so4         -6.810e-03  3.622e-03  -1.880   0.0601 .  
+temp         7.854e-02  6.530e-03  12.028  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 2766.9  on 67  degrees of freedom
+Residual deviance: 1590.0  on 61  degrees of freedom
+AIC: 1936.9
+
+Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+</div>
+</section>
+<section id="model" class="slide level2" style="font-size: 80%;">
+<h2>Model</h2>
+<p><span class="math display">\[Dace_i \sim Poisson(\lambda_i)\]</span> <span class="math display">\[\log(\lambda_i) = \beta_0+\beta_1 Acreage_i+ \beta_2 DO2_i + \beta_3 maxdepth_i +\]</span> <span class="math display">\[\beta_4 NO3_i + \beta_5 SO4_i +\beta_6 temp_i\]</span></p>
+<div class="fragment">
+<p><span class="math display">\[\lambda_i  = \exp(\beta_0+\beta_1 Acreage_i+ \beta_2 DO2_i + \beta_3 maxdepth_i +  \beta_4 NO3_i +\]</span> <span class="math display">\[\beta_5 SO4_i +\beta_6 temp_i)\]</span></p>
+</div>
+<div class="fragment">
+<p><span class="math display">\[\lambda_i  = e^{(\beta_0)}e^{(\beta_1 Acreage_i)}e^{(\beta_2 DO2_i)}e^{(\beta_3 maxdepth_i)} e^{(\beta_4 NO3_i)}e^{(\beta_5 SO4_i)}e^{(\beta_6 temp_i)}\]</span></p>
+</div>
+</section>
+<section id="interpretation" class="slide level2" style="font-size: 80%;">
+<h2>Interpretation</h2>
+<p><span class="math display">\[\begin{gather}
+Dace_i \sim Poisson(\lambda_i)   \\
+\log(\lambda_i) = \beta_0+\beta_1 Acreage_i+ \beta_2 DO2_i + \beta_3 maxdepth_i + \\
+   \beta_4 NO3_i + \beta_5 SO4_i +\beta_6 temp_i \nonumber
+\end{gather}\]</span></p>
+<p><span class="math display">\[\lambda_i  = e^{(\beta_0)}e^{(\beta_1 Acreage_i)}e^{(\beta_2 DO2_i)}e^{(\beta_3 maxdepth_i)} e^{(\beta_4 NO3_i)}e^{(\beta_5 SO4_i)}e^{(\beta_6 temp_i)}\]</span></p>
+<ul>
+<li><span class="math inline">\(\beta_0\)</span> = <span class="fragment">expected log mean when all predictors are equal to 0</span></li>
+</ul>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(\exp(\beta_0)\)</span> = expected mean when all predictors are equal to 0</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(\beta_2\)</span> = 0.226 = <span class="fragment">expected change in the log mean [i.e., <span class="math inline">\(\log(\lambda)\)</span>], per unit change in D02, while holding everything else constant.</span></li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(\exp(\beta_2)\)</span> = 1.25 <span class="fragment">= we expect the mean to increase <em>by a factor</em> of 1.25 for every 1 unit change in D02 (and holding everything else constant)</span></li>
+</ul>
+</div>
+</section>
+<section id="inference" class="slide level2">
+<h2>Inference</h2>
+<p>Rely on asymptotic Normality for Maximum Likelihood Estimators</p>
+<p><span class="math display">\[\hat{\beta} \sim N(\beta, I^{-1}(\theta))\]</span></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Store coefficients and their standard errors</span></span>
+<span id="cb3-2"><a href="" aria-hidden="true" tabindex="-1"></a>beta.hats <span class="ot">&lt;-</span> <span class="fu">coef</span>(glmPdace)</span>
+<span id="cb3-3"><a href="" aria-hidden="true" tabindex="-1"></a>ses <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(<span class="fu">vcov</span>(glmPdace)))</span>
+<span id="cb3-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cbind</span>(beta.hats<span class="fl">-1.96</span><span class="sc">*</span>ses, beta.hats<span class="fl">+1.96</span><span class="sc">*</span>ses), <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              [,1]   [,2]
+(Intercept) -2.117 -1.012
+acreage      0.000  0.000
+do2          0.184  0.268
+maxdepth     0.010  0.013
+no3          0.160  0.202
+so4         -0.014  0.000
+temp         0.066  0.091</code></pre>
+</div>
+</div>
+</section>
+<section id="profile-confidence-intervals" class="slide level2">
+<h2>Profile confidence intervals</h2>
+<p>Inverts the likelihood ratio test to form confidence intervals (see Section 10.10 of the book)</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co">#' Or, can use profile likelihood intervals</span></span>
+<span id="cb5-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(glmPdace)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                    2.5 %        97.5 %
+(Intercept) -2.117222e+00 -1.012594e+00
+acreage      3.432623e-05  4.247872e-05
+do2          1.841122e-01  2.674327e-01
+maxdepth     1.023509e-02  1.285684e-02
+no3          1.603516e-01  2.022292e-01
+so4         -1.400207e-02  1.966821e-04
+temp         6.576200e-02  9.136105e-02</code></pre>
+</div>
+</div>
+</section>
+<section id="confidence-intervals-for-expbeta" class="slide level2">
+<h2>Confidence Intervals for exp(<span class="math inline">\(\beta\)</span>)</h2>
+<ol type="1">
+<li>Calculate a CI for <span class="math inline">\(\beta\)</span></li>
+<li>Exponentiate the confidence limits</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cbind</span>(<span class="fu">exp</span>(beta.hats<span class="fl">-1.96</span><span class="sc">*</span>ses), <span class="fu">exp</span>(beta.hats<span class="fl">+1.96</span><span class="sc">*</span>ses)), <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             [,1]  [,2]
+(Intercept) 0.120 0.363
+acreage     1.000 1.000
+do2         1.202 1.307
+maxdepth    1.010 1.013
+no3         1.174 1.224
+so4         0.986 1.000
+temp        1.068 1.096</code></pre>
+</div>
+</div>
+</section>
+<section id="deviance" class="slide level2" style="font-size: 80%;">
+<h2>Deviance</h2>
+<p>The <span style="color:red;">deviance</span> is a measure of model fit when using maximum likelihood.</p>
+<div class="fragment">
+<p><span style="color:red;">Residual deviance</span> <span class="math inline">\(= 2(logL(y| \hat{\theta}_s)-logL(y|\hat{\theta}_0))\)</span></p>
+<ul>
+<li><span class="math inline">\(logL(\hat{\theta}_s | y)\)</span> = log-likelihood for a “saturated” model (one with a parameter for each observation).</li>
+<li><span class="math inline">\(logL(\hat{\theta}_0 | y)\)</span> = log-likelihood for our model of interest evaluated at the MLEs (<span class="math inline">\(\hat{\theta}_0\)</span>)</li>
+</ul>
+</div>
+<div class="fragment">
+<p><span style="color:red;">Null deviance</span> = residual deviance for a model that only contains an intercept</p>
+<p>It may be helpful to think of the <span style="color:red;">null deviance</span> and <span style="color:red;">residual deviance</span> as maximum likelihood equivalents to total and residual sums of squares, respectively.</p>
+</div>
+</section>
+<section id="deviance-1" class="slide level2">
+<h2>Deviance</h2>
+<p>There is no <span class="math inline">\(R^2\)</span> for generalized linear models, but sometimes see % deviance explained (<span style="color:red;">pseudo <span class="math inline">\(R^2\)</span></span>):</p>
+<p><span class="math display">\[100 \times \frac{\mbox{null deviance-residual deviance}}{\mbox{null deviance}}\]</span></p>
+<div class="fragment">
+<ul>
+<li>Null deviance <span class="math inline">\(\approx\)</span> maximum likelihood equivalent of total sum of squares.</li>
+<li>Residual deviance <span class="math inline">\(\approx\)</span> maximum likelihood equivalent of residual sum of squares</li>
+</ul>
+<p>For a discussion of different pseudo-<span class="math inline">\(R^2\)</span> measures, see <a href="http://www.ats.ucla.edu:80/stat/mult_pkg/faq/general/Psuedo_RSquareds.htm">this site</a></p>
+<!---
+https://web.archive.org/web/20130701052120/
+
+## 
+
+Poisson likelihood: 
+
+\begin{center}
+\begin{eqnarray} 
+L(\lambda | y) & =  & \prod_{i=1}^n\frac{\lambda_i^{y_i}\exp(-\lambda_i)}{y_i!} \nonumber, \mbox{which implies}: 
+...
+ \\
+logL(\lambda | y) & = & \sum_{i=1}^n y_i\log(\lambda_i) -\sum_{i=1}^n\lambda_i - \sum_{i=1}^n \log(y_i!)  \nonumber  
+...
+
+\end{eqnarray}
+\end{center}
+
+
+Saturated model replaces $\lambda_i$ with $y_i$: 
+\begin{center}
+$logL(\lambda_s | y)  = \sum_{i=1}^n y_i\log(y_i) -\sum_{i=1}^ny_i - \sum_{i=1}^n \log(y_i!)$  \nonumber 
+...
+
+\end{center}
+
+So, residual deviance: 
+\begin{center}
+$= 2\sum_{i=1}^n(y_i log(\frac{y_i}{\hat{\lambda}_i}) - (y_i-\hat{\lambda}_i))$
+\end{center}
+
+## More on Deviance
+
+
+For more discussion, see 
+
+- Section 9.5, 9.71, 9.82 (Zuur et al)
+- McCullagh and Nelder 1989) Generalized Linear Models
+
+Or...
+
+\href{http://www.unc.edu/courses/2006spring/ecol/145/001/docs/lectures/lecture22.htm}{http://www.unc.edu/courses/2006spring/ecol/145/001/docs/lectures/lecture22.htm}
+--->
+</div>
+</section>
+<section id="residuals" class="slide level2" style="font-size: 80%;">
+<h2>Residuals</h2>
+<p><span style="color:red;">Deviance residuals</span>= <span class="math inline">\(sign(y_i-\mu_i)\sqrt{d_i}\)</span>, where:</p>
+<ul>
+<li><span class="math inline">\(d_i\)</span> is the contribution of the <span class="math inline">\(i^{th}\)</span> observation to the residual deviance (may be useful for spotting outliers/influential points)</li>
+<li>sign = 1 if <span class="math inline">\(y_i &gt; \mu_i\)</span> and -1 if <span class="math inline">\(y_i &lt; \mu_i\)</span>.</li>
+</ul>
+<div class="fragment">
+<p><span style="color:red;">Pearson residuals</span> = <span class="math inline">\(\frac{Y_i-E[Y_i|X_i]}{\sqrt{Var[Y_i | X_i]}} = \frac{Y_i-\lambda_i}{\sqrt{\lambda_i}}\)</span> for Poisson</p>
+</div>
+<div class="fragment">
+<ul>
+<li>If the Poisson model is appropriate, these residuals should have constant variance</li>
+</ul>
+</div>
+<div class="fragment">
+<p>Often Deviance and Pearson residuals are similar.</p>
+</div>
+</section>
+<section id="residual-plots" class="slide level2">
+<h2>Residual Plots</h2>
+<ul>
+<li>Residuals versus fitted values</li>
+<li>Residuals versus predictors</li>
+<li>Residuals over time or space (to diagnose possible spatial/temporal correlation)</li>
+</ul>
+<div class="fragment">
+<p>See <code>residualPlots</code> in <code>car</code> library for useful plots.</p>
+</div>
+<div class="fragment">
+<p>See also <code>check_model</code> in the <code>performance</code> package and the <code>DHARMa</code> package.</p>
+</div>
+</section>
+<section id="goodness-of-fit-test" class="slide level2" style="font-size: 80%;">
+<h2>Goodness-of-fit test</h2>
+<p>How can we assess overall model fit?</p>
+<div class="fragment">
+<p>Think “Bayesian p-value”…</p>
+</div>
+<div class="fragment">
+<ul>
+<li>Account for uncertainty in <span class="math inline">\(\hat{\beta}\)</span> by drawing values of <span class="math inline">\(\beta\)</span> from <span class="math inline">\(N(\hat{\beta}, \widehat{Cov}(\hat{\beta})^2)\)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Use the values of <span class="math inline">\(\beta\)</span> above to estimate <span class="math inline">\(\lambda\)</span> (<code>lambda.hat</code>)</li>
+<li>Simulate new data (e.g., using <code>rpois(n, lambda.hat)</code>)</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Calculate a measure of fit for both real and simulated data</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Rinse, repeat.</li>
+</ul>
+</div>
+<div class="fragment">
+<p>If the model is appropriate: “goodness-of-fit” statistics for real and simulated data should be similar</p>
+</div>
+</section>
+<section id="goodness-of-fit-test-1" class="slide level2" style="font-size: 80%;">
+<h2>Goodness of fit test</h2>
+<p><span class="math inline">\(H_0\)</span>: the data were generated by the assumed model</p>
+<p><span class="math inline">\(H_A\)</span>: the data were not generated by the assumed model</p>
+<div class="fragment">
+<ul>
+<li>The GOF statistics for the simulated data tell us what we might expect to see if the Null hypothesis is true.</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>P-value = proportion of time the GOF statistic for <span style="color:red;">our observed data</span> is as or more extreme than GOF statistic for the simulated data</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>If p-value is small, then we have evidence that the model is not appropriate.</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>If the p-value is not small, then….</li>
+</ul>
+</div>
+<div class="fragment">
+<p>We do not have enough evidence to suggest the model is not appropriate</p>
+</div>
+</section>
+<section id="what-should-we-use-as-a-measure-of-fit" class="slide level2" style="font-size: 70%;">
+<h2>What should we use as a measure of fit?</h2>
+<div class="fragment">
+<p>One option (see Kery Ch 13), Pearson <span class="math inline">\(\chi^2\)</span> statistic:</p>
+<p><span class="math display">\[\chi^2_{n-p} =  \sum_{i=1}^n \frac{(Y_i-\hat{E}[Y_i|X_i])^2}{\widehat{Var}[Y_i | X_i]}\]</span></p>
+</div>
+<div class="fragment">
+<p>Loop:</p>
+<ul>
+<li>Simulate a random vector of <span class="math inline">\(\beta\)</span>’s using <span class="math inline">\(MVN(\hat{\beta}, \widehat{Cov}(\hat{\beta})^2)\)</span></li>
+<li>Use these <span class="math inline">\(\beta\)</span>’s to form <span class="math inline">\(\lambda_i\)</span>’s = <span class="math inline">\(\exp(\beta_0+\beta_1X_{1,i}+\ldots \beta_pX_{p,i})\)</span><br>
+</li>
+<li>Simulate new data using these <span class="math inline">\(\lambda_i\)</span>’s and .</li>
+<li>Calculate <span class="math inline">\(\chi^2_{n-p}\)</span> for real and simulated data (plugging in <span class="math inline">\(\hat{E}[Y_i|X_i] = \widehat{Var}[Y_i | X_i]= \hat{\lambda}_i\)</span>.</li>
+</ul>
+</div>
+<div class="fragment">
+<p>p-value = proportion of times <span class="math inline">\(\chi^2_{sim} \ge \chi^2_{real}\)</span> (want large values)</p>
+</div>
+<div class="fragment">
+<p>Lets do this!</p>
+</div>
+</section>
+<section id="overdispersion-varyx-eyx" class="slide level2" style="font-size: 80%;">
+<h2>Overdispersion, <span class="math inline">\(Var(Y|X) &gt; E(Y|X)\)</span></h2>
+<p>Reasons data may be overdispersed:</p>
+<div>
+<ul>
+<li class="fragment">Omitted variables</li>
+<li class="fragment">Explanatory and response variables may be measured with error</li>
+<li class="fragment">Model may be mis-specified (relationship between log(<span class="math inline">\(\mu\)</span>) and <span class="math inline">\(x\)</span> may be non-linear) - Outliers</li>
+<li class="fragment">Spatial, temporal, within-individual clustering (repeated measures)</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Response may be due to a mixture of random processes
+<ul>
+<li>Presence/absence determined by suitable habitat</li>
+<li>Counts | suitable habitat may be Poisson<br>
+</li>
+<li>Leads to “zero-inflation” models</li>
+</ul></li>
+</ul>
+</div>
+</section>
+<section id="testing-for-overdispersion" class="slide level2" style="font-size: 75%;">
+<h2>Testing for Overdispersion</h2>
+<p>Some compare residual Deviance:</p>
+<p><span class="math display">\[\mbox{Residual deviance} \text{ or }  \sum_{i=1}^n \frac{(Y_i-E[Y_i|X_i])^2}{Var[Y_i | X_i]}\]</span></p>
+<p>to a <span class="math inline">\(\chi^2\)</span> distribution with <span class="math inline">\(n-p\)</span> degrees of freedom.</p>
+<div class="fragment">
+<p>Large values can be caused by:</p>
+<ul>
+<li>Mis-specified model (missing predictors)</li>
+<li>Mis-specified distribution</li>
+<li>Outliers</li>
+<li><span style="color:red;">Small numbers of observations for any set of unique covariate values</span></li>
+</ul>
+</div>
+<div class="fragment">
+<p>So, best to test using (predictive) simulation techniques discussed earlier (e.g., using the Pearson <span class="math inline">\(\chi^2\)</span> statistic).</p>
+</div>
+</section>
+<section id="consequences-of-overdispersion" class="slide level2">
+<h2>Consequences of Overdispersion</h2>
+<p>We may obtain reasonable estimates of <span class="math inline">\(\beta\)</span>, but:</p>
+<ul>
+<li>SE may be too small</li>
+<li>We may select overly complex models</li>
+</ul>
+<div class="fragment">
+<p>Before “correcting for overdispersion,” consider whether:</p>
+<ul>
+<li>You may have left out important predictors</li>
+<li>If you need to allow for non-linear relationships (residual plots).</li>
+</ul>
+</div>
+</section>
+<section>
+<section id="how-to-deal-with-overdispersion" class="title-slide slide level1 center">
+<h1>How to deal with overdispersion</h1>
+
+</section>
+<section id="relaxing-the-poisson-assumption" class="slide level2" style="font-size: 80%;">
+<h2>Relaxing the Poisson Assumption</h2>
+<p>Poisson regression:</p>
+<ul>
+<li><span class="math inline">\(log(\lambda_i) = \log(\mu_i) = \beta_0 + \beta_1X_{1,i} + \ldots \beta_pX_{p,i}\)</span></li>
+<li><span class="math inline">\(f(y_i) \sim\)</span> Poisson(<span class="math inline">\(\lambda_i\)</span>)</li>
+</ul>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(E[Y_|X_i] =  \lambda_i =  e^{\beta_0 + \beta_1X_{1,i} + \ldots \beta_pX_{p,i}}\)</span><br>
+</li>
+<li><span class="math inline">\(Var[Y_i|X_i] = \lambda_i = e^{\beta_0 + \beta_1X_{1,i} + \ldots \beta_pX_{p,i}}\)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<p>What if <span class="math inline">\(E[Y_i|X_i] = exp(\beta_0 + \beta_1X_{1,i} + \ldots \beta_pX_{p,i})\)</span> is appropriate, but the Poisson distribution is not?</p>
+</div>
+<div class="fragment">
+<p>In particular, what if <span class="math inline">\(Var[Y_i|X_i] &gt; E[Y_i|X_i]\)</span>?</p>
+</div>
+<div class="fragment">
+<p><span style="color:red;">Option 1: Bootstrap!</span></p>
+</div>
+</section>
+<section id="option-2-variance-inflation" class="slide level2" style="font-size: 75%;">
+<h2>Option 2: Variance Inflation</h2>
+<p>Another option: add a scale parameter to inflate variances.</p>
+<ul>
+<li><span class="math inline">\(E[Y_i|X_i] = \mu = e^{\beta_0 + \beta_1X_{1,i} + \ldots \beta_pX_{p,i}}\)</span></li>
+<li><span class="math inline">\(Var[Y_i|x_i] = \phi\mu = \phi e^{\beta_0 + \beta_1X_{1,i} + \ldots \beta_pX_{p,i}}\)</span></li>
+</ul>
+<div class="fragment">
+<p>Estimate of overdispersion, <span class="math inline">\(\hat{\phi}\)</span> by either:</p>
+<ul>
+<li><span class="math inline">\(\hat{\phi} = \frac{\mbox{Residual deviance}}{(n-p)}\)</span></li>
+<li><span class="math inline">\(\hat{\phi} = \frac{1}{n-p}\sum_{i=1}^n \frac{(Y_i-E[Y_i|X_i])^2}{Var[Y_i | X_i]}\)</span> (what R does, probably better)</li>
+</ul>
+</div>
+<div class="fragment">
+<p>Zuur et al.&nbsp;recommend:</p>
+<ul>
+<li>If <span class="math inline">\(\phi &gt; 1.5\)</span> should adjust for overdispersion</li>
+<li>If greater than 15 or 20, consider alternative methods (Negative Binomial, zero-inflation models, Poisson-Normal model)</li>
+</ul>
+</div>
+</section>
+<section id="variance-inflation-quasilikelihood" class="slide level2" style="font-size: 80%;">
+<h2>Variance Inflation: Quasilikelihood</h2>
+<p>In R, can use `<code>glm</code> with <code>family = quasipoisson()</code></p>
+<div class="fragment">
+<p>Will estimate an inflation factor using:</p>
+<p><span class="math display">\[\hat{\phi} = \frac{1}{n-p}\sum_{i=1}^n \frac{(Y_i-E[Y_i|X_i])^2}{Var[Y_i | X_i]}\]</span></p>
+</div>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(\hat{\beta}\)</span> will be unchanged, but SE will be larger by a factor of <span class="math inline">\(\sqrt{\phi}\)</span>.</li>
+<li>No longer “maximum likelihood”</li>
+<li><span style="color:red;">quasilikelihood</span> (more on this later)</li>
+<li>Modeling the first two moments of <span class="math inline">\(Y\)</span> (<span class="math inline">\(E[Y|X], Var[Y|X]\)</span>)</li>
+</ul>
+</div>
+</section>
+<section id="poisson-model-with-overdispersion-parameter" class="slide level2">
+<h2>Poisson Model with Overdispersion parameter</h2>
+<p>Fit to slug data:</p>
+<ul>
+<li><span class="math inline">\(\hat{\beta}\)</span> does not change</li>
+<li>SE’s inflated by <span class="math inline">\(\sqrt{\hat{\phi}}\)</span></li>
+</ul>
+<div class="fragment">
+<p>Lets do this!</p>
+</div>
+</section>
+<section id="option-3-use-a-different-distribution-than-poisson" class="slide level2" style="font-size: 75%;">
+<h2>Option 3: Use a different distribution than Poisson</h2>
+<p><span class="math display">\[Dace_i \sim Negative Binomial(\mu_i, \theta)\]</span> <span class="math display">\[\log(\mu_i) = \beta_0+\beta_1 Acreage_i+ \beta_2 DO2_i + \beta_3 maxdepth_i +\]</span> <span class="math display">\[\beta_4 NO3_i + \beta_5 SO4_i +\beta_6 temp_i\]</span></p>
+<div class="fragment">
+<p><span class="math display">\[\mu_i  = \exp(\beta_0+\beta_1 Acreage_i+ \beta_2 DO2_i + \beta_3 maxdepth_i +  \beta_4 NO3_i +\]</span> <span class="math display">\[\beta_5 SO4_i +\beta_6 temp_i)\]</span></p>
+</div>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(E[Y_i] = \mu_i\)</span></li>
+<li><span class="math inline">\(Var[Y_i]= \mu_i + \mu_i^2/\theta\)</span></li>
+</ul>
+<p>Poisson is a limiting case (when <span class="math inline">\(\theta \rightarrow \infty\)</span>)</p>
+</div>
+</section>
+<section id="negative-binomial-models-in-r" class="slide level2">
+<h2>Negative Binomial Models in R</h2>
+<p>Can fit negative binomial models in R using the <code>glm.nb</code> function in the <code>MASS</code> library</p>
+<p><code>glm.nb(y ~ x, data=)</code></p>
+<div class="fragment">
+<p>Lets do this and inspect goodness of fit!</p>
+</div>
+</section>
+<section id="model-comparisons" class="slide level2" style="font-size: 80%;">
+<h2>Model comparisons</h2>
+<p>For large samples, the difference in deviances for nested models should be <span class="math inline">\(\sim \chi^2\)</span> with df = difference in number of parameters between the two models.</p>
+<p><span class="math display">\[D_2-D_1 \sim \chi^2_{df}\]</span></p>
+<div class="fragment">
+<ul>
+<li>Can use <code>drop1(model, test="Chi")</code> (equivalent to a likelihood ratio test) or <code>Anova</code> in <code>car</code> package</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Can use forward, backwards, stepwise selection (with the same dangers/caveats related to overfitting); see <code>stepAIC</code> in <code>MASS</code> library (for backwards selection)</li>
+</ul>
+</div>
+</section>
+<section id="aic" class="slide level2" style="font-size: 80%;">
+<h2>AIC</h2>
+<p>AIC = -2 x <span class="math inline">\(logL(\hat{\theta} | y)\)</span> + 2 x number of parameters</p>
+<ul>
+<li>measure of “fit” with “penalty” for model complexity</li>
+</ul>
+<div class="fragment">
+<ul>
+<li>the larger log-likelihood, the smaller AIC</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>for similar likelihoods, AIC will be smaller for simpler models</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(\rightarrow\)</span> smaller AIC is better</li>
+</ul>
+<p>Can use to compare nested and non-nested models.</p>
+<ul>
+<li>Not always appropriate for certain types of models (problematic if you have latent variables, e.g., mixture models)</li>
+</ul>
+</div>
+</section>
+<section id="negative-binomial-in-jags" class="slide level2">
+<h2>Negative Binomial in JAGS</h2>
+<p>JAGS: <span style="color:red;">dnegbin</span> specified in terms of parameters (<span class="math inline">\(p\)</span>, <span class="math inline">\(\theta\)</span>)</p>
+<div class="fragment">
+<p>We will specify the model in terms of <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\theta\)</span>, then solve for <span class="math inline">\(p\)</span>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log</span>(mu[i]) <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta<span class="sc">*</span>IRook[i]</span>
+<span id="cb9-2"><a href="" aria-hidden="true" tabindex="-1"></a>    p[i] <span class="ot">&lt;-</span> theta<span class="sc">/</span>(theta<span class="sc">+</span>mu[i])</span>
+<span id="cb9-3"><a href="" aria-hidden="true" tabindex="-1"></a>    slugs[i] <span class="sc">~</span> <span class="fu">dnegbin</span>(p[i],theta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="poisson-normal-model" class="slide level2" style="font-size: 80%;">
+<h2>Poisson-normal model</h2>
+<p><span class="math display">\[log(\lambda_i) = \log(\mu_i) = \beta_0 + \beta_1X_{1,i} + \ldots \beta_pX_{p,i} + \epsilon_i\]</span></p>
+<p><span class="math display">\[\epsilon_i \sim N(0, \sigma^2)\]</span></p>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(E[Y_i|X_i, \epsilon_i = 0] = \mu =  \exp^{\beta_0 + \beta_1x_1 + \ldots \beta_px_p} \ne E[Y_i|X_i]\)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(E[Y_i|X_i] =   e^{\beta_0 + \beta_1X_{1,i} + \ldots \beta_pX_{p,i} + \frac{1}{2}\sigma^2}\)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(Var[Y_i|X_i] = \mu_i + (e^{\sigma^2}-1)\mu_i^2\)</span></li>
+</ul>
+</div>
+</section>
+<section id="offsets" class="slide level2">
+<h2>Offsets</h2>
+<p>Count data, <span class="math inline">\(Y\)</span>, are often collected:</p>
+<ul>
+<li>over varying lengths of time</li>
+<li>in sample units that have different areas</li>
+</ul>
+<div class="fragment">
+<p>We may be interested in modeling rates:</p>
+<p><span class="math display">\[E[Y_i|X_i]/\mbox{Time}_i\]</span></p>
+</div>
+<div class="fragment">
+<p>Or densities:</p>
+<p><span class="math display">\[E[Y_i|X_i]/\mbox{Area}_i\]</span></p>
+<p>We may want to account for variable survey effort (varying times or areas)!</p>
+</div>
+</section>
+<section id="offsets-1" class="slide level2" style="font-size: 80%;">
+<h2>Offsets</h2>
+<p>Poisson and negative binomial models for rate data:</p>
+<p><span class="math inline">\(log(E[Y_i|X_i]/\mbox{Time}_i) = \beta_0 + \beta_1X_{1,i} + \ldots+\beta_pX_{p,i}\)</span></p>
+<div class="fragment">
+<p><span class="math inline">\(\Rightarrow  log(E[Y_i|X_i]) - \log(\mbox{Time}_i) = \beta_0 + \beta_1X_{1,i} + \ldots+\beta_pX_{p,i}\)</span></p>
+</div>
+<div class="fragment">
+<p><span class="math inline">\(\Rightarrow log(E[Y_i|X_i]) = \log(\mbox{Time}_i) + \beta_0 + \beta_1X_{1,i} + \ldots+\beta_pX_{p,i}\)</span></p>
+</div>
+<div class="fragment">
+<p><span class="math inline">\(\log(\mbox{Time}_i)\)</span> is called an <strong>offset</strong> and can be modeled using:</p>
+<p><code>glm(y ~ x + offset(log(time)), data= , family = poisson())</code></p>
+</div>
+<div class="fragment">
+<p>An <span style="color:red;">offset</span> is an explanatory variable with a regression coefficient fixed at 1.</p>
+<p>See <span style="color:red;">PoissonOffsetTemplate.R</span> and <span style="color:red;">PoissonOffset.R</span> (in the Generalized linear models folder) for an exercise fitting a Poisson model with an offset.</p>
+</div>
+</section>
+<section id="dic" class="slide level2" style="font-size: 80%;">
+<h2>DIC</h2>
+<p>Martyn Plummer (creator of JAGS):</p>
+<p>DIC [like AIC] is (an approximation to) a theoretical out-of-sample predictive error.</p>
+<p>“The deviance information criterion (DIC) is widely used for Bayesian model comparison, despite the lack of a clear theoretical foundation….valid only when the effective number of parameters in the model is much smaller than the number of independent observations. In disease mapping, a typical application of DIC, this assumption does not hold and DIC under-penalizes more complex models. Another deviance-based loss function, derived from the same decision-theoretic framework, is applied to mixture models, which have previously been considered an unsuitable application for DIC.”</p>
+</section>
+<section id="dic-1" class="slide level2" style="font-size: 80%;">
+<h2>DIC</h2>
+<p><a href="http://andrewgelman.com/2011/06/22/deviance_dic_ai/">Andrew Gelman</a>: “I don’t really ever know what to make of DIC. On one hand, it seems sensible…On the other hand, I don’t really have any idea what I would do with DIC in any real example. In our book we included an example of DIC–people use it and we don’t have any great alternatives–but I had to be pretty careful that the example made sense. Unlike the usual setting where we use a method and that gives us insight into a problem, here we used our insight into the problem to make sure that in this particular case the method gave a reasonable answer.”</p>
+</section>
+<section id="model-comparisons-1" class="slide level2">
+<h2>Model comparisons</h2>
+<p>There are other potential options out there (e.g., WIC, cross-validation estimates of predictive error, etc)</p>
+<p><br></p>
+<p>Hooten, Mevin B, and N Thompson Hobbs. 2015. “A Guide to Bayesian Model Selection for Ecologists.” Ecological Monographs 85 (1): 3–28.</p>
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="L15_GeneralizedLinearModelsCountData_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="L15_GeneralizedLinearModelsCountData_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="L15_GeneralizedLinearModelsCountData_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="L15_GeneralizedLinearModelsCountData_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="L15_GeneralizedLinearModelsCountData_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="L15_GeneralizedLinearModelsCountData_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="L15_GeneralizedLinearModelsCountData_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="L15_GeneralizedLinearModelsCountData_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="L15_GeneralizedLinearModelsCountData_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="L15_GeneralizedLinearModelsCountData_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="L15_GeneralizedLinearModelsCountData_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'fade',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 5.0e-2,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+
+    <script>
+
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
+      // slide changes (different for each slide format).
+
+      (function () {
+
+        // dispatch for htmlwidgets
+
+        function fireSlideEnter() {
+
+          const event = window.document.createEvent("Event");
+
+          event.initEvent("slideenter", true, true);
+
+          window.document.dispatchEvent(event);
+
+        }
+
+    
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+
+          fireSlideEnter();
+
+    
+
+          // dispatch for shiny
+
+          if (window.jQuery) {
+
+            if (previousSlide) {
+
+              window.jQuery(previousSlide).trigger("hidden");
+
+            }
+
+            if (currentSlide) {
+
+              window.jQuery(currentSlide).trigger("shown");
+
+            }
+
+          }
+
+        }
+
+    
+
+        // hookup for slidy
+
+        if (window.w3c_slidy) {
+
+          window.w3c_slidy.add_observer(function (slide_num) {
+
+            // slide_num starts at position 1
+
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
+          });
+
+        }
+
+    
+
+      })();
+
+    </script>
+
+    
+
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        // For code content inside modals, clipBoardJS needs to be initialized with a container option
+        // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>

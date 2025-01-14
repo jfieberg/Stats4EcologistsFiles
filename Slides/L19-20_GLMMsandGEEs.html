@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="L19-20_GLMMsandGEEs_files/libs/clipboard/clipboard.min.js"></script>
+<script src="L19-20_GLMMsandGEEs_files/libs/quarto-html/tabby.min.js"></script>
+<script src="L19-20_GLMMsandGEEs_files/libs/quarto-html/popper.min.js"></script>
+<script src="L19-20_GLMMsandGEEs_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="L19-20_GLMMsandGEEs_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="L19-20_GLMMsandGEEs_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="L19-20_GLMMsandGEEs_files/libs/quarto-html/quarto-syntax-highlighting-dark-8b864f0777c60eecff11d75b6b2e1175.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.33">
+
+  <meta name="author" content="FW8051 Statistics for Ecologists">
+  <title>Correlated Data Overview</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="L19-20_GLMMsandGEEs_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="L19-20_GLMMsandGEEs_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="L19-20_GLMMsandGEEs_files/libs/revealjs/dist/theme/quarto-c89a7e063782379d64767b77f736f9e1.css">
+  <link href="L19-20_GLMMsandGEEs_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="L19-20_GLMMsandGEEs_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="L19-20_GLMMsandGEEs_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="L19-20_GLMMsandGEEs_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="L19-20_GLMMsandGEEs_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="L19-20_GLMMsandGEEs_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-dark">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Correlated Data Overview</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+FW8051 Statistics for Ecologists 
+</div>
+</div>
+</div>
+
+</section>
+<section id="learning-objectives" class="slide level2">
+<h2>Learning Objectives</h2>
+<ul>
+<li>Be able to model correlated binary and correlated count data using generalized linear mixed effect models (GLMMs) and generalized estimating equations (GEEs)</li>
+</ul>
+<div class="fragment">
+<ul>
+<li>Be able to interpret parameters in linear and generalized linear mixed effects models</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Be able to describe models and their assumptions using equations and text and match parameters in these equations to estimates in computer output.</li>
+</ul>
+</div>
+</section>
+<section id="correlated-data-methods-in-ecology" class="slide level2">
+<h2>Correlated Data Methods in Ecology</h2>
+<p>For data that are normally distributed:</p>
+<ul>
+<li>Linear mixed effects model<br>
+</li>
+<li>Generalized Least Squares</li>
+</ul>
+<div class="fragment">
+<p>For count or binary data:</p>
+<ul>
+<li>Generalized linear mixed effects models (GLMMS)<br>
+</li>
+<li>Generalized Estimating Equations (GEE)</li>
+</ul>
+</div>
+<div class="fragment">
+<div style="font-size: 70%;">
+<p>Fieberg, J., Rieger, R.H., Zicus, M. C., Schildcrout, J. S. 2009. Regression modelling of correlated data in ecology: subject specific and population averaged response patterns. Journal of Applied Ecology 46:1018-1025.</p>
+</div>
+</div>
+</section>
+<section id="mallard-nesting-structures" class="slide level2">
+<h2>Mallard Nesting structures</h2>
+
+<img data-src="Graphics/nest1.jpg" class="quarto-figure quarto-figure-center r-stretch" style="width:65.0%" alt="Picture of a single-cylinder mallard nest box."><p><strong>Research Questions</strong>: which types of cylinders are best (single or double)?</p>
+<div class="fragment">
+<p>Where should they be placed?</p>
+</div>
+</section>
+<section id="mallard-data" class="slide level2">
+<h2>Mallard Data</h2>
+<ul>
+<li>110 nest structures placed in 104 wetlands</li>
+<li>Structure type (single versus double) was chosen randomly at each location
+<ul>
+<li>53 single-cylinders, 57 double-cylinders</li>
+</ul></li>
+<li>Occupancy (0,1) and clutch sizes were recorded in 1997, 1998, 1999</li>
+</ul>
+<div style="font-size: 70%;">
+<p>Zicus, M.C., J. Fieberg and D. P. Rave. 2003. Does mallard clutch size vary with landscape composition: a different view. Wilson Bulletin 114:409-413.</p>
+<p>Zicus, M. C., D. P. Rave, and J. Fieberg. 2006. Cost effectiveness of single- vs.&nbsp;double-cylinder over-water nest structures. Wildlife Society Bulletin 34:647-655.</p>
+<p>Zicus, M. C., Rave, D. P., Das, A., Riggs, M. R., and Buitenwerf, M. L. (2006). Influence of land use on mallard nest‐structure occupancy. The Journal of wildlife management, 70(5), 1325-1333.</p>
+</div>
+</section>
+<section id="example-clutch-size-data" class="slide level2" style="font-size: 75%;">
+<h2>Example Clutch Size Data</h2>
+<p><span class="math inline">\(Y_{ij}\)</span> = clutch size for the <span class="math inline">\(i^{th}\)</span> structure during year <span class="math inline">\(j\)</span></p>
+<p><span class="math inline">\(Init.Date_{ij}\)</span> = nest initiation date (Julian day) for the <span class="math inline">\(i^{th}\)</span> structure during year <span class="math inline">\(j\)</span></p>
+<p><span class="math inline">\(I(deply=2)_{i}\)</span> = 0 if <span class="math inline">\(i^{th}\)</span> structure is a single cylinder, 1 if double cylinder</p>
+<div class="fragment">
+<p><strong>Model</strong>: <span class="math display">\[Y_{ij}  = (\beta_0 + b_{0i}) + \beta_1Init.Date_{ij} + \beta_2I(deply=2)_i+\epsilon_{ij}\]</span> <span class="math display">\[\epsilon_{ij} \sim N(0, \sigma^2_{\epsilon})\]</span> <span class="math display">\[b_{0i} \sim N(0, \sigma^2_{b_0})\]</span></p>
+<p>Assume <span class="math inline">\(\epsilon_{ij}\)</span> and <span class="math inline">\(b_{0i}\)</span> are independent.</p>
+</div>
+<div class="fragment">
+<p>Similar to including “structure” as a series of dummy variables with the added assumption that the parameters are drawn from a normal distribution</p>
+</div>
+</section>
+<section id="generalized-least-squares" class="slide level2">
+<h2>Generalized Least Squares</h2>
+<p>For normally distributed response data, we can fit correlated data models without having to resort to random effects:</p>
+<p><span class="math display">\[Clutch size_{ij} = \beta_0  + \beta_1Init.Date_{ij}+ \beta_2I(deply=2)_i +\epsilon_{ij}\]</span> <span class="math display">\[\epsilon_{ij} \sim N(0, \Omega)\]</span></p>
+<p><span class="math inline">\(\Omega\)</span> = Var/Cov matrix for <span class="math inline">\(\epsilon\)</span>. We no longer assume the errors, <span class="math inline">\(\epsilon_{ij}\)</span>, are independent!</p>
+<!---
+\begin{center}
+$\mbox{Clutch size} \sim MVN(\mu, \Omega)$\\
+$\mu_{ij} = \beta_0  + \beta_1$\texttt{Init.Date}$_{ij}$ $+ \beta_2$\texttt{I(deply=2)}$_i$ \
+\end{center}  
+--->
+</section>
+<section id="generalized-least-squares-1" class="slide level2" style="font-size: 70%;">
+<h2>Generalized Least Squares</h2>
+<p><span class="math display">\[Clutch size_{ij} = \beta_0  + \beta_1Init.Date_{ij}+ \beta_2I(deply=2)_i+\epsilon_{ij}\]</span></p>
+<p><span class="math display">\[\epsilon_{ij} \sim N(0, \Omega)\]</span></p>
+<p>Compound symmetric covariance matrix for within-cluster data:</p>
+<p><span class="math display">\[\Omega= \begin{bmatrix}
+    \Sigma_i &amp; 0 &amp; \cdots &amp; 0 \\
+    0 &amp; \ddots &amp; \ddots &amp; \vdots \\
+        \vdots &amp; \ddots &amp; \ddots &amp; 0 \\
+        0 &amp; \cdots &amp; 0 &amp; \Sigma_i
+    \end{bmatrix} \text{ with }
+  \Sigma_i = \begin{bmatrix}
+    \sigma^2 &amp; \rho\sigma^2 &amp; \cdots &amp; \rho \sigma^2 \\
+    \rho \sigma^2 &amp; \ddots &amp; \ddots &amp; \vdots \\
+        \vdots &amp; \ddots &amp; \ddots &amp; \rho \sigma^2 \\
+        \rho \sigma^2 &amp; \cdots &amp; \rho \sigma^2 &amp; \sigma^2
+    \end{bmatrix}\]</span></p>
+<div class="colums">
+<div class="column" style="width:60%;">
+<p>Correlation between:</p>
+<ul>
+<li>2 observations from the same cluster = <span class="math inline">\(\rho\)</span></li>
+<li>2 observations taken from different clusters = <span class="math inline">\(0\)</span></li>
+</ul>
+</div><div class="column fragment" style="width:40%;">
+<p>This model is equivalent to a linear mixed effects model with random intercepts for each structure! Note: <span class="math inline">\(\rho = \frac{\sigma^2_{b_0}} {\sigma^2_{b_0}+ \sigma^2_{\epsilon}}\)</span> and <span class="math inline">\(\sigma^2 = \sigma^2_{b_0}+ \sigma^2_{\epsilon}\)</span>.</p>
+</div></div>
+</section>
+<section id="extensions-to-count-and-binary-data" class="slide level2" style="font-size: 80%;">
+<h2>Extensions to Count and Binary Data</h2>
+<p>Unlike the multivariate normal distribution, Poisson, Negative Binomial, Bernoulli, Binomial distributions</p>
+<ul>
+<li>Are NOT parameterized in terms of separate mean and variance parameters.</li>
+</ul>
+<div class="fragment">
+<ul>
+<li>Variance is a function of the mea7n
+<ul>
+<li>Poisson <span class="math inline">\(Var(Y|X) = E(Y|X)\)</span></li>
+<li>Bernoulli <span class="math inline">\(Var(Y|X) = E(Y|X)(1-E(Y|X))\)</span></li>
+</ul></li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Unlike the Normal distribution, there are no multivariate Poisson or Binomial analogs that allow correlation to be directly modeled</li>
+</ul>
+</div>
+</section>
+<section id="extensions-to-count-and-binary-data-1" class="slide level2" style="font-size: 80%;">
+<h2>Extensions to Count and Binary Data</h2>
+<p>2 Options:</p>
+<div>
+<ul>
+<li class="fragment">Start with generalized linear models (logistic or Poisson regression) and add random coefficients (intercepts, slopes)</li>
+<li class="fragment">Use generalized estimating equations or cluster-level bootstrap (recognizing clusters serve as independent units)</li>
+</ul>
+</div>
+</section>
+<section>
+<section id="option-1-generalized-linear-mixed-effects-models" class="title-slide slide level1 center">
+<h1>Option 1: Generalized linear mixed effects models</h1>
+
+</section>
+<section id="generalized-linear-models" class="slide level2" style="font-size: 80%;">
+<h2>Generalized Linear Models</h2>
+<p><span style="color:red;">Systematic component</span>: <span class="math inline">\(g(\mu_i) = \eta_i = \beta_0 + \beta_1x_1 + \ldots \beta_px_p\)</span></p>
+<div class="fragment">
+<p>Some transformation of the the mean, <span class="math inline">\(g(\mu_i)\)</span>, results in a linear model.</p>
+</div>
+<div class="fragment">
+<p><span style="color:red;">Random component</span>: <span class="math inline">\(Y_i \sim f(y_i|x_i), i=1, \ldots, n\)</span></p>
+</div>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(f(y_i|x_i)\)</span> is in the <span style="color:red;">exponential family</span> (includes normal, Poisson, binomial, gamma, inverse Gaussian)</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(f(y_i|x_i)\)</span> that describes unmodeled variation about <span class="math inline">\(\mu_i = E[Y_i|X_i]\)</span></li>
+</ul>
+</div>
+</section>
+<section id="generalized-linear-mixed-effects-models" class="slide level2" style="font-size: 80%;">
+<h2>Generalized Linear Mixed Effects Models</h2>
+<p><span style="color:red;">Systematic component</span>: <span class="math inline">\(g(\mu_{ij}) = \eta_{ij} = (\beta_0 + b_{0i}) + (\beta_1 + b_{1i})x_{ij}\)</span></p>
+<div class="fragment">
+<p><span style="color:red;">Random components</span>:</p>
+<div>
+<ul>
+<li class="fragment"><span class="math inline">\(Y_{ij} | b_{0i}, b_{1i} \sim f(y_{ij} | b_{0i}, b_{1i})\)</span>, with <span class="math inline">\(f(y_i | b_{0i}, b_{1i})\)</span> in the <span style="color:red;">exponential family</span> (e.g., Poisson, binomial).</li>
+<li class="fragment"><span class="math inline">\(b_{0i}\)</span> and <span class="math inline">\(b_{1i}\)</span> allow intercepts and parameters to vary among groups.<br>
+</li>
+<li class="fragment">Usually assume: (<span class="math inline">\(b_{0i}, b_{1i}) \sim N(0, \Sigma\)</span>)</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="conditional-models" class="slide level2" style="font-size: 80%;">
+<h2>Conditional models</h2>
+<p>Poisson-normal model:</p>
+<ul>
+<li><span class="math inline">\(Y_{ij} | b_i \sim\)</span> Poisson(<span class="math inline">\(\lambda_{ij}\)</span>)</li>
+<li><span class="math inline">\(log(\lambda_{ij}) =  (\beta_0 + b_{0i}) + (\beta_1 + b_{1i})x_{ij}\)</span></li>
+<li>(<span class="math inline">\(b_{0i}, b_{1i}) \sim N(0, \Sigma\)</span>)</li>
+</ul>
+<div class="fragment">
+<p>Logistic-normal model:</p>
+<ul>
+<li><span class="math inline">\(Y_{ij} | b_i \sim\)</span> Bernoulli(<span class="math inline">\(p_{ij}\)</span>)<br>
+</li>
+<li><span class="math inline">\(logit(p_{ij}) =  (\beta_0 + b_{0i}) + (\beta_1 + b_{1i})x_{ij}\)</span></li>
+<li>(<span class="math inline">\(b_{0i}, b_{1i}) \sim N(0, \Sigma\)</span>)</li>
+</ul>
+</div>
+<div class="fragment">
+<p>Frequentist analysis: the <span class="math inline">\(b\)</span>’s are unobserved random variables…we do not estimate them! Rather, we estimate <span class="math inline">\(\beta_0, \beta_1, \Sigma\)</span>.</p>
+</div>
+</section>
+<section id="non-linear-models-modeling-occupancy-probability" class="slide level2" style="font-size: 80%;">
+<h2>Non-linear models: Modeling Occupancy Probability</h2>
+<p>Logistic-normal model:</p>
+<p><span class="math display">\[Y_{ij} | b_i \sim Bernoulli(p_{ij})\]</span> <span class="math display">\[\log[p_{ij}/(1-p_{ij}) | b_i] = \beta_0 + b_{0i} + \beta_1VOM_{ij} + \beta_2I(deply=2)_i\]</span> <span class="math display">\[b_{0i} \sim N(0, \tau^2)\]</span></p>
+<div class="fragment">
+<p>Structures have different “propensities” of being occupied:</p>
+<ul>
+<li>Depending on visual obstruction (VOM), structure type, and other unmeasured characteristics (<span class="math inline">\(b_{0i}\)</span>) associated with the structure and the landscape in which it is placed.</li>
+</ul>
+</div>
+</section>
+<section id="parameter-estimation" class="slide level2" style="font-size: 80%;">
+<h2>Parameter Estimation</h2>
+<p>To estimate parameters using Maximum Likelihood, we need to determine:</p>
+<ul>
+<li>the distribution of <span class="math inline">\(Y\)</span> (not <span class="math inline">\(Y|b_i\)</span>)</li>
+</ul>
+<div class="fragment">
+<p><span style="color:red;">Total law of Probability</span> If events <span class="math inline">\(B_1, B_2, \ldots, B_k\)</span> are mutually exclusive and together make up all possibilities, then:</p>
+<p><span class="math inline">\(P(A) = \sum_iP(A|B_i)P(B)\)</span></p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="Graphics/Partitionpic2.png" class="quarto-figure quarto-figure-center" style="width:50.0%" alt="Visualization of the total law of probability."></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="unconditional-model-and-likelihood" class="slide level2">
+<h2>Unconditional Model and Likelihood</h2>
+<p>To determine the distribution of <span class="math inline">\(Y_{ij}\)</span>, we integrate over the random effects:</p>
+<p><span class="math display">\[L(Y_{ij} | \beta, \Sigma) =  \int f(Y_{ij} | b_i)f(b_i)db_i\]</span></p>
+<ul>
+<li><span class="math inline">\(\beta\)</span> = fixed effects parameters in <span class="math inline">\(f(Y_{ij} | b_i)\)</span></li>
+<li><span class="math inline">\(\Sigma\)</span> are variance parameters of the random effects distribution, <span class="math inline">\(f(b_i)\)</span></li>
+</ul>
+<!---
+- $f(Y_{ij} |b_i)$ a distribution from the exponential family (e.g., Poisson, Binomial)
+- $f(b_i)$ is usually $\sim N(0, D)$ 
+--->
+</section>
+<section id="normally-distributed-data-linear-mixed-effects-models" class="slide level2" style="font-size: 70%;">
+<h2>Normally Distributed Data: Linear Mixed Effects Models</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><span class="math display">\[Y_{ij}|b \sim N(\mu_{ij}, \sigma^2)\]</span> <span class="math display">\[\mu_{ij} = X_{ij}\beta + Z_ib\]</span> <span class="math display">\[b \sim N(0, \Sigma)\]</span></p>
+</div><div class="column fragment" style="width:60%;">
+<p>If we average over (or integrate out) the random effects (<span class="math inline">\(b\)</span>), we get the <span style="color:red;">marginal distribution of <span class="math inline">\(Y\)</span></span>:</p>
+<p><span class="math display">\[Y  \sim MVN(X\beta, \Omega)\]</span> <span class="math display">\[\Omega = Z\Sigma Z^\prime + \sigma^2I\]</span></p>
+<p><span class="fragment"><span class="math display">\[I= \begin{bmatrix}
+    1 &amp; 0 &amp; \cdots &amp; 0 \\
+    0 &amp; \ddots &amp; \ddots &amp; \vdots \\
+        \vdots &amp; \ddots &amp; \ddots &amp; 0 \\
+        0 &amp; \cdots &amp; 0 &amp; 1
+    \end{bmatrix}_{(n \times n)}\]</span></span></p>
+</div></div>
+<!---
+ 
+## 
+
+
+Random intercepts model:
+
+\begin{center}
+$Y_{ij} | b_i \sim$ Normal($\mu_{ij}$, $\sigma^2$)\\
+$\mu_{ij} = X_{ij}\beta + b_{i}$\\
+$b_i\sim N(0, \tau^2)$ 
+\end{center}
+
+Likelihood:
+
+\begin{align}
+L(Y | \beta, D) & = &  \prod_{i=1}^{n}  \int f(Y_{ij} | b_i)f(b_i)db_i \\
+L(Y | \beta, D) & = &  \prod_{i=1}^{n} \int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi}\sigma}e^{\frac{(Y_{ij} - X_{ij}\beta-b_i)^2}{2\sigma^2}}\frac{1}{\sqrt{2\pi}\tau}e^{\frac{(b_i -0)^2}{2\tau^2}}db_i \\  
+\end{align}
+...
+
+
+Theses integrals can be solved analytically, giving.... 
+...
+
+
+\begin{center}
+$Y_{ij} \sim N(X_{ij}\beta, \Omega)$  
+
+$\Omega= \begin{bmatrix} 
+    \Sigma_i & 0 & \cdots & 0 \\
+    0 & \ddots & \ddots & \vdots \\
+        \vdots & \ddots & \ddots & 0 \\
+        0 & \cdots & 0 & \Sigma_i
+    \end{bmatrix}$ with 
+  $\Sigma_i = \begin{bmatrix} 
+    \tau^2 + \sigma^2 & \tau^2 & \cdots & \tau^2 \\
+    \tau^2  & \ddots & \ddots & \vdots \\
+        \vdots & \ddots & \ddots & \tau^2 \\
+        \tau^2 & \cdots & \tau^2 & \tau^2 + \sigma^2
+    \end{bmatrix}$
+  \end{center} 
+    
+--->
+</section>
+<section id="GLSvRI" class="slide level2" data-menu-title="GLS versus RI model" style="font-size: 70%;">
+<h2></h2>
+<div class="columns">
+<div class="column">
+<p><span class="math display">\[Y  \sim MVN(X\beta, \Omega)\]</span></p>
+<p>Random Intercept Model:</p>
+<p><span class="math display">\[\Omega= \begin{bmatrix}
+    \Sigma_i &amp; 0 &amp; \cdots &amp; 0 \\
+    0 &amp; \ddots &amp; \ddots &amp; \vdots \\
+        \vdots &amp; \ddots &amp; \ddots &amp; 0 \\
+        0 &amp; \cdots &amp; 0 &amp; \Sigma_i
+    \end{bmatrix} \text{ with }\]</span> <span class="fragment"><span class="math display">\[\Sigma_i = \begin{bmatrix}
+    \tau^2 + \sigma^2 &amp; \tau^2 &amp; \cdots &amp; \tau^2 \\
+    \tau^2  &amp; \ddots &amp; \ddots &amp; \vdots \\
+        \vdots &amp; \ddots &amp; \ddots &amp; \tau^2 \\
+        \tau^2 &amp; \cdots &amp; \tau^2 &amp; \tau^2 + \sigma^2
+    \end{bmatrix}\]</span></span></p>
+</div><div class="column fragment" style="width:50%;">
+<p>GLS Model with compound-symmetric correlation structure:</p>
+<p><span class="math display">\[\Omega= \begin{bmatrix}
+    \Sigma_i &amp; 0 &amp; \cdots &amp; 0 \\
+    0 &amp; \ddots &amp; \ddots &amp; \vdots \\
+        \vdots &amp; \ddots &amp; \ddots &amp; 0 \\
+        0 &amp; \cdots &amp; 0 &amp; \Sigma_i
+    \end{bmatrix} \text{ with }\]</span> <span class="fragment"><span class="math display">\[\Sigma_i = \begin{bmatrix}
+    \sigma^2 &amp; \rho\sigma^2 &amp; \cdots &amp; \rho \sigma^2 \\
+    \rho \sigma^2 &amp; \ddots &amp; \ddots &amp; \vdots \\
+        \vdots &amp; \ddots &amp; \ddots &amp; \rho \sigma^2 \\
+        \rho \sigma^2 &amp; \cdots &amp; \rho \sigma^2 &amp; \sigma^2
+    \end{bmatrix}\]</span></span></p>
+</div></div>
+</section>
+<section id="logistic-normal-random-intercept-model" class="slide level2" style="font-size: 75%;">
+<h2>Logistic-normal random intercept model</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><span class="math display">\[Y_{ij} |b_i \sim Bernoulli(p_{ij})\]</span> <span class="math display">\[logit(p_{ij}) = \beta_0 + b_{0i} + \beta_{1}x_{ij}\]</span> <span class="math display">\[b_{0i} \sim N(0, \sigma^2_{b})\]</span></p>
+</div><div class="column fragment" style="width:50%;">
+<ul>
+<li><span class="math inline">\(f(Y_{ij} |b_i)  = p_{ij}^{Y_{ij}}(1-p_{ij})^{1-Y_{ij}}\)</span></li>
+<li><span class="math inline">\(f(b_i) = \frac{1}{\sqrt{2\pi}\sigma_{b}}e^{\frac{(b_{0i}-0)^2}{2\sigma^2_{b}}}\)</span></li>
+</ul>
+</div></div>
+<div class="fragment">
+<p><span class="math display">\[L(Y_{ij} | \beta, \Sigma) =  \int f(Y_{ij} | b_i)f(b_i)db_i\]</span></p>
+<p><span class="math display">\[\int \left[ \frac{exp(\beta_0 + b_{0i} + \beta_1x_{ij})}{1+exp(\beta_0 + b_{0i} + \beta_1x_{ij})}\right]^{Y_{ij}}\left[ \frac{1}{1+exp(\beta_0 + b_{0i} + \beta_1x_{ij})}\right]^{1-Y_{ij}} \frac{1}{\sqrt{2\pi}\sigma_{b}}e^{\frac{(b_{0i}-0)^2}{2\sigma^2_{b}}}db_{0i}\]</span></p>
+</div>
+<div class="fragment">
+<p>No closed-form solution!</p>
+</div>
+</section>
+<section id="unconditional-model-and-likelihood-1" class="slide level2">
+<h2>Unconditional Model and Likelihood</h2>
+<p>How do we use maximum likelihood to estimate parameters?</p>
+<p><span class="math display">\[L(Y_{ij} | \beta, \Sigma) = \prod_{i=1}^{n} \int f(Y_{ij} | b_i)f(b_i)db_i\]</span></p>
+<div class="fragment">
+<p>Options:</p>
+<div>
+<ul>
+<li class="fragment">Approximate <span class="math inline">\(\prod_{i=1}^{n} \int f(Y_{ij} | b_i)f(b_i)\)</span>, then maximize<br>
+</li>
+<li class="fragment">Use numerical integration (can be slow, difficult, particularly with multiple random effects)</li>
+<li class="fragment">Add priors, and use Bayesian techniques</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="numerical-integration-glmer" class="slide level2" style="font-size: 80%;">
+<h2>Numerical Integration: glmer</h2>
+<p><strong><code>nAGQ</code></strong></p>
+<ul>
+<li>specifies number of points per axis for evaluating the adaptive Gauss-Hermite approximation to the log-likelihood.</li>
+<li>default = 1 (Laplace approximation)</li>
+<li>values &gt; 1 produce greater accuracy in the evaluation of the log-likelihood at the expense of speed.</li>
+<li>a value of zero uses a faster but less exact form of parameter estimation for GLMMs (penalized iteratively reweighted least squares step).</li>
+</ul>
+<div class="fragment">
+<p>See also <strong>mixed_model</strong> in the <code>GLMMadaptive</code> package.</p>
+<!---
+## What about linear mixed models?
+
+Linear mixed model with random intercepts:
+\begin{center}
+$Y_{ij} | b_i \sim$ Normal($\mu_{ij}$, $\sigma^2$)  \\
+$\mu_{ij} = (\beta_0 + b_{0i}) + (\beta_1 + b_{1i})x_{ij}$
+\end{center}
+
+...
+
+
+Likelihood:
+\begin{center}
+$L(Y_{ij} | \beta, D) = \prod_{i=1}^n \int f(Y_{ij} | b_i)f(b_i)db_i$
+\end{center}
+...
+
+ 
+There is a closed form expression in this case...
+
+- $Y_{ij}$ is normally distributed!
+--->
+</div>
+</section>
+<section id="lmes-versus-glmms" class="slide level2">
+<h2>LMEs versus GLMMs</h2>
+<p>Generalized linear mixed effects models are more challenging to fit than linear mixed effects models…and</p>
+<div class="fragment">
+<p><br></p>
+<p>Parameters in generalized linear mixed effects models have a “subject-specific”, but not “population-average” interpretation.</p>
+</div>
+</section>
+<section id="parameter-interpretation-linear-mixed-effects-models" class="slide level2" style="font-size: 65%;">
+<h2>Parameter Interpretation: Linear mixed effects models</h2>
+<p><span class="math display">\[Clutch size_{ij} = (\beta_0 + b_{0i}) + \beta_1Init.Date_{ij} + \beta_2I(deply=2)_i+\epsilon_{ij}\]</span> <span class="math display">\[\epsilon_{ij} \sim N(0, \sigma^2)\]</span> <span class="math display">\[b_{0i} \sim N(0, \sigma^2_{b_0})\]</span></p>
+<p>Assume <span class="math inline">\(\epsilon_{ij}\)</span> and <span class="math inline">\(b_{0i}\)</span> are independent.</p>
+<div class="fragment">
+<p>How does clutch size vary with nest initiation date and structure type for a “typical” structure (i.e., one with <span class="math inline">\(b_{0i}\)</span> = 0)?</p>
+<ul>
+<li><span class="math inline">\(E[Y|X, b_{0i}=0]  =  \beta_0 + \beta_1Init.Date + \beta_2I(deply=2)\)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<p>How does clutch size vary across the population of structures as a function of nest initiation date and structure type?</p>
+<ul>
+<li><span class="math inline">\(E[Y|X] =  \beta_0 + \beta_1Init.Date + \beta_2I(deply=2)\)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<p>Fixed effects parameters have both population-averaged and subject-specific interpretations!</p>
+</div>
+</section>
+<section id="parameter-interpretation-generalized-linear-mixed-effects-models" class="slide level2" style="font-size: 70%;">
+<h2>Parameter Interpretation: Generalized Linear Mixed Effects Models</h2>
+<p><span class="math display">\[Y_i | b_i \sim Binomial(1,p_i)\]</span> <span class="math display">\[\log[p_{ij}/(1-p_{ij}) | b_i] = \beta_0 + b_{0i} + \beta_1VOM_{ij} + \beta_2I(deply=2)_i\]</span> <span class="math display">\[b_{0i} \sim N(0, \sigma^2_{b_0})\]</span></p>
+<div class="fragment">
+<p>The fixed effects parameters in logistic regression models <strong>only</strong> have a <strong>subject-specific</strong> interpretation when we transform back to scales of interest!</p>
+<div>
+<ul>
+<li class="fragment"><span class="math inline">\(\exp(\beta_1)\)</span> = change in the odds of occupancy as we increase VOM by 1 unit while holding and <span class="math inline">\(b_{0i}\)</span> (i.e., “structure”) constant</li>
+<li class="fragment"><span class="math inline">\(exp(\beta_2)\)</span> = change in the odds of occupancy if we were to change a particular structure from a single to double cylinder model (and hold VOM constant)</li>
+</ul>
+</div>
+</div>
+<div class="fragment">
+<p>Note: a subject-specific interpretation may not be meaningful for predictors that are constant within a cluster.</p>
+</div>
+</section>
+<section id="interpretation-of-parameters-glmms" class="slide level2">
+<h2>Interpretation of Parameters: GLMMS</h2>
+
+<img data-src="Graphics/sspa.jpg" class="quarto-figure quarto-figure-center r-stretch" style="width:60.0%" alt="Picture of subject-specific curves depicting probability of use (y-axis) versus VOM (x-axis), along with the population averaged response. All curves exhibit an &quot;s-liked&quot; shape with probabilities giong from 0 to 1 as we increase VOM, but the population averaged response curve is flatter than the subject-specific curves."><p><span class="math inline">\(E[Y_{ij} | X]\)</span> (red curve) is no longer the same as <span class="math inline">\(E[Y_{ij}|X, b_{0i}=0]\)</span> (blue curve)!</p>
+<!---
+## GLMMS
+
+
+- Population-averaged response patters $\ne$ subject-specific response pattern with random effects set = 0.
+
+- GLMMS can also be more difficult to fit than linear mixed effects models
+
+    - Require numerical integration to determine the likelihood and estimate parameters
+
+--->
+</section>
+<section id="glmms-and-population-average-response-patterns" class="slide level2" style="font-size: 70%;">
+<h2>GLMMs and Population-Average Response Patterns</h2>
+<p><span class="math display">\[Y_{ij} | b_{0i}, b_{1i} \sim f(y_{ij} | b_{0i}, b_{1i})\]</span> <span class="math display">\[(b_{0i}, b_{1i}) \sim N(0, \Sigma), \mbox{ with}\]</span></p>
+<p><span class="math inline">\(f(y_i | b_{0i}, b_{1i})\)</span> given by Poisson, binomial, negative binomial.</p>
+<p><br></p>
+<p>How can we quantify how <span class="math inline">\(E[Y|X]\)</span> changes with <span class="math inline">\(X\)</span> (as opposed to <span class="math inline">\(E[Y |X, b_{0i}, b_{1i}]\)</span> or <span class="math inline">\(E[Y |X, b_{0i}= b_{1i}=0]\)</span>)?</p>
+<div class="fragment">
+<div>
+<ul>
+<li class="fragment">Integrate (i.e.&nbsp;average) over the random effects using simulations: simulate several subject-specific response curves from the fitted model, transform back to the response scale, then average.</li>
+<li class="fragment">Approximations in the literature for specific models (see Section 19 in book)</li>
+<li class="fragment"><code>mixed_model</code> + <code>marginal_coefs</code> in <code>GLMMadaptive</code> package to estimate equivalent “marginal coefficients” (based on Hedeker et al.&nbsp;2018).<br>
+</li>
+</ul>
+</div>
+</div>
+<div class="fragment">
+<div style="font-size: 60%;">
+<p>Hedeker, D., du Toit, S. H., Demirtas, H. and Gibbons, R. D. (2018), A note on marginalization of regression parameters from mixed models of binary outcomes. Biometrics 74, 354-361.</p>
+</div>
+</div>
+</section>
+<section id="glmm-resources-on-canvas" class="slide level2">
+<h2>GLMM Resources on Canvas</h2>
+<p>Readings:</p>
+<ul>
+<li>Bolker et al.&nbsp;2008. Generalized linear mixed models: a practical guide for ecology and evolution</li>
+<li>Bolker et al.&nbsp;2013: Strategies for fitting nonlinear ecological models in R, AD Model Builder, and BUGS</li>
+</ul>
+<p>Useful Links</p>
+<ul>
+<li><a href="http://glmm.wikidot.com/">GLMM wiki</a></li>
+<li><a href="http://glmm.wikidot.com/examples">GLMMS worked examples</a></li>
+<li><a href="https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html">GLMM FAQ</a></li>
+</ul>
+</section></section>
+<section>
+<section id="option-2-generalized-estimating-equations" class="title-slide slide level1 center">
+<h1>Option 2: Generalized Estimating equations</h1>
+
+</section>
+<section id="generalized-estimating-equations" class="slide level2">
+<h2>Generalized Estimating Equations</h2>
+<ul>
+<li>Motivation (least squares, maximum likelihood…)</li>
+<li>Assumptions and implementation of GEE approach</li>
+</ul>
+</section>
+<section id="least-squares-and-maximum-likelihood" class="slide level2" style="font-size: 70%;">
+<h2>Least Squares and Maximum Likelihood</h2>
+<p>For Normally distributed data:</p>
+<p><span class="math inline">\(L(\mu, \sigma^2; y_1, y_2, \ldots, y_n) = \prod_{i=1}^n \frac{1}{\sqrt{2\pi}\sigma}\exp\left(-\frac{(y_i-\mu)^2}{2\sigma^2}\right)\)</span></p>
+<div class="fragment">
+<p>With linear regression, we assume <span class="math inline">\(Y_i \sim N(\beta_0 + x_i\beta_1, \sigma^2)\)</span>, so…</p>
+<p><br></p>
+</div>
+<div class="fragment">
+<p><span class="math inline">\(L(\beta_0, \beta_1, \sigma; x) = \prod_{i=1}^n \frac{1}{\sqrt{2\pi}\sigma}\exp\left(-\frac{(y_i-\beta_0+x_i\beta_1)^2}{2\sigma^2}\right) =\frac{1}{(\sqrt{2\pi}\sigma)^n}\exp\left(-\sum_{i=1}^n\frac{(y_i-\beta_0+x_i\beta_1)^2}{2\sigma^2}\right)\)</span></p>
+</div>
+<div class="fragment">
+<p><span class="math inline">\(\Rightarrow logL =-nlog(\sigma) - \frac{n}{2}log(2\pi) -\sum_{i=1}^n\frac{(y_i-\beta_0+x_i\beta_1)^2}{2\sigma^2}\)</span></p>
+</div>
+<div class="fragment">
+<p><span class="math inline">\(\Rightarrow\)</span> maximizing logL <span class="math inline">\(\Rightarrow\)</span> minimizing <span class="math inline">\(\sum_{i=1}^n\frac{(y_i-\beta_0+x_i\beta_1)^2}{2\sigma^2}\)</span></p>
+<p>or, equivalently <span class="math inline">\(\sum_{i=1}^n(y_i-\beta_0-x_i\beta_1)^2\)</span></p>
+</div>
+</section>
+<section id="least-squares" class="slide level2">
+<h2>Least squares</h2>
+<p><span class="math display">\[\begin{gather}
+\sum_{i=1}^n (y_i - E[Y_i|X_i])^2 \newline
+= \sum_{i=1}^n (y_i - (\beta_0+x_{1i}\beta_1+\ldots))^2
+\end{gather}\]</span></p>
+<p>Least squares leads to the following set of equations for estimating parameters (take the derivative and set = 0):</p>
+<p><span class="math display">\[2\sum_{i=1}^n \frac{\partial E[Y_i|X_i]}{\partial \beta}(Y_i -E[Y_i|X_i]) = 0\]</span></p>
+<p>Or, equivalently…</p>
+<p><span class="math display">\[\sum_{i=1}^n X_i(Y_i -E[Y_i|X_i]) = 0\]</span></p>
+</section>
+<section id="generalized-linear-models-1" class="slide level2" style="font-size: 80%;">
+<h2>Generalized Linear Models</h2>
+<p>Maximum Likelihood estimators are found by solving:</p>
+<p><span class="math inline">\(\sum_{i=1}^n \frac{\partial E[Y_i|X_i]}{\partial \beta}V_i^{-1}(Y_i -E[Y_i|X_i]) = 0\)</span>.</p>
+<div class="fragment">
+<p>Logistic Regression:</p>
+<ul>
+<li><span class="math inline">\(E[Y_i|X_i]= exp(X_i\beta)/[1+exp(X_i\beta)]\)</span></li>
+<li><span class="math inline">\(V_i = Var[Y_i|X_i]=  E[Y_i|X_i](1-E[Y_i|X_i])\)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<p>Poisson Regression:</p>
+<ul>
+<li><span class="math inline">\(E[Y_i|X_i]= exp(X_i\beta)\)</span></li>
+<li><span class="math inline">\(V_i = Var[Y_i|X_i]=  E[Y_i|X_i]\)</span></li>
+</ul>
+</div>
+</section>
+<section id="generalized-estimating-equations-gee" class="slide level2" style="font-size: 80%;">
+<h2>Generalized Estimating Equations (GEE)</h2>
+<p>GEE: <span class="math inline">\(\hat{\beta}\)</span> solves: <span class="math inline">\(\sum_{i=1}^n \frac{\partial \mu_i}{\partial \beta}V_i(\alpha)^{-1}(Y_i -E[Y_i|X_i]) = 0\)</span>.</p>
+<div>
+<ul>
+<li class="fragment">Specify mean (<span class="math inline">\(E[Y|X]\)</span>) and variance covariance matrix (<span class="math inline">\(V_i\)</span>) of the data from each individual</li>
+<li class="fragment">Write <span class="math inline">\(V_i(\alpha)\)</span> in terms of variances and correlations among observations for each individual= <span class="math inline">\(A_i^{1/2}R_i(\alpha)A_i^{1/2}\)</span><br>
+</li>
+<li class="fragment">Determine the variance model based on the type of data (e.g., <span class="math inline">\(A_i = \phi E[Y|X]\)</span> for count data, <span class="math inline">\(A_i =  E[Y|X](1-E[Y|X])\)</span> for binary data)</li>
+</ul>
+</div>
+<div class="fragment">
+<p><span class="math inline">\(R_i\)</span> = working correlation model that describes within subject correlation.</p>
+<ul>
+<li>Examples include exchangeable (equal correlation among all observations), Ar(1) (time series), unstructured</li>
+</ul>
+</div>
+</section>
+<section id="generalized-estimating-equations-gee-1" class="slide level2" style="font-size: 80%;">
+<h2>Generalized Estimating Equations (GEE)</h2>
+<p>GEE: <span class="math inline">\(\hat{\beta}\)</span> solves: <span class="math inline">\(\sum_{i=1}^n \frac{\partial \mu_i}{\partial \beta}V_i(\alpha)^{-1}(Y_i -E[Y_i|X_i]) = 0\)</span>.</p>
+<div>
+<ul>
+<li class="fragment">Model the mean and variance as a function of explanatory variables (<span class="math inline">\(E(Y|X)\)</span> and <span class="math inline">\(Var(Y|X)\)</span>)</li>
+<li class="fragment">Make no other distributional assumptions (“quasi-likelihood”)</li>
+<li class="fragment">Uses large sample theory for statistical inference, treating clusters as independent</li>
+<li class="fragment">Fixed effects parameters have a population-averaged interpretation (how does <span class="math inline">\(y\)</span> change across the population of structures that have different values of <span class="math inline">\(x\)</span> )</li>
+<li class="fragment">Fit using <code>geeglm</code> in <code>geepack</code> library</li>
+</ul>
+</div>
+</section>
+<section id="theory" class="slide level2" style="font-size: 80%;">
+<h2>Theory</h2>
+<p>Estimates will be asymptotically unbiased (think “large number of clusters”)</p>
+<div>
+<ul>
+<li class="fragment">Even if the assumed variance &amp; covariance models are wrong</li>
+<li class="fragment">Better assumptions regarding the variance &amp; correlation structure lead to more precise estimates</li>
+<li class="fragment">Requires “missing data” to be missing completely at random (a simple way to think about this assumption is that the amount of data for each cluster is random)</li>
+</ul>
+</div>
+<div class="fragment">
+<p>Uses “robust” (or “sandwich”) standard errors, treating clusters as independent observational units</p>
+<ul>
+<li><span class="math inline">\(\hat{\beta} \pm 1.96SE\)</span> gives valid CIs (for large numbers of clusters)</li>
+</ul>
+
+</div>
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="L19-20_GLMMsandGEEs_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="L19-20_GLMMsandGEEs_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="L19-20_GLMMsandGEEs_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="L19-20_GLMMsandGEEs_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="L19-20_GLMMsandGEEs_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="L19-20_GLMMsandGEEs_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="L19-20_GLMMsandGEEs_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="L19-20_GLMMsandGEEs_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="L19-20_GLMMsandGEEs_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="L19-20_GLMMsandGEEs_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="L19-20_GLMMsandGEEs_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'fade',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 5.0e-2,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+
+    <script>
+
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
+      // slide changes (different for each slide format).
+
+      (function () {
+
+        // dispatch for htmlwidgets
+
+        function fireSlideEnter() {
+
+          const event = window.document.createEvent("Event");
+
+          event.initEvent("slideenter", true, true);
+
+          window.document.dispatchEvent(event);
+
+        }
+
+    
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+
+          fireSlideEnter();
+
+    
+
+          // dispatch for shiny
+
+          if (window.jQuery) {
+
+            if (previousSlide) {
+
+              window.jQuery(previousSlide).trigger("hidden");
+
+            }
+
+            if (currentSlide) {
+
+              window.jQuery(currentSlide).trigger("shown");
+
+            }
+
+          }
+
+        }
+
+    
+
+        // hookup for slidy
+
+        if (window.w3c_slidy) {
+
+          window.w3c_slidy.add_observer(function (slide_num) {
+
+            // slide_num starts at position 1
+
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
+          });
+
+        }
+
+    
+
+      })();
+
+    </script>
+
+    
+
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        // For code content inside modals, clipBoardJS needs to be initialized with a container option
+        // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>

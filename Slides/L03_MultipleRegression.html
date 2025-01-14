@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="L03_MultipleRegression_files/libs/clipboard/clipboard.min.js"></script>
+<script src="L03_MultipleRegression_files/libs/quarto-html/tabby.min.js"></script>
+<script src="L03_MultipleRegression_files/libs/quarto-html/popper.min.js"></script>
+<script src="L03_MultipleRegression_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="L03_MultipleRegression_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="L03_MultipleRegression_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="L03_MultipleRegression_files/libs/quarto-html/quarto-syntax-highlighting-dark-8b864f0777c60eecff11d75b6b2e1175.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.33">
+
+  <meta name="author" content="FW8051 Statistics for Ecologists">
+  <title>Multiple Regression</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="L03_MultipleRegression_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="L03_MultipleRegression_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+      }
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #f8f8f2;  }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #f8f8f2; } /* Normal */
+    code span.al { color: #f07178; background-color: #2a0f15; font-weight: bold; } /* Alert */
+    code span.an { color: #d4d0ab; } /* Annotation */
+    code span.at { color: #00e0e0; } /* Attribute */
+    code span.bn { color: #d4d0ab; } /* BaseN */
+    code span.bu { color: #abe338; } /* BuiltIn */
+    code span.cf { color: #ffa07a; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #abe338; } /* Char */
+    code span.cn { color: #ffd700; } /* Constant */
+    code span.co { color: #f8f8f2; font-style: italic; } /* Comment */
+    code span.cv { color: #ffd700; } /* CommentVar */
+    code span.do { color: #f8f8f2; } /* Documentation */
+    code span.dt { color: #ffa07a; } /* DataType */
+    code span.dv { color: #d4d0ab; } /* DecVal */
+    code span.er { color: #f07178; text-decoration: underline; } /* Error */
+    code span.ex { color: #00e0e0; font-weight: bold; } /* Extension */
+    code span.fl { color: #d4d0ab; } /* Float */
+    code span.fu { color: #ffa07a; } /* Function */
+    code span.im { color: #abe338; } /* Import */
+    code span.in { color: #d4d0ab; } /* Information */
+    code span.kw { color: #ffa07a; font-weight: bold; } /* Keyword */
+    code span.op { color: #ffa07a; } /* Operator */
+    code span.ot { color: #00e0e0; } /* Other */
+    code span.pp { color: #dcc6e0; } /* Preprocessor */
+    code span.re { color: #00e0e0; background-color: #f8f8f2; } /* RegionMarker */
+    code span.sc { color: #abe338; } /* SpecialChar */
+    code span.ss { color: #abe338; } /* SpecialString */
+    code span.st { color: #abe338; } /* String */
+    code span.va { color: #00e0e0; } /* Variable */
+    code span.vs { color: #abe338; } /* VerbatimString */
+    code span.wa { color: #dcc6e0; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="L03_MultipleRegression_files/libs/revealjs/dist/theme/quarto-c89a7e063782379d64767b77f736f9e1.css">
+  <link href="L03_MultipleRegression_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="L03_MultipleRegression_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="L03_MultipleRegression_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="L03_MultipleRegression_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="L03_MultipleRegression_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="L03_MultipleRegression_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <script src="L03_MultipleRegression_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+  <script src="L03_MultipleRegression_files/libs/rglWebGL-binding-1.3.1/rglWebGL.js"></script>
+
+  <link href="L03_MultipleRegression_files/libs/rglwidgetClass-1.3.1/rgl.css" rel="stylesheet">
+
+  <script src="L03_MultipleRegression_files/libs/rglwidgetClass-1.3.1/rglClass.src.js"></script>
+
+  <script src="L03_MultipleRegression_files/libs/rglwidgetClass-1.3.1/utils.src.js"></script>
+
+  <script src="L03_MultipleRegression_files/libs/rglwidgetClass-1.3.1/buffer.src.js"></script>
+
+  <script src="L03_MultipleRegression_files/libs/rglwidgetClass-1.3.1/subscenes.src.js"></script>
+
+  <script src="L03_MultipleRegression_files/libs/rglwidgetClass-1.3.1/shaders.src.js"></script>
+
+  <script src="L03_MultipleRegression_files/libs/rglwidgetClass-1.3.1/shadersrc.src.js"></script>
+
+  <script src="L03_MultipleRegression_files/libs/rglwidgetClass-1.3.1/textures.src.js"></script>
+
+  <script src="L03_MultipleRegression_files/libs/rglwidgetClass-1.3.1/projection.src.js"></script>
+
+  <script src="L03_MultipleRegression_files/libs/rglwidgetClass-1.3.1/mouse.src.js"></script>
+
+  <script src="L03_MultipleRegression_files/libs/rglwidgetClass-1.3.1/init.src.js"></script>
+
+  <script src="L03_MultipleRegression_files/libs/rglwidgetClass-1.3.1/pieces.src.js"></script>
+
+  <script src="L03_MultipleRegression_files/libs/rglwidgetClass-1.3.1/draw.src.js"></script>
+
+  <script src="L03_MultipleRegression_files/libs/rglwidgetClass-1.3.1/controls.src.js"></script>
+
+  <script src="L03_MultipleRegression_files/libs/rglwidgetClass-1.3.1/selection.src.js"></script>
+
+  <script src="L03_MultipleRegression_files/libs/rglwidgetClass-1.3.1/rglTimer.src.js"></script>
+
+  <script src="L03_MultipleRegression_files/libs/rglwidgetClass-1.3.1/pretty.src.js"></script>
+
+  <script src="L03_MultipleRegression_files/libs/rglwidgetClass-1.3.1/axes.src.js"></script>
+
+  <script src="L03_MultipleRegression_files/libs/rglwidgetClass-1.3.1/animation.src.js"></script>
+
+  <script src="L03_MultipleRegression_files/libs/CanvasMatrix4-1.3.1/CanvasMatrix.src.js"></script>
+
+</head>
+<body class="quarto-dark">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Multiple Regression</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+FW8051 Statistics for Ecologists 
+</div>
+</div>
+</div>
+
+</section>
+<section id="learning-goals" class="slide level2">
+<h2>Learning Goals</h2>
+<ol type="1">
+<li>Understand regression analysis with <strong>matrix notation</strong>.</li>
+<li>Become familiar with creating <strong>dummy variables</strong> for categorical regressors</li>
+<li><strong>Interpret</strong> the results of regression analyses with categorical and quantitative variables</li>
+</ol>
+</section>
+<section id="matrix-notation-for-regression" class="slide level2">
+<h2>Matrix Notation for Regression</h2>
+<p>Recall: <span class="math inline">\(Y_i = \beta_0 + \beta_1X_i + \epsilon_i \quad (i = 1, \ldots, n)\)</span></p>
+<div class="fragment">
+<ul>
+<li>This implies:</li>
+</ul>
+<p><span class="math display">\[\begin{eqnarray*}
+Y_1 &amp; = &amp; \beta_0 + \beta_1X_1 + \epsilon_1 \\
+Y_2 &amp; = &amp; \beta_0 + \beta_1X_2 + \epsilon_2 \\
+&amp; \vdots &amp; \\
+Y_n &amp; = &amp; \beta_0 + \beta_1X_n + \epsilon_n
+\end{eqnarray*}\]</span></p>
+</div>
+<div class="fragment">
+<ul>
+<li>We can extract this set of equations with matrices.</li>
+</ul>
+</div>
+</section>
+<section id="matrix-notation-for-regression-1" class="slide level2">
+<h2>Matrix Notation for Regression</h2>
+<p><span class="math display">\[\begin{eqnarray*}
+Y_1 &amp; = &amp; \beta_0 + \beta_1X_1 + \epsilon_1 \\
+Y_2 &amp; = &amp; \beta_0 + \beta_1X_2 + \epsilon_2 \\
+&amp; \vdots &amp; \\
+Y_n &amp; = &amp; \beta_0 + \beta_1X_n + \epsilon_n
+\end{eqnarray*}\]</span></p>
+<p><span class="math display">\[\begin{equation*}
+Y_{n\times1} = \begin{bmatrix}Y_1 \\ Y_2 \\ \vdots \\ Y_n \end{bmatrix}
+X_{n\times2} = \begin{bmatrix} 1 &amp; X_1 \\ 1 &amp; X_2 \\ \vdots &amp; \vdots \\ 1 &amp; X_n \end{bmatrix}
+\beta_{2\times1} = \begin{bmatrix} \beta_0 \\ \beta_1 \end{bmatrix}
+\epsilon_{n\times1} = \begin{bmatrix} \epsilon_1 \\ \epsilon_2 \\ \vdots \\ \epsilon_n \end{bmatrix}
+\end{equation*}\]</span></p>
+</section>
+<section id="matrix-notation-for-regression-2" class="slide level2">
+<h2>Matrix Notation for Regression</h2>
+<p><span class="math display">\[\begin{eqnarray*}
+Y_1 &amp; = &amp; \beta_0 + \beta_1X_1 + \epsilon_1 \\
+Y_2 &amp; = &amp; \beta_0 + \beta_1X_2 + \epsilon_2 \\
+&amp; \vdots &amp; \\
+Y_n &amp; = &amp; \beta_0 + \beta_1X_n + \epsilon_n
+\end{eqnarray*}\]</span></p>
+<p><span class="math display">\[\begin{equation*}
+\begin{bmatrix}Y_1 \\ Y_2 \\ \vdots \\ Y_n \end{bmatrix}  =
+\begin{bmatrix}1 &amp; X_1 \\ 1 &amp; X_2 \\ \vdots &amp; \vdots \\ 1 &amp; X_n \end{bmatrix}  \times
+\begin{bmatrix} \beta_0 \\ \beta_1 \end{bmatrix}  +
+\begin{bmatrix} \epsilon_1 \\ \epsilon_2 \\ \vdots \\ \epsilon_n \end{bmatrix}
+\end{equation*}\]</span></p>
+</section>
+<section id="matrix-notation-for-regression-3" class="slide level2" style="font-size: 80%;">
+<h2>Matrix Notation for Regression</h2>
+<p>Also, recall that <span class="math inline">\(\epsilon \sim \text{N}(0, \sigma^2)\)</span>.</p>
+<div class="fragment">
+<ul>
+<li>The assumption of independence can be shown with the for <span class="math inline">\(\epsilon\)</span>:</li>
+</ul>
+<p><span class="math display">\[\begin{equation*}
+\sigma^2_{\epsilon_{n\times n}} = \begin{bmatrix}
+  \sigma^2 &amp; 0 &amp; 0 &amp; \cdots &amp; 0\\
+  0 &amp; \sigma^2 &amp; 0 &amp; \cdots &amp; 0 \\
+  0 &amp; 0 &amp; \sigma^2 &amp; \cdots &amp; 0 \\
+  \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+  0 &amp; 0 &amp; 0 &amp; \cdots &amp; \sigma^2
+\end{bmatrix}
+\end{equation*}\]</span></p>
+<ul>
+<li>The <span class="math inline">\((i,i)\)</span> entry = var<span class="math inline">\((y_i)\)</span></li>
+<li>The <span class="math inline">\((i,j)\)</span> entry = cov<span class="math inline">\((y_i, y_j)\)</span></li>
+</ul>
+</div>
+</section>
+<section id="matrix-notation-for-regression-4" class="slide level2">
+<h2>Matrix Notation for Regression</h2>
+<p><strong>Think-Pair-Share</strong></p>
+<p>Simple linear regression (i.e., 1 regressor):</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{bmatrix}Y_1 \\ Y_2 \\ \vdots \\ Y_n \end{bmatrix}  =
+\begin{bmatrix}1 &amp; X_1 \\ 1 &amp; X_2 \\ \vdots &amp; \vdots \\ 1 &amp; X_n \end{bmatrix}  \times
+\begin{bmatrix} \beta_0 \\ \beta_1 \end{bmatrix}  +
+\begin{bmatrix} \epsilon_1 \\ \epsilon_2 \\ \vdots \\ \epsilon_n \end{bmatrix}
+\end{equation*}\]</span></p>
+<p>If we have <strong>two</strong> regressors (i.e., multiple linear regression), what would the <span class="math inline">\(X\)</span> and <span class="math inline">\(\beta\)</span> matrices look like?</p>
+</section>
+<section id="matrix-notation-for-regression-5" class="slide level2">
+<h2>Matrix Notation for Regression</h2>
+<p>We can generalize this matrix notation for any number (<span class="math inline">\(p-1\)</span>) of regressors: <span class="math display">\[\begin{equation*}
+Y_{[n\times1]} = X_{[n\times p]}\beta_{[p\times 1]} + \epsilon_{[n\times 1]}
+\end{equation*}\]</span></p>
+<div class="fragment">
+<p><span class="math display">\[\begin{equation*}
+\begin{bmatrix}Y_1 \\ Y_2 \\ \vdots \\ Y_n \end{bmatrix}  =
+\begin{bmatrix}1 &amp; X_{11} &amp; X_{12} &amp; \cdots &amp; X_{1,p-1} \\
+  1 &amp; X_{21} &amp; X_{22} &amp; \cdots &amp; X_{2,p-1} \\
+  \vdots &amp; \vdots &amp; \vdots &amp; &amp; \vdots \\
+  1 &amp; X_{n1} &amp; X_{n2} &amp; \cdots &amp; X_{n,p-1} \end{bmatrix}  \times
+\begin{bmatrix} \beta_0 \\ \beta_1 \\ \vdots \\ \beta_{p-1} \end{bmatrix}  +
+\begin{bmatrix} \epsilon_1 \\ \epsilon_2 \\ \vdots \\ \epsilon_n \end{bmatrix}
+\end{equation*}\]</span></p>
+<p>Note, I am using 2 subscripts (the first indexes each observation; the second indexes each variable in the model).</p>
+</div>
+</section>
+<section id="multiple-linear-regression" class="slide level2" style="font-size: 80%;">
+<h2>Multiple linear regression</h2>
+<p>With multiple (<span class="math inline">\(p-1\)</span>) explanatory variables, the multiple linear regression model is:</p>
+<p><span class="math display">\[Y_i  =  \beta_0 + \beta_1X_{i1} + \beta_2X_{i2} + \cdots + \beta_{p-1}X_{i,p-1} + \epsilon_i\]</span> <span class="math display">\[\epsilon  \sim  \text{N}(0, \sigma^2)\]</span></p>
+<div class="fragment">
+<p>Or, <span class="math display">\[Y_i  \sim  \text{N}(\mu_i, \sigma^2)\]</span> <span class="math display">\[\mu_i =  \beta_0 + \beta_1X_{i1} + \cdots + \beta_{p-1}X_{i,p-1}\]</span></p>
+</div>
+<div class="fragment">
+<p>We can use <code>lm</code> to find estimates of intercept (<span class="math inline">\(\beta_0\)</span>) and slope parameters (<span class="math inline">\(\beta_1, \beta_2, \ldots\)</span>) that minimize SSE:</p>
+<p><span class="math inline">\(SSE =\sum_i^n(Y_i-\hat{Y}_i)^2 = \sum_i^n(Y_i-[\beta_0 + \beta_1X_{1,i}  + \ldots+\beta_{p-1}X_{i,p-1}])^2\)</span></p>
+<p>. .</p>
+</div>
+</section>
+<section id="multiple-linear-regression-1" class="slide level2" style="font-size: 80%;">
+<h2>Multiple Linear Regression</h2>
+<p>We have the same assumptions (HILE Gauss) and can use the same diagnostic plots.</p>
+<div class="fragment">
+<p>However, it’s important to diagnose the degree to which explanatory variables are correlated with each other (will address in more detail when we cover <span style="color:red;">multicollinearity</span>).</p>
+</div>
+<div class="fragment">
+<p>The Coefficient of Determination (R<span class="math inline">\(^2= SSR/SST\)</span>) is calculated the same way, with:</p>
+<ul>
+<li><span class="math inline">\(SST_{df=n-1} = \sum_i^n(Y_i-\bar{Y})^2\)</span><br>
+</li>
+<li><span class="math inline">\(SSE_{df=n-p} = \sum_i^n(Y_i-\hat{Y})^2\)</span><br>
+</li>
+<li><span class="math inline">\(SSR_{df=p-1} = SST-SSE = \sum_i^n(\hat{Y}_i-\bar{Y})^2\)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<p>In section 8, we will discuss an adjusted R<span class="math inline">\(^2\)</span> which is more useful when comparing models. <!---
+\begin{equation*}
+R^2_\mathrm{adj} = \frac{\frac{\mathrm{SSR}}{p-1}}{\frac{SST}{n-1}} = \left( \frac{n-1}{p-1}\right) \frac{\mathrm{SSR}}{\mathrm{SST}}
+\end{equation*} 
+---></p>
+</div>
+</section>
+<section id="mutliple-predictors-and-rikz-data" class="slide level2" style="font-size: 80%;">
+<h2>Mutliple Predictors and RIKZ data</h2>
+<ul>
+<li>Assuming, naively, that observations are independent, we already established the relationship between Richness (<span class="math inline">\(\mathrm{R}\)</span>) and relative elevation (<span class="math inline">\(\mathrm{NAP}\)</span>):</li>
+</ul>
+<p><span class="math display">\[\begin{equation*}
+\hat{\mathrm{R}}_i=6.886-2.867\mathrm{NAP}_i
+\end{equation*}\]</span></p>
+<div class="fragment">
+<p>What if we also hypothesized that <strong>humus</strong> (<span class="math inline">\(\mathrm{H}\)</span>, amount of organic material) would affect Richness NAP?</p>
+<ul>
+<li>The multiple linear regression model would look like: <span class="math display">\[\begin{equation*}
+\hat{\mathrm{R}}_i=\beta_0 + \beta_1\mathrm{NAP}_i + \beta_2\mathrm{H}_i + \epsilon_i
+\end{equation*}\]</span></li>
+</ul>
+</div>
+</section>
+<section id="section" class="slide level2" style="font-size: 80%;">
+<h2></h2>
+<p><span class="math inline">\(R_i = \beta_0 + \beta_1NAP_i + \beta_2H_i + \epsilon_i\)</span><br>
+</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="" aria-hidden="true" tabindex="-1"></a>  lmfit3<span class="ot">&lt;-</span><span class="fu">lm</span>(Richness<span class="sc">~</span>NAP<span class="sc">+</span>humus, <span class="at">data=</span>RIKZdat)</span>
+<span id="cb1-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(lmfit3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Richness ~ NAP + humus, data = RIKZdat)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-4.767 -2.464 -0.891  1.389 15.277 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   5.4592     0.8304   6.575 5.92e-08 ***
+NAP          -2.5123     0.6227  -4.035 0.000226 ***
+humus        21.9424     9.7098   2.260 0.029080 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.974 on 42 degrees of freedom
+Multiple R-squared:  0.3978,    Adjusted R-squared:  0.3691 
+F-statistic: 13.87 on 2 and 42 DF,  p-value: 2.372e-05</code></pre>
+</div>
+</div>
+</section>
+<section id="model-comparison" class="slide level2">
+<h2>Model Comparison</h2>
+<p>We can compare models: <span class="math display">\[\begin{eqnarray*}
+\hat{\mathrm{R}}_i &amp; = &amp; 6.886 - 2.867\mathrm{NAP}_i   \\
+\hat{\mathrm{R}}_i &amp; = &amp; 5.459 - 2.512\mathrm{NAP}_i + 21.942\mathrm{H}_i
+\end{eqnarray*}\]</span></p>
+<div class="fragment">
+<!---
+- $\beta_1$ changed from -2.9 to -2.5 
+...
+
+- Adjusted R$^2$ went from 0.31 to 0.37 
+...
+
+--->
+<p>Interpretations:</p>
+<ul>
+<li><p><span class="math inline">\(\beta_0\)</span>: <span class="fragment fade-in">the level of Richness if Humus and NAP both equal 0.</span></p></li>
+<li><p><span class="math inline">\(\beta_1\)</span>: <span class="fragment fade-in">the change in Richness for every 1 unit increase in NAP <em>while holding Humus constant</em></span></p></li>
+<li><p><span class="math inline">\(\beta_2\)</span>: <span class="fragment fade-in">the change in Richness for every 1 unit increase in Humus <em>while holding NAP constant</em>.</span></p></li>
+</ul>
+</div>
+</section>
+<section id="section-1" class="slide level2">
+<h2></h2>
+<div class="cell" data-layout-align="center">
+<div id="fig-regvis2" class="cell-output-display quarto-float quarto-figure quarto-figure-center no-overflow-x">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-regvis2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div id="rgl72345" style="width:960px;height:480px;" class="rglWebGL html-widget" role="img" aria-labelledby="rgl72345-aria"></div>
+<script type="application/json" data-for="rgl72345">{"x":{"material":{"color":"#000000","alpha":1,"lit":true,"ambient":"#000000","specular":"#FFFFFF","emission":"#000000","shininess":50,"smooth":true,"front":"filled","back":"filled","size":3,"lwd":1,"fog":true,"point_antialias":false,"line_antialias":false,"texture":null,"textype":"rgb","texmode":"modulate","texmipmap":false,"texminfilter":"linear","texmagfilter":"linear","texenvmap":false,"depth_mask":true,"depth_test":"less","isTransparent":false,"polygon_offset":[0,0],"margin":"","floating":false,"tag":"","blend":["src_alpha","one_minus_src_alpha"]},"rootSubscene":1,"objects":{"7":{"id":7,"type":"points","material":{"lit":false},"vertices":"0","colors":"1","centers":"2","ignoreExtent":false,"flags":34816},"9":{"id":9,"type":"text","material":{"lit":false,"margin":0,"floating":true,"edge":[0,1,1]},"vertices":"3","colors":"4","texts":[["NAP"]],"cex":[[1]],"adj":[[0.5,0.5,0.5]],"centers":"5","family":[["sans"]],"font":[[1]],"ignoreExtent":true,"flags":33808},"10":{"id":10,"type":"text","material":{"lit":false,"margin":1,"floating":true,"edge":[1,1,1]},"vertices":"6","colors":"7","texts":[["humus"]],"cex":[[1]],"adj":[[0.5,0.5,0.5]],"centers":"8","family":[["sans"]],"font":[[1]],"ignoreExtent":true,"flags":33808},"11":{"id":11,"type":"text","material":{"lit":false,"margin":2,"floating":true,"edge":[1,1,1]},"vertices":"9","colors":"10","texts":[["Richness"]],"cex":[[1]],"adj":[[0.5,0.5,0.5]],"centers":"11","family":[["sans"]],"font":[[1]],"ignoreExtent":true,"flags":33808},"12":{"id":12,"type":"planes","material":{"alpha":0.2980392277240753,"front":"lines","isTransparent":true},"vertices":"12","colors":"14","offsets":[[5.459179878234863]],"centers":"15","normals":"13","ignoreExtent":true,"flags":32803},"13":{"id":13,"type":"lines","material":{"lit":false},"vertices":"16","colors":"17","centers":"18","ignoreExtent":false,"flags":32832},"5":{"id":5,"type":"light","vertices":[[0,0,1]],"colors":[[1,1,1,1],[1,1,1,1],[1,1,1,1]],"viewpoint":true,"finite":false},"4":{"id":4,"type":"background","material":{},"colors":"19","centers":"20","sphere":false,"fogtype":"none","fogscale":1,"flags":32768},"6":{"id":6,"type":"background","material":{"lit":false,"back":"lines"},"colors":"21","centers":"22","sphere":false,"fogtype":"none","fogscale":1,"flags":32768},"8":{"id":8,"type":"bboxdeco","material":{"front":"lines","back":"lines"},"vertices":"23","colors":"24","axes":{"mode":["pretty","pretty","pretty"],"step":[1,0.05000000074505806,5],"nticks":[5,5,5],"marklen":[15,15,15],"expand":[1.029999971389771,1.029999971389771,1.029999971389771]},"draw_front":true,"flags":32769},"1":{"id":1,"type":"subscene","par3d":{"antialias":8,"FOV":30,"ignoreExtent":false,"listeners":1,"mouseMode":{"none":"none","left":"trackball","right":"zoom","middle":"fov","wheel":"pull"},"observer":[0,0,54.65366363525391],"modelMatrix":[[3.584228754043579,0,0,-1.646953344345093],[0,14.67376518249512,0.5497614145278931,-8.214577674865723],[0,-40.31583786010742,0.2000968009233475,-50.79502868652344],[0,0,0,1]],"projMatrix":[[3.732050657272339,0,0,0],[0,3.732050657272339,0,0],[0,0,-3.863703489303589,-197.0201416015625],[0,0,-1,0]],"skipRedraw":false,"userMatrix":[[1,0,0,0],[0,0.3420201433256682,0.9396926207859085,0],[0,-0.9396926207859085,0.3420201433256682,0],[0,0,0,1]],"userProjection":[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]],"scale":[3.584228754043579,42.90321731567383,0.5850439071655273],"viewport":{"x":0,"y":0,"width":1,"height":1},"zoom":1,"bbox":[-1.335999965667725,2.255000114440918,0,0.300000011920929,-0.1231914013624191,22],"windowRect":[0,0,256,256],"family":"sans","font":1,"cex":1,"useFreeType":false,"fontname":"NULL","maxClipPlanes":2147483647,"glVersion":"NA","activeSubscene":0},"embeddings":{"viewport":"replace","projection":"replace","model":"replace","mouse":"replace"},"objects":[6,8,7,9,10,11,12,13,5],"subscenes":[],"flags":36211}},"crosstalk":{"key":[],"group":[],"id":[],"options":[]},"width":960,"height":480,"buffer":{"accessors":[{"bufferView":0,"componentType":5126,"count":45,"type":"VEC3"},{"bufferView":1,"componentType":5121,"count":1,"type":"VEC4"},{"bufferView":2,"componentType":5126,"count":45,"type":"VEC3"},{"bufferView":3,"componentType":5126,"count":1,"type":"VEC3"},{"bufferView":4,"componentType":5121,"count":1,"type":"VEC4"},{"bufferView":5,"componentType":5126,"count":1,"type":"VEC3"},{"bufferView":6,"componentType":5126,"count":1,"type":"VEC3"},{"bufferView":7,"componentType":5121,"count":1,"type":"VEC4"},{"bufferView":8,"componentType":5126,"count":1,"type":"VEC3"},{"bufferView":9,"componentType":5126,"count":1,"type":"VEC3"},{"bufferView":10,"componentType":5121,"count":1,"type":"VEC4"},{"bufferView":11,"componentType":5126,"count":1,"type":"VEC3"},{"bufferView":12,"componentType":5126,"count":3,"type":"VEC3"},{"bufferView":13,"componentType":5126,"count":1,"type":"VEC3"},{"bufferView":14,"componentType":5126,"count":1,"type":"VEC4"},{"bufferView":15,"componentType":5126,"count":4,"type":"VEC3"},{"bufferView":16,"componentType":5126,"count":90,"type":"VEC3"},{"bufferView":17,"componentType":5121,"count":90,"type":"VEC4","normalized":true},{"bufferView":18,"componentType":5126,"count":45,"type":"VEC3"},{"bufferView":19,"componentType":5126,"count":1,"type":"VEC4"},{"bufferView":20,"componentType":5121,"count":1,"type":"VEC3"},{"bufferView":21,"componentType":5121,"count":1,"type":"VEC4"},{"bufferView":22,"componentType":5121,"count":1,"type":"VEC3"},{"bufferView":23,"componentType":5126,"count":16,"type":"VEC3"},{"bufferView":24,"componentType":5121,"count":1,"type":"VEC4"}],"bufferViews":[{"buffer":0,"byteLength":540,"byteOffset":0},{"buffer":0,"byteLength":4,"byteOffset":540},{"buffer":0,"byteLength":540,"byteOffset":544},{"buffer":0,"byteLength":12,"byteOffset":1084},{"buffer":0,"byteLength":4,"byteOffset":1096},{"buffer":0,"byteLength":12,"byteOffset":1100},{"buffer":0,"byteLength":12,"byteOffset":1112},{"buffer":0,"byteLength":4,"byteOffset":1124},{"buffer":0,"byteLength":12,"byteOffset":1128},{"buffer":0,"byteLength":12,"byteOffset":1140},{"buffer":0,"byteLength":4,"byteOffset":1152},{"buffer":0,"byteLength":12,"byteOffset":1156},{"buffer":0,"byteLength":36,"byteOffset":1168},{"buffer":0,"byteLength":12,"byteOffset":1204},{"buffer":0,"byteLength":16,"byteOffset":1216},{"buffer":0,"byteLength":48,"byteOffset":1232},{"buffer":0,"byteLength":1080,"byteOffset":1280},{"buffer":0,"byteLength":360,"byteOffset":2360},{"buffer":0,"byteLength":540,"byteOffset":2720},{"buffer":0,"byteLength":16,"byteOffset":3260},{"buffer":0,"byteLength":3,"byteOffset":3276},{"buffer":0,"byteLength":4,"byteOffset":3279},{"buffer":0,"byteLength":3,"byteOffset":3283},{"buffer":0,"byteLength":192,"byteOffset":3288},{"buffer":0,"byteLength":4,"byteOffset":3480}],"buffers":[{"byteLength":3484,"bytes":"7FE4Pc3MTD0AADBBppuEv5qZmT4AACBBDAKrv83MzD0AAFBBLbIdP5qZGT4AADBBoBovv83M\nTD0AACBB7FGYP83MzD0AAABBhetRP83MzD0AABBBXI8iP83MzD0AAABBI9t5PZqZGT4AAJhB\ng8CqvwAAAAAAAIhBI9t5v83MTD0AAMBAZDu/PwAAAAAAAIA/8tJNvs3MzD0AAIBAtMj2vs3M\nTD0AAEBADAIrPs3MzD0AAEBA003iP83MTD0AAIA/j8L1vAAAAAAAAEBAH4XrPs3MTD0AAEBA\n2/muPwAAAAAAAIA/sp1PvwAAAAAAAIBA2/mOPwAAAAAAAEBAnMQAvwAAAAAAALBBvp86P83M\nzD0AAMBAiUHQPwAAAAAAAAAAGy9dPc3MzD0AAMBAz/cTvwAAAAAAAKBADi2yvs3MTD0AAIBA\nPzUOQAAAAAAAAIA/pptkv83MTD0AAMBAkxhEPwAAAAAAAIBASgxiP83MTD0AAABAppvkP83M\nTDwAAIA/AACwPwAAAAAAAIA/j8J1vQAAAAAAAEBAbee7PgAAAAAAAIBAVOPVPwAAAAAAAEBA\nAADAvs3MzD0AAKBA16OAvwAAAAAAAOBAexQuPgAAAAAAAKBA+FMDQAAAAAAAAAAAokW2vs3M\nTD0AAOBAEoPAPc3MTD4AADBBbxIDuwAAAAAAAEBA7FEQQM3MTD0AAAAApHBdPwAAAAAAAABA\nAAAAAexROD3NzEw9AAAwQaabhL+amZk+AAAgQQwCq7/NzMw9AABQQS2yHT+amRk+AAAwQaAa\nL7/NzEw9AAAgQexRmD/NzMw9AAAAQYXrUT/NzMw9AAAQQVyPIj/NzMw9AAAAQSPbeT2amRk+\nAACYQYPAqr8AAAAAAACIQSPbeb/NzEw9AADAQGQ7vz8AAAAAAACAP/LSTb7NzMw9AACAQLTI\n9r7NzEw9AABAQAwCKz7NzMw9AABAQNNN4j/NzEw9AACAP4/C9bwAAAAAAABAQB+F6z7NzEw9\nAABAQNv5rj8AAAAAAACAP7KdT78AAAAAAACAQNv5jj8AAAAAAABAQJzEAL8AAAAAAACwQb6f\nOj/NzMw9AADAQIlB0D8AAAAAAAAAABsvXT3NzMw9AADAQM/3E78AAAAAAACgQA4tsr7NzEw9\nAACAQD81DkAAAAAAAACAP6abZL/NzEw9AADAQJMYRD8AAAAAAACAQEoMYj/NzEw9AAAAQKab\n5D/NzEw8AACAPwAAsD8AAAAAAACAP4/Cdb0AAAAAAABAQG3nuz4AAAAAAACAQFTj1T8AAAAA\nAABAQAAAwL7NzMw9AACgQNejgL8AAAAAAADgQHsULj4AAAAAAACgQPhTA0AAAAAAAAAAAKJF\ntr7NzEw9AADgQBKDwD3NzEw+AAAwQW8SA7sAAAAAAABAQOxREEDNzEw9AAAAAKRwXT8AAAAA\nAAAAQAAAwH8AAIBAAACAPwAAAAEAAMB/AACAQAAAgD8AAMB/AACAQAAAgD8AAAABAADAfwAA\ngEAAAIA/AADAfwAAgEAAAIA/AAAAAQAAwH8AAIBAAACAPwwCq78AAAAA2gwNQQwCq7+amZk+\npl92QexREECamZk+PQ3MQNPJIMD/ia9BAACAvwAAAAAAAAAAAAAAAJmYmD4AVg6+zsxMPmAm\nI0GMbIc/IGHPPZa8oEAZBIY/nBSlOo7PNkAAAMB/AADAfwAAwH/sUTg9zcxMPQAAMEHsUTg9\nzcxMPQ8vzkCmm4S/mpmZPgAAIEGmm4S/mpmZPoNQakEMAqu/zczMPQAAUEEMAqu/zczMPXMo\nMEEtsh0/mpkZPgAAMEEtsh0/mpkZPo9+5kCgGi+/zcxMPQAAIEGgGi+/zcxMPUZlBEHsUZg/\nzczMPQAAAEHsUZg/zczMPYQ9lUCF61E/zczMPQAAEEGF61E/zczMPXT8skBcjyI/zczMPQAA\nAEFcjyI/zczMPezbwUAj23k9mpkZPgAAmEEj23k9mpkZPnuOCUGDwKq/AAAAAAAAiEGDwKq/\nAAAAAEX4DEEj23m/zcxMPQAAwEAj23m/zcxMPRYiEEFkO78/AAAAAAAAgD9kO78/AAAAAOFW\n2j/y0k2+zczMPQAAgEDy0k2+zczMPciIAkG0yPa+zcxMPQAAQEC0yPa+zcxMPTON+EAMAis+\nzczMPQAAQEAMAis+zczMPcp750DTTeI/zcxMPQAAgD/TTeI/zcxMPUxUB0CPwvW8AAAAAAAA\nQECPwvW8AAAAAAcbsUAfhes+zcxMPQAAQEAfhes+zcxMPfvRrEDb+a4/AAAAAAAAgD/b+a4/\nAAAAAP6WAUCynU+/AAAAAAAAgECynU+/AAAAALnk70Db+Y4/AAAAAAAAQEDb+Y4/AAAAAHLJ\nKUCcxAC/AAAAAAAAsEGcxAC/AAAAAM0h10C+nzo/zczMPQAAwEC+nzo/zczMPVFNukCJQdA/\nAAAAAAAAAACJQdA/AAAAANWRrz8bL109zczMPQAAwEAbL109zczMPW6R8EDP9xO/AAAAAAAA\noEDP9xO/AAAAAF4p3UAOLbK+zcxMPQAAgEAOLbK+zcxMPVzH7UA/NQ5AAAAAAAAAgD8/NQ5A\nAAAAAMZL/L2mm2S/zcxMPQAAwECmm2S/zcxMPfrLDEGTGEQ/AAAAAAAAgECTGEQ/AAAAAD85\nYkBKDGI/zcxMPQAAAEBKDGI/zcxMPULQikCmm+Q/zcxMPAAAgD+mm+Q/zcxMPPmLnz8AALA/\nAAAAAAAAgD8AALA/AAAAALJNAECPwnW9AAAAAAAAQECPwnW9AAAAAHWEs0Bt57s+AAAAAAAA\ngEBt57s+AAAAAGgwkUBU49U/AAAAAAAAQEBU49U/AAAAAJhroT8AAMC+zczMPQAAoEAAAMC+\nzczMPVKHCUHXo4C/AAAAAAAA4EDXo4C/AAAAAGt9/0B7FC4+AAAAAAAAoEB7FC4+AAAAANkG\noUD4UwNAAAAAAAAAAAD4UwNAAAAAACOZmz6iRba+zcxMPQAA4ECiRba+zcxMPQFs7kASg8A9\nzcxMPgAAMEESg8A9zcxMPrLIGUFvEgO7AAAAAAAAQEBvEgO7AAAAAMParkDsURBAzcxMPQAA\nAADsURBAzcxMPfYZZD+kcF0/AAAAAAAAAECkcF0/AAAAADpOUkD/AAD//wAA/wAA//8AAP//\n/wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8A\nAP//AAD//wAA/wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//\nAAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP///wAA//8AAP//AAD//wAA//8A\nAP//AAD/AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA////AAD//wAA/wAA//8AAP//\n/wAA//8AAP8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP///wAA//8A\nAP8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP///wAA//8AAP8AAP//\nAAD//wAA//8AAP//AAD//wAA///sUTg9zcxMPcSLC0Gmm4S/mpmZPkIoRUEMAqu/zczMPToU\nQEEtsh0/mpkZPqSfEUGgGi+/zcxMPaMyEkHsUZg/zczMPcKeykCF61E/zczMPTp+6UBcjyI/\nzczMPfbt4EAj23k9mpkZPj7HXEGDwKq/AAAAACJ8TkEj23m/zcxMPRYi8EBkO78/AAAAAHAr\nrT/y0k2+zczMPciIwkC0yPa+zcxMPZpGrEAMAis+zczMPeW9o0DTTeI/zcxMPUxUxz+PwvW8\nAAAAAISNiEAfhes+zcxMPf5ohkDb+a4/AAAAAP6WwT+ynU+/AAAAAFzyt0Db+Y4/AAAAALnk\nNECcxAC/AAAAAHPIZUG+nzo/zczMPagmvUCJQdA/AAAAANWRLz8bL109zczMPbdI2EDP9xO/\nAAAAAK+UvkAOLbK+zcxMPa7jtkA/NQ5AAAAAAId24D6mm2S/zcxMPfrL7ECTGEQ/AAAAAKAc\ncUBKDGI/zcxMPULQSkCmm+Q/zcxMPPzFjz8AALA/AAAAALJNwD+PwnW9AAAAADrCiUBt57s+\nAAAAADSYiEBU49U/AAAAAOZaCEAAAMC+zczMPVKH2UDXo4C/AAAAALa+70B7FC4+AAAAAGyD\noED4UwNAAAAAACOZGz6iRba+zcxMPQA250ASg8A9zcxMPlnkJEFvEgO7AAAAAGJth0DsURBA\nzcxMPfYZ5D6kcF0/AAAAAB0nKUCZmJg+mZiYPpmYmD4AAIA/AAAAAQEBAQAAAAAAAACAvwAA\nwH8AAMB/AAAAAAAAwH8AAMB/AACAPwAAwH8AAMB/AAAAQAAAwH8AAMB/AADAfwAAAAAAAMB/\nAADAf83MTD0AAMB/AADAf83MzD0AAMB/AADAf5qZGT4AAMB/AADAf83MTD4AAMB/AADAfwAA\ngD4AAMB/AADAf5qZmT4AAMB/AADAfwAAwH8AAAAAAADAfwAAwH8AAKBAAADAfwAAwH8AACBB\nAADAfwAAwH8AAHBBAADAfwAAwH8AAKBBAAAAAQ=="}]},"context":{"shiny":false,"rmarkdown":null},"vertexShader":"#line 2 1\n// File 1 is the vertex shader\n#ifdef GL_ES\n#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\n#endif\n\nattribute vec3 aPos;\nattribute vec4 aCol;\nuniform mat4 mvMatrix;\nuniform mat4 prMatrix;\nvarying vec4 vCol;\nvarying vec4 vPosition;\n\n#ifdef NEEDS_VNORMAL\nattribute vec3 aNorm;\nuniform mat4 normMatrix;\nvarying vec4 vNormal;\n#endif\n\n#if defined(HAS_TEXTURE) || defined (IS_TEXT)\nattribute vec2 aTexcoord;\nvarying vec2 vTexcoord;\n#endif\n\n#ifdef FIXED_SIZE\nuniform vec3 textScale;\n#endif\n\n#ifdef FIXED_QUADS\nattribute vec3 aOfs;\n#endif\n\n#ifdef IS_TWOSIDED\n#ifdef HAS_NORMALS\nvarying float normz;\nuniform mat4 invPrMatrix;\n#else\nattribute vec3 aPos1;\nattribute vec3 aPos2;\nvarying float normz;\n#endif\n#endif // IS_TWOSIDED\n\n#ifdef FAT_LINES\nattribute vec3 aNext;\nattribute vec2 aPoint;\nvarying vec2 vPoint;\nvarying float vLength;\nuniform float uAspect;\nuniform float uLwd;\n#endif\n\n#ifdef USE_ENVMAP\nvarying vec3 vReflection;\n#endif\n\nvoid main(void) {\n  \n#ifndef IS_BRUSH\n#if defined(NCLIPPLANES) || !defined(FIXED_QUADS) || defined(HAS_FOG) || defined(USE_ENVMAP)\n  vPosition = mvMatrix * vec4(aPos, 1.);\n#endif\n  \n#ifndef FIXED_QUADS\n  gl_Position = prMatrix * vPosition;\n#endif\n#endif // !IS_BRUSH\n  \n#ifdef IS_POINTS\n  gl_PointSize = POINTSIZE;\n#endif\n  \n  vCol = aCol;\n  \n// USE_ENVMAP implies NEEDS_VNORMAL\n\n#ifdef NEEDS_VNORMAL\n  vNormal = normMatrix * vec4(-aNorm, dot(aNorm, aPos));\n#endif\n\n#ifdef USE_ENVMAP\n  vReflection = normalize(reflect(vPosition.xyz/vPosition.w, \n                        normalize(vNormal.xyz/vNormal.w)));\n#endif\n  \n#ifdef IS_TWOSIDED\n#ifdef HAS_NORMALS\n  /* normz should be calculated *after* projection */\n  normz = (invPrMatrix*vNormal).z;\n#else\n  vec4 pos1 = prMatrix*(mvMatrix*vec4(aPos1, 1.));\n  pos1 = pos1/pos1.w - gl_Position/gl_Position.w;\n  vec4 pos2 = prMatrix*(mvMatrix*vec4(aPos2, 1.));\n  pos2 = pos2/pos2.w - gl_Position/gl_Position.w;\n  normz = pos1.x*pos2.y - pos1.y*pos2.x;\n#endif\n#endif // IS_TWOSIDED\n  \n#ifdef NEEDS_VNORMAL\n  vNormal = vec4(normalize(vNormal.xyz), 1);\n#endif\n  \n#if defined(HAS_TEXTURE) || defined(IS_TEXT)\n  vTexcoord = aTexcoord;\n#endif\n  \n#if defined(FIXED_SIZE) && !defined(ROTATING)\n  vec4 pos = prMatrix * mvMatrix * vec4(aPos, 1.);\n  pos = pos/pos.w;\n  gl_Position = pos + vec4(aOfs*textScale, 0.);\n#endif\n  \n#if defined(IS_SPRITES) && !defined(FIXED_SIZE)\n  vec4 pos = mvMatrix * vec4(aPos, 1.);\n  pos = pos/pos.w + vec4(aOfs,  0.);\n  gl_Position = prMatrix*pos;\n#endif\n  \n#ifdef FAT_LINES\n  /* This code was inspired by Matt Deslauriers' code in \n   https://mattdesl.svbtle.com/drawing-lines-is-hard */\n  vec2 aspectVec = vec2(uAspect, 1.0);\n  mat4 projViewModel = prMatrix * mvMatrix;\n  vec4 currentProjected = projViewModel * vec4(aPos, 1.0);\n  currentProjected = currentProjected/currentProjected.w;\n  vec4 nextProjected = projViewModel * vec4(aNext, 1.0);\n  vec2 currentScreen = currentProjected.xy * aspectVec;\n  vec2 nextScreen = (nextProjected.xy / nextProjected.w) * aspectVec;\n  float len = uLwd;\n  vec2 dir = vec2(1.0, 0.0);\n  vPoint = aPoint;\n  vLength = length(nextScreen - currentScreen)/2.0;\n  vLength = vLength/(vLength + len);\n  if (vLength > 0.0) {\n    dir = normalize(nextScreen - currentScreen);\n  }\n  vec2 normal = vec2(-dir.y, dir.x);\n  dir.x /= uAspect;\n  normal.x /= uAspect;\n  vec4 offset = vec4(len*(normal*aPoint.x*aPoint.y - dir), 0.0, 0.0);\n  gl_Position = currentProjected + offset;\n#endif\n  \n#ifdef IS_BRUSH\n  gl_Position = vec4(aPos, 1.);\n#endif\n}","fragmentShader":"#line 2 2\n// File 2 is the fragment shader\n#ifdef GL_ES\n#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\n#endif\nvarying vec4 vCol; // carries alpha\nvarying vec4 vPosition;\n#if defined(HAS_TEXTURE) || defined (IS_TEXT)\nvarying vec2 vTexcoord;\nuniform sampler2D uSampler;\n#endif\n\n#ifdef HAS_FOG\nuniform int uFogMode;\nuniform vec3 uFogColor;\nuniform vec4 uFogParms;\n#endif\n\n#if defined(IS_LIT) && !defined(FIXED_QUADS)\nvarying vec4 vNormal;\n#endif\n\n#if NCLIPPLANES > 0\nuniform vec4 vClipplane[NCLIPPLANES];\n#endif\n\n#if NLIGHTS > 0\nuniform mat4 mvMatrix;\n#endif\n\n#ifdef IS_LIT\nuniform vec3 emission;\nuniform float shininess;\n#if NLIGHTS > 0\nuniform vec3 ambient[NLIGHTS];\nuniform vec3 specular[NLIGHTS]; // light*material\nuniform vec3 diffuse[NLIGHTS];\nuniform vec3 lightDir[NLIGHTS];\nuniform bool viewpoint[NLIGHTS];\nuniform bool finite[NLIGHTS];\n#endif\n#endif // IS_LIT\n\n#ifdef IS_TWOSIDED\nuniform bool front;\nvarying float normz;\n#endif\n\n#ifdef FAT_LINES\nvarying vec2 vPoint;\nvarying float vLength;\n#endif\n\n#ifdef USE_ENVMAP\nvarying vec3 vReflection;\n#endif\n\nvoid main(void) {\n  vec4 fragColor;\n#ifdef FAT_LINES\n  vec2 point = vPoint;\n  bool neg = point.y < 0.0;\n  point.y = neg ? (point.y + vLength)/(1.0 - vLength) :\n                 -(point.y - vLength)/(1.0 - vLength);\n#if defined(IS_TRANSPARENT) && defined(IS_LINESTRIP)\n  if (neg && length(point) <= 1.0) discard;\n#endif\n  point.y = min(point.y, 0.0);\n  if (length(point) > 1.0) discard;\n#endif // FAT_LINES\n  \n#ifdef ROUND_POINTS\n  vec2 coord = gl_PointCoord - vec2(0.5);\n  if (length(coord) > 0.5) discard;\n#endif\n  \n#if NCLIPPLANES > 0\n  for (int i = 0; i < NCLIPPLANES; i++)\n    if (dot(vPosition, vClipplane[i]) < 0.0) discard;\n#endif\n    \n#ifdef FIXED_QUADS\n    vec3 n = vec3(0., 0., 1.);\n#elif defined(IS_LIT)\n    vec3 n = normalize(vNormal.xyz);\n#endif\n    \n#ifdef IS_TWOSIDED\n    if ((normz <= 0.) != front) discard;\n#endif\n\n#ifdef IS_LIT\n    vec3 eye = normalize(-vPosition.xyz/vPosition.w);\n    vec3 lightdir;\n    vec4 colDiff;\n    vec3 halfVec;\n    vec4 lighteffect = vec4(emission, 0.);\n    vec3 col;\n    float nDotL;\n#ifdef FIXED_QUADS\n    n = -faceforward(n, n, eye);\n#endif\n    \n#if NLIGHTS > 0\n    // Simulate two-sided lighting\n    if (n.z < 0.0)\n      n = -n;\n    for (int i=0;i<NLIGHTS;i++) {\n      colDiff = vec4(vCol.rgb * diffuse[i], vCol.a);\n      lightdir = lightDir[i];\n      if (!viewpoint[i]) {\n        if (finite[i]) {\n          lightdir = (mvMatrix * vec4(lightdir, 1.)).xyz;\n        } else {\n          lightdir = (mvMatrix * vec4(lightdir, 0.)).xyz;\n        }\n      }\n      if (!finite[i]) {\n        halfVec = normalize(lightdir + eye);\n      } else {\n        lightdir = normalize(lightdir - vPosition.xyz/vPosition.w);\n        halfVec = normalize(lightdir + eye);\n      }\n      col = ambient[i];\n      nDotL = dot(n, lightdir);\n      col = col + max(nDotL, 0.) * colDiff.rgb;\n      col = col + pow(max(dot(halfVec, n), 0.), shininess) * specular[i];\n      lighteffect = lighteffect + vec4(col, colDiff.a);\n    }\n#endif\n    \n#else // not IS_LIT\n    vec4 colDiff = vCol;\n    vec4 lighteffect = colDiff;\n#endif\n    \n#ifdef IS_TEXT\n    vec4 textureColor = lighteffect*texture2D(uSampler, vTexcoord);\n#endif\n    \n#ifdef HAS_TEXTURE\n\n// These calculations use the definitions from \n// https://docs.gl/gl3/glTexEnv\n\n#ifdef USE_ENVMAP\n    float m = 2.0 * sqrt(dot(vReflection, vReflection) + 2.0*vReflection.z + 1.0);\n    vec4 textureColor = texture2D(uSampler, vReflection.xy / m + vec2(0.5, 0.5));\n#else\n    vec4 textureColor = texture2D(uSampler, vTexcoord);\n#endif\n\n#ifdef TEXTURE_rgb\n\n#if defined(TEXMODE_replace) || defined(TEXMODE_decal)\n    textureColor = vec4(textureColor.rgb, lighteffect.a);\n#endif \n\n#ifdef TEXMODE_modulate\n    textureColor = lighteffect*vec4(textureColor.rgb, 1.);\n#endif\n\n#ifdef TEXMODE_blend\n    textureColor = vec4((1. - textureColor.rgb) * lighteffect.rgb, lighteffect.a);\n#endif\n\n#ifdef TEXMODE_add\n    textureColor = vec4(lighteffect.rgb + textureColor.rgb, lighteffect.a);\n#endif\n\n#endif //TEXTURE_rgb\n        \n#ifdef TEXTURE_rgba\n\n#ifdef TEXMODE_replace\n// already done\n#endif \n\n#ifdef TEXMODE_modulate\n    textureColor = lighteffect*textureColor;\n#endif\n\n#ifdef TEXMODE_decal\n    textureColor = vec4((1. - textureColor.a)*lighteffect.rgb) +\n                     textureColor.a*textureColor.rgb, \n                     lighteffect.a);\n#endif\n\n#ifdef TEXMODE_blend\n    textureColor = vec4((1. - textureColor.rgb) * lighteffect.rgb,\n                    lighteffect.a*textureColor.a);\n#endif\n\n#ifdef TEXMODE_add\n    textureColor = vec4(lighteffect.rgb + textureColor.rgb,\n                    lighteffect.a*textureColor.a);\n#endif\n    \n#endif //TEXTURE_rgba\n    \n#ifdef TEXTURE_alpha\n    float luminance = dot(vec3(1.,1.,1.),textureColor.rgb)/3.;\n\n#if defined(TEXMODE_replace) || defined(TEXMODE_decal)\n    textureColor = vec4(lighteffect.rgb, luminance);\n#endif \n\n#if defined(TEXMODE_modulate) || defined(TEXMODE_blend) || defined(TEXMODE_add)\n    textureColor = vec4(lighteffect.rgb, lighteffect.a*luminance);\n#endif\n \n#endif // TEXTURE_alpha\n    \n// The TEXTURE_luminance values are not from that reference    \n#ifdef TEXTURE_luminance\n    float luminance = dot(vec3(1.,1.,1.),textureColor.rgb)/3.;\n\n#if defined(TEXMODE_replace) || defined(TEXMODE_decal)\n    textureColor = vec4(luminance, luminance, luminance, lighteffect.a);\n#endif \n\n#ifdef TEXMODE_modulate\n    textureColor = vec4(luminance*lighteffect.rgb, lighteffect.a);\n#endif\n\n#ifdef TEXMODE_blend\n    textureColor = vec4((1. - luminance)*lighteffect.rgb,\n                        lighteffect.a);\n#endif\n\n#ifdef TEXMODE_add\n    textureColor = vec4(luminance + lighteffect.rgb, lighteffect.a);\n#endif\n\n#endif // TEXTURE_luminance\n \n    \n#ifdef TEXTURE_luminance_alpha\n    float luminance = dot(vec3(1.,1.,1.),textureColor.rgb)/3.;\n\n#if defined(TEXMODE_replace) || defined(TEXMODE_decal)\n    textureColor = vec4(luminance, luminance, luminance, textureColor.a);\n#endif \n\n#ifdef TEXMODE_modulate\n    textureColor = vec4(luminance*lighteffect.rgb, \n                        textureColor.a*lighteffect.a);\n#endif\n\n#ifdef TEXMODE_blend\n    textureColor = vec4((1. - luminance)*lighteffect.rgb,\n                        textureColor.a*lighteffect.a);\n#endif\n\n#ifdef TEXMODE_add\n    textureColor = vec4(luminance + lighteffect.rgb, \n                        textureColor.a*lighteffect.a);\n\n#endif\n\n#endif // TEXTURE_luminance_alpha\n    \n    fragColor = textureColor;\n\n#elif defined(IS_TEXT)\n    if (textureColor.a < 0.1)\n      discard;\n    else\n      fragColor = textureColor;\n#else\n    fragColor = lighteffect;\n#endif // HAS_TEXTURE\n    \n#ifdef HAS_FOG\n    // uFogParms elements: x = near, y = far, z = fogscale, w = (1-sin(FOV/2))/(1+sin(FOV/2))\n    // In Exp and Exp2: use density = density/far\n    // fogF will be the proportion of fog\n    // Initialize it to the linear value\n    float fogF;\n    if (uFogMode > 0) {\n      fogF = (uFogParms.y - vPosition.z/vPosition.w)/(uFogParms.y - uFogParms.x);\n      if (uFogMode > 1)\n        fogF = mix(uFogParms.w, 1.0, fogF);\n      fogF = fogF*uFogParms.z;\n      if (uFogMode == 2)\n        fogF = 1.0 - exp(-fogF);\n      // Docs are wrong: use (density*c)^2, not density*c^2\n      // https://gitlab.freedesktop.org/mesa/mesa/-/blob/master/src/mesa/swrast/s_fog.c#L58\n      else if (uFogMode == 3)\n        fogF = 1.0 - exp(-fogF*fogF);\n      fogF = clamp(fogF, 0.0, 1.0);\n      gl_FragColor = vec4(mix(fragColor.rgb, uFogColor, fogF), fragColor.a);\n    } else gl_FragColor = fragColor;\n#else\n    gl_FragColor = fragColor;\n#endif // HAS_FOG\n    \n}","players":[],"webGLoptions":{"preserveDrawingBuffer":true}},"evals":[],"jsHooks":[]}</script>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-regvis2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Visualizing the regression model with 2 predictors. Instead of a best-fit line, we have a best-fit plane. Code was adapted from https://stackoverflow.com/questions/47344850/scatterplot3d-regression-plane-with-residuals.
+</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section>
+<section id="categorical-variables" class="title-slide slide level1 center">
+<h1>Categorical variables</h1>
+
+</section>
+<section id="section-2" class="slide level2">
+<h2></h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="Graphics/jackel.jpg" class="quarto-figure quarto-figure-center" alt="Picture of a golden jackel." width="512"></p>
+</figure>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<p>Mandible lengths in mm:</p>
+<ul>
+<li>10 male and 10 female golden jackals</li>
+<li>From British Museum (Manly 1991)</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="" aria-hidden="true" tabindex="-1"></a>males<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="dv">120</span>, <span class="dv">107</span>, <span class="dv">110</span>, <span class="dv">116</span>, <span class="dv">114</span>, <span class="dv">111</span>, <span class="dv">113</span>, <span class="dv">117</span>, <span class="dv">114</span>, <span class="dv">112</span>)</span>
+<span id="cb3-2"><a href="" aria-hidden="true" tabindex="-1"></a>females<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="dv">110</span>, <span class="dv">111</span>, <span class="dv">107</span>, <span class="dv">108</span>, <span class="dv">110</span>, <span class="dv">105</span>, <span class="dv">107</span>, <span class="dv">106</span>, <span class="dv">111</span>, <span class="dv">111</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Do males and females have, on average, different mandible lengths? …</p>
+<p><span class="math display">\[H_0: \mu_m = \mu_f \text{ versus } H_a: \mu_m \neq \mu_f\]</span></p>
+</div></div>
+</section>
+<section id="t-test" class="slide level2">
+<h2>T-test</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(males, females, <span class="at">var.equal=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Two Sample t-test
+
+data:  males and females
+t = 3.4843, df = 18, p-value = 0.002647
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 1.905773 7.694227
+sample estimates:
+mean of x mean of y 
+    113.4     108.6 </code></pre>
+</div>
+</div>
+</section>
+<section id="categorical-variables-1" class="slide level2">
+<h2>Categorical Variables</h2>
+<p>We can also test the effect of jackal sex on mandible lengths with a regression model.</p>
+<div class="fragment">
+<ul>
+<li>We have to create a data.frame with mandible lengths (quantitative) and sex (categorical)</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="" aria-hidden="true" tabindex="-1"></a>jawdat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">jaws =</span> <span class="fu">c</span>(males, females),</span>
+<span id="cb6-2"><a href="" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sex =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"M"</span>,<span class="dv">10</span>), <span class="fu">rep</span>(<span class="st">"F"</span>, <span class="dv">10</span>)))</span>
+<span id="cb6-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(jawdat) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  jaws sex
+1  120   M
+2  107   M
+3  110   M
+4  116   M
+5  114   M
+6  111   M</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="linear-model" class="slide level2">
+<h2>Linear Model</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="" aria-hidden="true" tabindex="-1"></a>lmfit2<span class="ot">&lt;-</span><span class="fu">lm</span>(jaws<span class="sc">~</span>sex, <span class="at">data=</span>jawdat)</span>
+<span id="cb8-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmfit2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = jaws ~ sex, data = jawdat)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+  -6.4   -1.8    0.1    2.4    6.6 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 108.6000     0.9741 111.486  &lt; 2e-16 ***
+sexM          4.8000     1.3776   3.484  0.00265 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.08 on 18 degrees of freedom
+Multiple R-squared:  0.4028,    Adjusted R-squared:  0.3696 
+F-statistic: 12.14 on 1 and 18 DF,  p-value: 0.002647</code></pre>
+</div>
+</div>
+</section>
+<section id="dummy-variables" class="slide level2" style="font-size: 80%;">
+<h2>Dummy Variables</h2>
+<p>This is easier to understand if we use the matrix form of the regression model to view our data.</p>
+<div class="columns">
+<div class="column" style="width:20%;">
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>   jaws sex
+16  105   F
+18  106   F
+2   107   M
+13  107   F
+17  107   F
+14  108   F</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<p><span class="math display">\[\begin{equation*}
+\begin{bmatrix}105 \\ 106 \\ 107 \\ 107 \\ \vdots \end{bmatrix}  =
+  \begin{bmatrix}1 &amp; 0 \\ 1 &amp; 0 \\ 1 &amp; 1 \\ 1 &amp; 0 \\ \vdots &amp; \vdots \end{bmatrix}  \times
+\begin{bmatrix} \beta_0 \\ \beta_1 \end{bmatrix} +
+  \begin{bmatrix} \epsilon_1 \\ \epsilon_2 \\ \epsilon_3 \\ \epsilon_4 \\ \vdots \end{bmatrix}
+\end{equation*}\]</span></p>
+</div></div>
+</section>
+<section id="dummy-variables-1" class="slide level2">
+<h2>Dummy Variables</h2>
+<ul>
+<li>For <span class="math inline">\(k\)</span> groups of categorical variables, we need to have <span class="math inline">\(k-1\)</span> <span style="color:red;">dummy variables</span>.</li>
+<li>How many dummy variables do we need for the jackals example?</li>
+</ul>
+<div class="fragment">
+<p><span class="framgement center highlight-red">1 (we have 2 groups)</span></p>
+</div>
+<div class="fragment">
+<ul>
+<li>Each dummy variable is used as an indicator variable in the model for one group.<br>
+</li>
+<li>In this case, the dummy variable will indicate (i.e., equal 1) for the <span style="color:red;">male</span> jackal observations.</li>
+</ul>
+</div>
+</section>
+<section id="look-at-confidence-intervals" class="slide level2">
+<h2>Look at confidence intervals</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(lmfit2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 2.5 %     97.5 %
+(Intercept) 106.553472 110.646528
+sexM          1.905773   7.694227</code></pre>
+</div>
+</div>
+<div class="fragment">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(males, females, <span class="at">var.equal=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Two Sample t-test
+
+data:  males and females
+t = 3.4843, df = 18, p-value = 0.002647
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 1.905773 7.694227
+sample estimates:
+mean of x mean of y 
+    113.4     108.6 </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="understanding-model-parameters" class="slide level2" style="font-size: 80%;">
+<h2>Understanding Model Parameters</h2>
+<p><strong>Think-Pair-Share</strong></p>
+<p>How do we interpret the results?</p>
+<p><span class="math display">\[\begin{eqnarray*}
+Y_i &amp; = &amp; \beta_0 + \beta_1\text{I(sex = male)}_{i} + \epsilon_i\\
+&amp; &amp; \text{where }\text{I(sex = male)}_{i}\text{ is 1 if male and 0 if female}\\
+\hat{Y}_i &amp; = &amp; 108.6 + 4.8\text{I(sex = male)}_{i}
+\end{eqnarray*}\]</span></p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>So, if <strong>male</strong>:</p>
+<p><span class="fragment fade-in"><span class="math inline">\(\hat{Y}_i = 108.6 + 4.8(1)\)</span></span></p>
+</div><div class="column" style="width:50%;">
+<p>And if <strong>female</strong> :</p>
+<p><span class="fragment fade-in"><span class="math inline">\(\hat{Y}_i = 108.6 + 4.8(0) = 108.6\)</span></span></p>
+</div></div>
+<div class="fragment">
+<p><em>Note: This parameterization is called “reference” or “effects” coding</em></p>
+</div>
+</section>
+<section id="understanding-model-parameters-1" class="slide level2">
+<h2>Understanding Model Parameters</h2>
+<p>Alternatively, we can use the “cell-means” or “means” coding:</p>
+<p><span class="math display">\[\begin{eqnarray*}
+Y_i &amp; = &amp; \beta_m\text{I(sex = male)}_{i} + \beta_f\text{I(sex = female)}_{i} + \epsilon_i\\
+&amp; &amp; \text{where }\text{I(sex = male)}_{i}\text{ = 1 if male and 0 if female}\\
+&amp; &amp; \text{where }\text{I(sex = female)}_{i}\text{ = 1 if female and 0 if male}
+\end{eqnarray*}\]</span></p>
+<div class="fragment">
+<p>In R: lm(jaws~sex-1, data=jawdat)</p>
+</div>
+</section>
+<section id="reference-vs-cell-means-coding" class="slide level2 smaller">
+<h2>Reference vs Cell Means Coding</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="" aria-hidden="true" tabindex="-1"></a>lmfit2b<span class="ot">&lt;-</span><span class="fu">lm</span>(jaws<span class="sc">~</span>sex, <span class="at">data=</span>jawdat)</span>
+<span id="cb15-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmfit2b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = jaws ~ sex, data = jawdat)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+  -6.4   -1.8    0.1    2.4    6.6 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 108.6000     0.9741 111.486  &lt; 2e-16 ***
+sexM          4.8000     1.3776   3.484  0.00265 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.08 on 18 degrees of freedom
+Multiple R-squared:  0.4028,    Adjusted R-squared:  0.3696 
+F-statistic: 12.14 on 1 and 18 DF,  p-value: 0.002647</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="" aria-hidden="true" tabindex="-1"></a>lmfit2b<span class="ot">&lt;-</span><span class="fu">lm</span>(jaws<span class="sc">~</span>sex<span class="dv">-1</span>, <span class="at">data=</span>jawdat)</span>
+<span id="cb17-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmfit2b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = jaws ~ sex - 1, data = jawdat)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+  -6.4   -1.8    0.1    2.4    6.6 
+
+Coefficients:
+     Estimate Std. Error t value Pr(&gt;|t|)    
+sexF 108.6000     0.9741   111.5   &lt;2e-16 ***
+sexM 113.4000     0.9741   116.4   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.08 on 18 degrees of freedom
+Multiple R-squared:  0.9993,    Adjusted R-squared:  0.9992 
+F-statistic: 1.299e+04 on 2 and 18 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="assumptions" class="slide level2">
+<h2>Assumptions?</h2>
+<ul>
+<li>Equal (constant) variance for the two groups</li>
+<li>Data are normally distributed</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mosaic)</span>
+<span id="cb19-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">histogram</span>(<span class="sc">~</span>jaws<span class="sc">|</span>sex, <span class="at">data=</span>jawdat, <span class="at">cex=</span><span class="dv">1</span>, <span class="at">fit=</span><span class="st">"normal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="L03_MultipleRegression_files/figure-revealjs/jawfig-1.png" class="quarto-figure quarto-figure-center r-stretch" alt="Histogram of jaw sizes for males and females with normal distribution overlayed." width="768"><div class="fragment">
+<p>Later, we will see how we can relax these assumptions (using either JAGS or <code>gls</code> in the <code>nlme</code> package).</p>
+</div>
+</section>
+<section id="categorical-variables-2" class="slide level2 smaller">
+<h2>Categorical variables</h2>
+<p>Recall the RIKZ data.</p>
+<ul>
+<li>Assuming, naively, that observations are independent, we already established the relationship between Richness (<span class="math inline">\(\mathrm{R}\)</span>) and relative elevation (<span class="math inline">\(\mathrm{NAP}\)</span>): <span class="math display">\[\begin{equation*}
+\hat{\mathrm{R}}_i=6.886-2.867\mathrm{NAP}_i+\epsilon_i
+\end{equation*}\]</span></li>
+</ul>
+<div class="fragment">
+<p>Now, what if we also suspected that the Week the data were collected might affect Richness <em>in addition to</em> NAP?</p>
+<ul>
+<li>Week could be considered continuous, but probably better to analyze it as a nominal variable with 4 categories.</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>How many dummy variables will we need to have in order to analyze the effect of Week?</li>
+</ul>
+</div>
+<div class="fragment">
+<p><span class="framgement center highlight-red">3 (we have 4 groups)</span></p>
+</div>
+<div class="fragment">
+<p>In R, use <code>as.factor(week)</code> to convert to a nominal variable.</p>
+</div>
+</section>
+<section id="analysis-of-covariance-model" class="slide level2">
+<h2>Analysis of Covariance Model</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="" aria-hidden="true" tabindex="-1"></a>lmfit4<span class="ot">&lt;-</span><span class="fu">lm</span>(Richness<span class="sc">~</span>NAP<span class="sc">+</span><span class="fu">as.factor</span>(week), <span class="at">data=</span>RIKZdat)</span>
+<span id="cb20-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmfit4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Richness ~ NAP + as.factor(week), data = RIKZdat)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-5.0788 -1.4014 -0.3633  0.6500 12.0845 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       11.3677     0.9459  12.017 7.48e-15 ***
+NAP               -2.2708     0.4678  -4.854 1.88e-05 ***
+as.factor(week)2  -7.6251     1.2491  -6.105 3.37e-07 ***
+as.factor(week)3  -6.1780     1.2453  -4.961 1.34e-05 ***
+as.factor(week)4  -2.5943     1.6694  -1.554    0.128    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.987 on 40 degrees of freedom
+Multiple R-squared:  0.6759,    Adjusted R-squared:  0.6435 
+F-statistic: 20.86 on 4 and 40 DF,  p-value: 2.369e-09</code></pre>
+</div>
+</div>
+</section>
+<section id="dummy-variables-2" class="slide level2 smaller">
+<h2>Dummy Variables</h2>
+<p><span class="math display">\[\begin{equation*}
+Y_i = \beta_0 + \beta_1X_{NAP,i} + \beta_2X_{W2,i} + \beta_3X_{W3,i} + \beta_4X_{W4,i} + \epsilon_i
+\end{equation*}\]</span></p>
+<ul>
+<li>where <span class="math inline">\(X_{W2,i}\)</span>, <span class="math inline">\(X_{W3,i}\)</span>, and <span class="math inline">\(X_{W4,i}\)</span> are indicator variables for Week 2, 3, and 4, respectively.</li>
+</ul>
+<div class="fragment">
+<p>In matrix form, the data with dummy variables would look like this (try to identify which weeks each observation comes from!):</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{bmatrix}11 \\ 10 \\ 13 \\ 11 \\ \vdots \end{bmatrix}  =
+\begin{bmatrix}1 &amp; 0.045 &amp; 0 &amp; 0 &amp; 1 \\ 1 &amp; -1.036 &amp; 0 &amp; 1 &amp; 0 \\ 1 &amp; -1.336 &amp; 0 &amp; 1 &amp; 0 \\ 1 &amp;  0.616 &amp; 1 &amp; 0 &amp; 0 \\ \vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots \end{bmatrix}  \times
+\begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \\ \beta_4 \end{bmatrix}  +
+\begin{bmatrix} \epsilon_1 \\ \epsilon_2 \\ \epsilon_3 \\ \epsilon_4 \\ \vdots \end{bmatrix}
+\end{equation*}\]</span></p>
+<p><em>Use</em> <code>model.matrix</code> <em>in R to see full dataset</em></p>
+</div>
+</section>
+<section id="analysis-of-covariance-ancova-model" class="slide level2 smaller">
+<h2>Analysis of Covariance (ANCOVA model)</h2>
+<p>The model is: <span class="math display">\[\begin{equation*}
+Y_i = \beta_0 + \beta_1X_{NAP,i} + \beta_2X_{W2,i} + \beta_3X_{W3,i} + \beta_4X_{W4,i} + \epsilon_i
+\end{equation*}\]</span></p>
+<p>There is one slope (<span class="math inline">\(\beta_1\)</span>) relating to the effect of NAP on Richness. In addition, each Week gets its own intercept:</p>
+<ul>
+<li>Week 1: <span class="math inline">\(Y_i = \beta_0 + \beta_1X_{NAP,i} + \epsilon_i\)</span></li>
+</ul>
+<div class="fragment">
+<ul>
+<li>Week 2: <span class="math inline">\(Y_i = [\beta_0 + \beta_2(1)] + \beta_1X_{NAP,i} + \epsilon_i\)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Week 3: <span class="math inline">\(Y_i = [\beta_0 + \beta_3(1)] + \beta_1X_{NAP,i} + \epsilon_i\)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Week 4: <span class="math inline">\(Y_i = [\beta_0 + \beta_4(1)] + \beta_1X_{NAP,i} + \epsilon_i\)</span></li>
+</ul>
+</div>
+</section>
+<section id="ancova" class="slide level2">
+<h2>ANCOVA</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb22-2"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> <span class="fu">cbind</span>(RIKZdat, <span class="at">pred =</span> <span class="fu">predict</span>(lmfit4)),</span>
+<span id="cb22-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">aes</span>(<span class="at">x =</span> NAP, <span class="at">y =</span> Richness, <span class="at">color =</span> <span class="fu">as.factor</span>(week)))</span>
+<span id="cb22-4"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> pred))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="L03_MultipleRegression_files/figure-revealjs/ancova1-1.png" class="quarto-figure quarto-figure-center r-stretch" alt="Plot of predictions from the analysis of covariance model with constant effect of NAP but different intercepts for each week." width="576"></section>
+<section id="assumptions-1" class="slide level2">
+<h2>Assumptions</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(lmfit4,</span>
+<span id="cb23-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">check =</span> <span class="fu">c</span>(<span class="st">"linearity"</span>, <span class="st">"homogeneity"</span>, <span class="st">"qq"</span>, <span class="st">"normality"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="L03_MultipleRegression_files/figure-revealjs/unnamed-chunk-18-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:80.0%" alt="Residual plots for ancova model"></section>
+<section id="means-coding" class="slide level2">
+<h2>Means coding</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="" aria-hidden="true" tabindex="-1"></a>lmfit.ancova.m <span class="ot">&lt;-</span> <span class="fu">lm</span>(Richness <span class="sc">~</span> NAP <span class="sc">+</span> <span class="fu">as.factor</span>(week)<span class="sc">-</span><span class="dv">1</span>, <span class="at">data =</span> RIKZdat) </span>
+<span id="cb24-2"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmfit.ancova.m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Richness ~ NAP + as.factor(week) - 1, data = RIKZdat)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-5.0788 -1.4014 -0.3633  0.6500 12.0845 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)    
+NAP               -2.2708     0.4678  -4.854 1.88e-05 ***
+as.factor(week)1  11.3677     0.9459  12.017 7.48e-15 ***
+as.factor(week)2   3.7426     0.8026   4.663 3.44e-05 ***
+as.factor(week)3   5.1897     0.7979   6.505 9.24e-08 ***
+as.factor(week)4   8.7734     1.3657   6.424 1.20e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.987 on 40 degrees of freedom
+Multiple R-squared:  0.8604,    Adjusted R-squared:  0.843 
+F-statistic: 49.32 on 5 and 40 DF,  p-value: 4.676e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="analysis-of-covariance-ancova-model-1" class="slide level2 smaller">
+<h2>Analysis of Covariance (ANCOVA model)</h2>
+<p>The model is: <span class="math display">\[\begin{equation*}
+Y_i = \beta_1X_{NAP,i} + \beta_2X_{W1,i}+ \beta_3X_{W2,i} + \beta_4X_{W3,i} + \beta_5X_{W4,i} + \epsilon_i
+\end{equation*}\]</span></p>
+<p>There is one slope (<span class="math inline">\(\beta_1\)</span>) relating to the effect of NAP on Richness. In addition, each Week gets its own intercept:</p>
+<ul>
+<li><p>Week 1: <span class="math inline">\(Y_i = \beta_2 + \beta_1X_{NAP,i} + \epsilon_i\)</span></p></li>
+<li><p>Week 2: <span class="math inline">\(Y_i = \beta_3 + \beta_1X_{NAP,i} + \epsilon_i\)</span></p></li>
+<li><p>Week 3: <span class="math inline">\(Y_i = \beta_4  + \beta_1X_{NAP,i} + \epsilon_i\)</span></p></li>
+<li><p>Week 4: <span class="math inline">\(Y_i = \beta_5  + \beta_1X_{NAP,i} + \epsilon_i\)</span></p></li>
+</ul>
+</section>
+<section id="reference-vs.-means-coding" class="slide level2 smaller">
+<h2>Reference vs.&nbsp;Means Coding</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="" aria-hidden="true" tabindex="-1"></a>lmfit.ancova.r <span class="ot">&lt;-</span> <span class="fu">lm</span>(Richness <span class="sc">~</span> NAP <span class="sc">+</span> <span class="fu">as.factor</span>(week), <span class="at">data =</span> RIKZdat) </span>
+<span id="cb26-2"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmfit.ancova.r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Richness ~ NAP + as.factor(week), data = RIKZdat)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-5.0788 -1.4014 -0.3633  0.6500 12.0845 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       11.3677     0.9459  12.017 7.48e-15 ***
+NAP               -2.2708     0.4678  -4.854 1.88e-05 ***
+as.factor(week)2  -7.6251     1.2491  -6.105 3.37e-07 ***
+as.factor(week)3  -6.1780     1.2453  -4.961 1.34e-05 ***
+as.factor(week)4  -2.5943     1.6694  -1.554    0.128    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.987 on 40 degrees of freedom
+Multiple R-squared:  0.6759,    Adjusted R-squared:  0.6435 
+F-statistic: 20.86 on 4 and 40 DF,  p-value: 2.369e-09</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="" aria-hidden="true" tabindex="-1"></a>lmfit.ancova.m <span class="ot">&lt;-</span> <span class="fu">lm</span>(Richness <span class="sc">~</span> NAP <span class="sc">+</span> <span class="fu">as.factor</span>(week)<span class="sc">-</span><span class="dv">1</span>, <span class="at">data =</span> RIKZdat) </span>
+<span id="cb28-2"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmfit.ancova.m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Richness ~ NAP + as.factor(week) - 1, data = RIKZdat)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-5.0788 -1.4014 -0.3633  0.6500 12.0845 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)    
+NAP               -2.2708     0.4678  -4.854 1.88e-05 ***
+as.factor(week)1  11.3677     0.9459  12.017 7.48e-15 ***
+as.factor(week)2   3.7426     0.8026   4.663 3.44e-05 ***
+as.factor(week)3   5.1897     0.7979   6.505 9.24e-08 ***
+as.factor(week)4   8.7734     1.3657   6.424 1.20e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.987 on 40 degrees of freedom
+Multiple R-squared:  0.8604,    Adjusted R-squared:  0.843 
+F-statistic: 49.32 on 5 and 40 DF,  p-value: 4.676e-16</code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="interactions" class="slide level2">
+<h2>Interactions</h2>
+<p>We should be cautious with interactions:</p>
+<ul>
+<li><p>In experimental data, interactions should <strong>frequently</strong> be examined, and often should be examined <strong>before</strong> testing for main effects.</p></li>
+<li><p>In observational studies, data will usually be unbalanced. Interactions should <strong>rarely</strong> be examined unless though to be important <em>a priori</em>.</p></li>
+</ul>
+</section>
+<section id="interactions-1" class="slide level2">
+<h2>Interactions</h2>
+<p>For illustration only, we can naively assume that we think that NAP and Week <strong>interact</strong> in their effects on Richness.</p>
+<ul>
+<li><em>Caveat: there’s no real biological reason that week and relative elevation should interact, and the researchers did not design this experiment to test for this interaction.</em></li>
+</ul>
+</section>
+<section id="section-3" class="slide level2">
+<h2></h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="" aria-hidden="true" tabindex="-1"></a>lmfit.ancovaI <span class="ot">&lt;-</span> <span class="fu">lm</span>(Richness <span class="sc">~</span> NAP <span class="sc">*</span> <span class="fu">as.factor</span>(week), <span class="at">data =</span> RIKZdat)</span>
+<span id="cb30-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmfit.ancovaI)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Richness ~ NAP * as.factor(week), data = RIKZdat)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-6.3022 -0.9442 -0.2946  0.3383  7.7103 
+
+Coefficients:
+                     Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)          11.40561    0.77730  14.673  &lt; 2e-16 ***
+NAP                  -1.90016    0.87000  -2.184 0.035369 *  
+as.factor(week)2     -8.04029    1.05519  -7.620 4.30e-09 ***
+as.factor(week)3     -6.37154    1.03168  -6.176 3.63e-07 ***
+as.factor(week)4      1.37721    1.60036   0.861 0.395020    
+NAP:as.factor(week)2  0.42558    1.12008   0.380 0.706152    
+NAP:as.factor(week)3 -0.01344    1.04246  -0.013 0.989782    
+NAP:as.factor(week)4 -7.00002    1.68721  -4.149 0.000188 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.442 on 37 degrees of freedom
+Multiple R-squared:  0.7997,    Adjusted R-squared:  0.7618 
+F-statistic: 21.11 on 7 and 37 DF,  p-value: 3.935e-11</code></pre>
+</div>
+</div>
+</section>
+<section id="interactions-2" class="slide level2 smaller">
+<h2>Interactions</h2>
+<p><span style="font-size: 70%;"><span class="math inline">\(Y_i  =  \beta_0 + \beta_1X_{NAP,i} +\beta_2X_{W2,i} + \beta_3X_{W3,i} + \beta_4X_{W4,i}+  \beta_5X_{NAP,i}X_{W2,i} + \beta_6X_{NAP,i}X_{W3,i} + \beta_7X_{NAP,i}X_{W4,i} +  \epsilon_i\)</span></span></p>
+<p>There is one slope and one intercept for each week:</p>
+<ul>
+<li>Week 1: <span class="math inline">\(Y_i = \beta_0 + \beta_1X_{NAP,i} + \epsilon_i\)</span></li>
+</ul>
+<div class="fragment">
+<ul>
+<li>Week 2: <span class="math inline">\(Y_i = [\beta_0 + \beta_2(1)] + [\beta_1 + \beta_5(1)]X_{NAP,i} + \epsilon_i\)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Week 3: <span class="math inline">\(Y_i = [\beta_0 + \beta_3(1)] + [\beta_1 + \beta_6(1)]X_{NAP,i} + \epsilon_i\)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Week 4: <span class="math inline">\(Y_i = [\beta_0 + \beta_4(1)] + [\beta_1 + \beta_7(1)]X_{NAP,i} + \epsilon_i\)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<p>Parameters <span class="math inline">\(\beta_2, \beta_3, \beta_4\)</span> reflect differences in intercepts (from week 1’s intercept).</p>
+</div>
+<div class="fragment">
+<p>Parameters <span class="math inline">\(\beta_5, \beta_6, \beta_7\)</span> reflect differences in slopes (from week 1’s slope).</p>
+</div>
+</section>
+<section id="interactions-3" class="slide level2 smaller">
+<h2>Interactions</h2>
+<p><span style="font-size: 70%;"><span class="math inline">\(Y_i  =  \beta_0 + \beta_1X_{NAP,i} +\beta_2X_{W2,i} + \beta_3X_{W3,i} + \beta_4X_{W4,i}+  \beta_5X_{NAP,i}X_{W2,i} + \beta_6X_{NAP,i}X_{W3,i} + \beta_7X_{NAP,i}X_{W4,i} +  \epsilon_i\)</span></span></p>
+<p>The data in matrix form (again, try to determine which week each observation comes from!):</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{bmatrix}11 \\ 10 \\ 13 \\ 11 \\ \vdots \end{bmatrix}  =
+  \begin{bmatrix}1 &amp; 0.045 &amp; 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0.045 \\ 1 &amp; -1.036 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; -1.036 &amp; 0\\ 1 &amp; -1.336 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; -1.336 &amp; 0 \\ 1 &amp;  0.616 &amp; 1 &amp; 0 &amp; 0 &amp;  0.616 &amp; 0 &amp; 0 \\ \vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots \end{bmatrix}  \times
+\begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \\ \beta_4 \\ \beta_5 \\ \beta_6 \\ \beta_7 \end{bmatrix} +
+  \begin{bmatrix} \epsilon_1 \\ \epsilon_2 \\ \epsilon_3 \\ \epsilon_4 \\ \vdots \end{bmatrix}
+\end{equation*}\]</span></p>
+</section>
+<section id="section-4" class="slide level2">
+<h2></h2>
+<p>To specify the same model using means coding, we would use:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="" aria-hidden="true" tabindex="-1"></a>lmfit.ancovaI.m<span class="ot">&lt;-</span><span class="fu">lm</span>(Richness<span class="sc">~</span>NAP<span class="sc">*</span><span class="fu">as.factor</span>(week)<span class="sc">-</span><span class="dv">1</span><span class="sc">-</span>NAP, <span class="at">data=</span>RIKZdat)</span>
+<span id="cb32-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmfit.ancovaI.m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Richness ~ NAP * as.factor(week) - 1 - NAP, data = RIKZdat)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-6.3022 -0.9442 -0.2946  0.3383  7.7103 
+
+Coefficients:
+                     Estimate Std. Error t value Pr(&gt;|t|)    
+as.factor(week)1      11.4056     0.7773  14.673  &lt; 2e-16 ***
+as.factor(week)2       3.3653     0.7136   4.716 3.38e-05 ***
+as.factor(week)3       5.0341     0.6784   7.421 7.85e-09 ***
+as.factor(week)4      12.7828     1.3989   9.138 5.05e-11 ***
+NAP:as.factor(week)1  -1.9002     0.8700  -2.184  0.03537 *  
+NAP:as.factor(week)2  -1.4746     0.7055  -2.090  0.04353 *  
+NAP:as.factor(week)3  -1.9136     0.5743  -3.332  0.00197 ** 
+NAP:as.factor(week)4  -8.9002     1.4456  -6.157 3.85e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.442 on 37 degrees of freedom
+Multiple R-squared:  0.9138,    Adjusted R-squared:  0.8951 
+F-statistic:    49 on 8 and 37 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<div class="fragment">
+<p>In this case, we directly get estimates of the intercepts and slopes for each week.</p>
+</div>
+</section>
+<section id="interactions-4" class="slide level2">
+<h2>Interactions</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(RIKZdat, <span class="fu">aes</span>(<span class="at">x=</span>NAP, <span class="at">y=</span>Richness, <span class="at">colour=</span><span class="fu">as.factor</span>(week)))<span class="sc">+</span></span>
+<span id="cb34-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)<span class="sc">+</span><span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="L03_MultipleRegression_files/figure-revealjs/rikzAncovaIntF-1.png" class="quarto-figure quarto-figure-center r-stretch" alt="Plot of predictions from a model with interactions between NAP and week. The slopes associated with NAP for weeks 1, 2, and 3 are similar but the slope for week 4 is much steeper." width="576"></section>
+<section id="think-pair-share" class="slide level2">
+<h2>Think-Pair-Share</h2>
+<p>How could we fit a model where the effect of NAP was the same for all weeks except week 4?</p>
+<div class="fragment">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="" aria-hidden="true" tabindex="-1"></a>lmfit.special <span class="ot">&lt;-</span> <span class="fu">lm</span>(Richness <span class="sc">~</span> NAP <span class="sc">+</span> <span class="fu">as.factor</span>(week) <span class="sc">+</span> NAP<span class="sc">:</span><span class="fu">I</span>(week<span class="sc">==</span><span class="dv">4</span>),</span>
+<span id="cb35-2"><a href="" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> RIKZdat)</span>
+<span id="cb35-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmfit.special)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Richness ~ NAP + as.factor(week) + NAP:I(week == 
+    4), data = RIKZdat)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-6.3022 -0.9762 -0.0838  0.6269  7.6894 
+
+Coefficients:
+                     Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)           11.4187     0.7558  15.108  &lt; 2e-16 ***
+NAP                   -1.7722     0.3875  -4.573 4.77e-05 ***
+as.factor(week)2      -7.9124     0.9996  -7.915 1.23e-09 ***
+as.factor(week)3      -6.4463     0.9965  -6.469 1.16e-07 ***
+as.factor(week)4       1.3641     1.5623   0.873    0.388    
+NAP:I(week == 4)TRUE  -7.1280     1.4652  -4.865 1.92e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.387 on 39 degrees of freedom
+Multiple R-squared:  0.7983,    Adjusted R-squared:  0.7725 
+F-statistic: 30.88 on 5 and 39 DF,  p-value: 1.425e-12</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="interactions-5" class="slide level2">
+<h2>Interactions</h2>
+<p>Although these results look convincing that there is an interaction between NAP and Week 4, remember:</p>
+<ul>
+<li>this an unbalanced design, with only 5 observations during week 4!</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(RIKZdat<span class="sc">$</span>week)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ 1  2  3  4 
+10 15 15  5 </code></pre>
+</div>
+</div>
+<ul>
+<li>Hence, this interaction model should be interpreted with caution unless there was an <em>a priori</em> reason to expect the effect of <code>NAP</code> to vary by week.</li>
+</ul>
+</section>
+<section id="multiple-degree-of-freedom-tests" class="slide level2">
+<h2>Multiple degree of freedom tests</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(car)</span>
+<span id="cb39-2"><a href="" aria-hidden="true" tabindex="-1"></a>  lm.RIKZ<span class="ot">&lt;-</span><span class="fu">lm</span>(Richness<span class="sc">~</span>NAP<span class="sc">+</span>exposure<span class="sc">+</span><span class="fu">as.factor</span>(week), <span class="at">data=</span>RIKZdat)</span>
+<span id="cb39-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">Anova</span>(lm.RIKZ)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type II tests)
+
+Response: Richness
+                Sum Sq Df F value    Pr(&gt;F)    
+NAP             231.59  1 27.1999 6.335e-06 ***
+exposure         24.94  1  2.9289   0.09495 .  
+as.factor(week)  73.19  3  2.8654   0.04888 *  
+Residuals       332.07 39                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p><strong>Multiple df test</strong> tests whether all 3 coefficients associated with <code>as.factor(week)</code> are 0 versus the alternative hypothesis that at least 1 is non-zero (all weeks are the same vs.&nbsp;at least one of the weeks differs from the others).</p>
+</section>
+<section id="anova-versus-anova" class="slide level2">
+<h2>Anova versus anova</h2>
+<ul>
+<li><p>For continuous variables, the p-values from will be identical to the t-test p-values (see exposure variable).</p></li>
+<li><p>These tests for (NAP, exposure, week) are conditional on having the other terms included in the model.</p></li>
+<li><p>By contrast the function which performs “sequential” tests (where, “order of entry” matters!)</p></li>
+</ul>
+</section>
+<section id="section-5" class="slide level2">
+<h2></h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anova</span>(<span class="fu">lm</span>(Richness<span class="sc">~</span>NAP<span class="sc">+</span>exposure<span class="sc">+</span><span class="fu">as.factor</span>(week), <span class="at">data=</span>RIKZdat))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: Richness
+                Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+NAP              1 357.53  357.53 41.9907 1.117e-07 ***
+exposure         1 338.86  338.86 39.7977 1.931e-07 ***
+as.factor(week)  3  73.19   24.40  2.8654   0.04888 *  
+Residuals       39 332.07    8.51                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anova</span>(<span class="fu">lm</span>(Richness<span class="sc">~</span><span class="fu">as.factor</span>(week)<span class="sc">+</span>exposure<span class="sc">+</span>NAP, <span class="at">data=</span>RIKZdat))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: Richness
+                Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+as.factor(week)  3 534.31 178.104 20.9177 3.060e-08 ***
+exposure         1   3.67   3.675  0.4316    0.5151    
+NAP              1 231.59 231.593 27.1999 6.335e-06 ***
+Residuals       39 332.07   8.514                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+</section>
+<section id="additional-notes" class="slide level2">
+<h2>Additional Notes</h2>
+<p>See section 3.8 in the book for information on how to conduct pairwise comparisons (e.g., we have “4 choose 2” = 6 possible comparisons of different weeks).</p>
+<div class="fragment">
+<p>See sections 3.12 and 3.13 for information regarding how to test your own hypotheses using <em>contrasts</em> (formed by taking linear combinations of the regression coefficients).</p>
+<p>For example, we could test whether the average richness during weeks 1 and 2 differs from the average richness of weeks 3 and 4.</p>
+
+</div>
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="L03_MultipleRegression_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="L03_MultipleRegression_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="L03_MultipleRegression_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="L03_MultipleRegression_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="L03_MultipleRegression_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="L03_MultipleRegression_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="L03_MultipleRegression_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="L03_MultipleRegression_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="L03_MultipleRegression_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="L03_MultipleRegression_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="L03_MultipleRegression_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'fade',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+
+    <script>
+
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
+      // slide changes (different for each slide format).
+
+      (function () {
+
+        // dispatch for htmlwidgets
+
+        function fireSlideEnter() {
+
+          const event = window.document.createEvent("Event");
+
+          event.initEvent("slideenter", true, true);
+
+          window.document.dispatchEvent(event);
+
+        }
+
+    
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+
+          fireSlideEnter();
+
+    
+
+          // dispatch for shiny
+
+          if (window.jQuery) {
+
+            if (previousSlide) {
+
+              window.jQuery(previousSlide).trigger("hidden");
+
+            }
+
+            if (currentSlide) {
+
+              window.jQuery(currentSlide).trigger("shown");
+
+            }
+
+          }
+
+        }
+
+    
+
+        // hookup for slidy
+
+        if (window.w3c_slidy) {
+
+          window.w3c_slidy.add_observer(function (slide_num) {
+
+            // slide_num starts at position 1
+
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
+          });
+
+        }
+
+    
+
+      })();
+
+    </script>
+
+    
+
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        // For code content inside modals, clipBoardJS needs to be initialized with a container option
+        // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>
