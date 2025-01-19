@@ -39,9 +39,10 @@ coviddat <- read.csv(here("FW8051Data", "minnesota-history.csv"))
 
 ## Footer
 
-We can create a reproducible using:
+We can create a reproducible report by typing this in the console (after replacing with actual file and directory names):
  
 rmarkdown::render(here::here("Rcode", "filename"), output_dir = "Output", output_format="pdf_document")
+  
   
 
 ```{r}
