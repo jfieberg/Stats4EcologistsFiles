@@ -6,7 +6,7 @@
 <script src="L03b_PartialRegressionAndResidualPlots_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="L03b_PartialRegressionAndResidualPlots_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="L03b_PartialRegressionAndResidualPlots_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="L03b_PartialRegressionAndResidualPlots_files/libs/quarto-html/quarto-syntax-highlighting-dark-8b864f0777c60eecff11d75b6b2e1175.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<link href="L03b_PartialRegressionAndResidualPlots_files/libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.6.33">
 
   <meta name="author" content="FW8051 Statistics for Ecologists">
@@ -29,7 +29,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="L03b_PartialRegressionAndResidualPlots_files/libs/revealjs/dist/theme/quarto-c89a7e063782379d64767b77f736f9e1.css">
+  <link rel="stylesheet" href="L03b_PartialRegressionAndResidualPlots_files/libs/revealjs/dist/theme/quarto-27a844e7d43f0d31b27642e48490372a.css">
   <link href="L03b_PartialRegressionAndResidualPlots_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="L03b_PartialRegressionAndResidualPlots_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="L03b_PartialRegressionAndResidualPlots_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -124,7 +124,7 @@
     }
   </style>
 </head>
-<body class="quarto-dark">
+<body class="quarto-light">
   <div class="reveal">
     <div class="slides">
 
@@ -178,7 +178,7 @@ FW8051 Statistics for Ecologists
 <p>Lets us visualize the effect of <span class="math inline">\(X_i\)</span> after accounting for all other predictors.</p>
 </div>
 </section>
-<section id="section" class="slide level2" style="font-size: 80%;">
+<section id="partial" class="slide level2" data-menu-title="Partial plot" style="font-size: 80%;">
 <h2></h2>
 
 <img data-src="graphics/av2.jpg" class="quarto-figure quarto-figure-center r-stretch" style="width:50.0%" alt="Partial regression plots."><p>Shows the slope and the true scatter of points around the partial line in an analogous way to bi-variate plots in simple linear regression</p>
@@ -225,11 +225,11 @@ FW8051 Statistics for Ecologists
 <li>Easy to generalize to other regression models (see visreg package on Canvas)</li>
 </ul>
 </section>
-<section id="section-1" class="slide level2">
+<section id="partialb" class="slide level2" data-menu-title="Partial plot">
 <h2></h2>
 
 <img data-src="graphics/av3.jpg" class="quarto-figure quarto-figure-center r-stretch" alt="Partial residual and partial regression plots." width="504"></section>
-<section id="section-2" class="slide level2">
+<section id="partialc" class="slide level2" data-menu-title="Partial plot">
 <h2></h2>
 
 <img data-src="graphics/av4.jpg" class="quarto-figure quarto-figure-center r-stretch" alt="Partial regression plots." width="482"></section>
@@ -438,10 +438,10 @@ FW8051 Statistics for Ecologists
         height: 700,
 
         // Factor of the display size that should remain empty around the content
-        margin: 0.1,
+        margin: 5.0e-2,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

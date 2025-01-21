@@ -6,7 +6,7 @@
 <script src="L01_LinearRegression_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="L01_LinearRegression_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="L01_LinearRegression_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="L01_LinearRegression_files/libs/quarto-html/quarto-syntax-highlighting-dark-8b864f0777c60eecff11d75b6b2e1175.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<link href="L01_LinearRegression_files/libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.6.33">
 
   <title>Linear Regression Review</title>
@@ -54,46 +54,46 @@
         -khtml-user-select: none; -moz-user-select: none;
         -ms-user-select: none; user-select: none;
         padding: 0 4px; width: 4em;
+        color: #aaaaaa;
       }
-    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
     div.sourceCode
-      { color: #f8f8f2;  }
+      { color: #003b4f; background-color: #f1f3f5; }
     @media screen {
     pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
     }
-    code span { color: #f8f8f2; } /* Normal */
-    code span.al { color: #f07178; background-color: #2a0f15; font-weight: bold; } /* Alert */
-    code span.an { color: #d4d0ab; } /* Annotation */
-    code span.at { color: #00e0e0; } /* Attribute */
-    code span.bn { color: #d4d0ab; } /* BaseN */
-    code span.bu { color: #abe338; } /* BuiltIn */
-    code span.cf { color: #ffa07a; font-weight: bold; } /* ControlFlow */
-    code span.ch { color: #abe338; } /* Char */
-    code span.cn { color: #ffd700; } /* Constant */
-    code span.co { color: #f8f8f2; font-style: italic; } /* Comment */
-    code span.cv { color: #ffd700; } /* CommentVar */
-    code span.do { color: #f8f8f2; } /* Documentation */
-    code span.dt { color: #ffa07a; } /* DataType */
-    code span.dv { color: #d4d0ab; } /* DecVal */
-    code span.er { color: #f07178; text-decoration: underline; } /* Error */
-    code span.ex { color: #00e0e0; font-weight: bold; } /* Extension */
-    code span.fl { color: #d4d0ab; } /* Float */
-    code span.fu { color: #ffa07a; } /* Function */
-    code span.im { color: #abe338; } /* Import */
-    code span.in { color: #d4d0ab; } /* Information */
-    code span.kw { color: #ffa07a; font-weight: bold; } /* Keyword */
-    code span.op { color: #ffa07a; } /* Operator */
-    code span.ot { color: #00e0e0; } /* Other */
-    code span.pp { color: #dcc6e0; } /* Preprocessor */
-    code span.re { color: #00e0e0; background-color: #f8f8f2; } /* RegionMarker */
-    code span.sc { color: #abe338; } /* SpecialChar */
-    code span.ss { color: #abe338; } /* SpecialString */
-    code span.st { color: #abe338; } /* String */
-    code span.va { color: #00e0e0; } /* Variable */
-    code span.vs { color: #abe338; } /* VerbatimString */
-    code span.wa { color: #dcc6e0; } /* Warning */
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="L01_LinearRegression_files/libs/revealjs/dist/theme/quarto-c89a7e063782379d64767b77f736f9e1.css">
+  <link rel="stylesheet" href="L01_LinearRegression_files/libs/revealjs/dist/theme/quarto-27a844e7d43f0d31b27642e48490372a.css">
   <link href="L01_LinearRegression_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="L01_LinearRegression_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="L01_LinearRegression_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -188,7 +188,7 @@
     }
   </style>
 </head>
-<body class="quarto-dark">
+<body class="quarto-light">
   <div class="reveal">
     <div class="slides">
 
@@ -229,7 +229,7 @@
 <h2>Its in the Nose!</h2>
 
 <img data-src="graphics/nosesNew.jpg" class="quarto-figure quarto-figure-center r-stretch" alt="Picture of a lion." width="196"></section>
-<section id="section" class="slide level2">
+<section id="Linerega" class="slide level2" data-menu-title="Lion Nose data">
 <h2></h2>
 <p>Data are contained in <code>abd</code> library of Program R:</p>
 <div class="cell" data-layout-align="center">
@@ -304,7 +304,7 @@ Y_i = \beta_0 + \beta_1X_i + \epsilon_i
 <h2>Residuals Versus Fitted</h2>
 
 <img data-src="graphics/statistics1efig1002.jpg" class="quarto-figure quarto-figure-center r-stretch" alt="Residual versus fitted value plot." width="698"></section>
-<section id="section-1" class="slide level2">
+<section id="lingregb" class="slide level2" data-menu-title="Residual plots">
 <h2></h2>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="" aria-hidden="true" tabindex="-1"></a>lm.nose <span class="ot">&lt;-</span> <span class="fu">lm</span>(age <span class="sc">~</span> proportion.black, <span class="at">data =</span> LionNoses)</span>
@@ -313,7 +313,7 @@ Y_i = \beta_0 + \beta_1X_i + \epsilon_i
 
 </div>
 <img data-src="L01_LinearRegression_files/figure-revealjs/nosediag-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:100.0%" alt="Residual plots for the linear regression model relating age to proportion of the nose that is black."></section>
-<section id="section-2" class="slide level2 smaller">
+<section id="linregc" class="slide level2 smaller" data-menu-title="Interpretation">
 <h2></h2>
 <p>Interpretation: Intercept, Slope, t-tests and p-values, Residual Standard Error (<span class="math inline">\(\hat{\sigma}\)</span>), <span class="math inline">\(R^2\)</span></p>
 <div class="cell" data-layout-align="center" data-code-block-height="650px">
@@ -357,7 +357,7 @@ F-statistic: 49.75 on 1 and 30 DF,  p-value: 7.677e-08</code></pre>
 </div></div>
 </div>
 </section>
-<section id="section-3" class="slide level2 smaller">
+<section id="liunregd" class="slide level2 smaller" data-menu-title="Hypothesis tests">
 <h2></h2>
 <p><span class="math inline">\(H_0: \beta_1=0\)</span> vs.&nbsp;<span class="math inline">\(H_A: \beta_1 \ne 0\)</span>?</p>
 <div class="cell" data-layout-align="center" data-code-block-height="650px">
@@ -410,7 +410,7 @@ F-statistic: 49.75 on 1 and 30 DF,  p-value: 7.677e-08</code></pre>
 <p>Lets explore through simulation!</p>
 </div>
 </section>
-<section id="simulation" class="slide level2">
+<section id="simulation" class="slide level2" style="font-size: 80%;">
 <h2>Simulation</h2>
 <p>Lets first generate a single data set consistent with our fitted model using the following code.</p>
 <div class="cell" data-layout-align="center">
@@ -583,7 +583,7 @@ F-statistic: 35.83 on 1 and 30 DF,  p-value: 1.45e-06</code></pre>
 <p><span class="math inline">\(t_{0.975, n-2}\)</span> = <code>qt(p=0.975, df=30)</code> = <span class="math inline">\(2.04\)</span></p>
 </div></div>
 </section>
-<section id="confidence-interval-2" class="slide level2" style="font-size: 80%;">
+<section id="confidence-interval-2" class="slide level2" style="font-size: 75%;">
 <h2>Confidence Interval</h2>
 <p><span class="math display">\[
   P(t_{0.025, n-2}&lt; \frac{\hat{\beta}-\beta}{\widehat{SE}(\hat{\beta})} &lt; t_{0.975, n-2}) = 0.95
@@ -615,7 +615,7 @@ proportion.black  7.5643082 13.729931</code></pre>
 </div>
 </div>
 </section>
-<section id="section-4" class="slide level2">
+<section id="Linregee" class="slide level2" data-menu-title="Interpretation CI">
 <h2></h2>
 <p>What is wrong with the following interpretation?</p>
 <p><span class="math display">\[P(7.56 \le \beta \le 13.72) = 0.95\]</span></p>
@@ -725,16 +725,30 @@ t = \frac{\hat{\beta_1}-0}{\widehat{SE}({\hat{\beta_1}})} \sim t_{n-2}
 </ul>
 </div>
 </section>
-<section id="hypothesis-test" class="slide level2">
+<section id="hypothesis-test" class="slide level2" style="font-size: 80%;">
 <h2>Hypothesis test</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
 <ul>
 <li>Sampling distribution when the null hypothesis is true: <span class="math display">\[
 t = \frac{\hat{\beta_1}-0}{\widehat{SE}({\hat{\beta_1}})} \sim t_{n-2}
 \]</span></li>
+</ul>
+</div><div class="column fragment" style="width:50%;">
+<ul>
 <li>Our observed t-statistic falls in the tail of this distribution (so, the Null hypothesis is unlikely to be true!)</li>
 </ul>
-
-<img data-src="L01_LinearRegression_files/figure-revealjs/tonew-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:50.0%" alt="Figure showing t-distribution overlayed on the simulated sampling distribution."></section>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="L01_LinearRegression_files/figure-revealjs/tonew-1.png" class="quarto-figure quarto-figure-center" style="width:90.0%" alt="Figure showing t-distribution overlayed on the simulated sampling distribution."></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</section>
 <section id="r2" class="slide level2 smaller">
 <h2><span class="math inline">\(R^2\)</span></h2>
 <div class="cell" data-layout-align="center" data-code-block-height="650px">
@@ -818,8 +832,19 @@ F-statistic: 49.75 on 1 and 30 DF,  p-value: 7.677e-08</code></pre>
 </div>
 <div class="fragment">
 <p>We expect 95% of the observations to fall within 2*1.669 of the regression line.</p>
-
 </div>
+</section>
+<section id="summary" class="slide level2">
+<h2>Summary</h2>
+<p>Reviewed important statistical concepts within the context of linear regression using simulated data:</p>
+<ul>
+<li>Sampling Distributions, SEs</li>
+<li>T-tests for regression coefficients</li>
+<li>Confidence intervals</li>
+<li>P-values</li>
+<li>How to check assumptions</li>
+</ul>
+
 </section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
