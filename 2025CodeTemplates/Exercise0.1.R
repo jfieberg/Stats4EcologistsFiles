@@ -1,0 +1,50 @@
+#' ---
+#' title: "Exercise X.X"
+#' author: "Your name (or leave blank for HW)"
+#' date: "`r format(Sys.time(), '%d %B, %Y')`"
+#' output: pdf_document
+#' ---
+#' 
+#'  
+#' 
+#' ## Preamble
+#' 
+#' Load libraries and set chunk options here.
+#' 
+## ----setup, warning = FALSE, message = FALSE-----------------------------
+# set global chunk options: images will be 7x5 inches
+# wrap output at 60 characters 
+library(knitr) # for creating reproducible reports
+library(formatR) # for formatting code in output file
+library(here) # to facilitate reading in data using a relative path
+opts_chunk$set(fig.width=7, fig.height=5, tidy.opts = list(width.cutoff = 60), tidy = TRUE)  
+
+#' 
+#' ## Data
+#' 
+#' Read in data.
+#' 
+## ------------------------------------------------------------------------
+coviddat <- read.csv(here("FW8051Data", "minnesota-history.csv"))
+
+#' 
+#' 
+#' 
+#' ## Analysis
+#' 
+## ------------------------------------------------------------------------
+
+
+#' 
+#' 
+#' ## Footer
+#' 
+#' We can create a reproducible report by typing this in the console 
+#' (after replacing with actual file and directory names):
+#'
+#' rmarkdown::render(here::here("Rcode", "filename"), output_dir = "Output", output_format="pdf_document")
+#' 
+## ------------------------------------------------------------------------
+sessionInfo()
+
+#' 
