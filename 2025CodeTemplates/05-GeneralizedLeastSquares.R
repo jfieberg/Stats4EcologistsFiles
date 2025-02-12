@@ -93,7 +93,7 @@ ggplot(sockeye, aes(sample = stdresids)) +
 
 #' Scale-location plot
 sockeye <- sockeye %>% 
-  mutate(absstdresids  = abs(stdresids))
+  mutate(absstdresids  = sqrt(abs(stdresids)))
 
 ggplot(sockeye, aes(fitted, absstdresids)) + geom_point() +
   geom_smooth() 
