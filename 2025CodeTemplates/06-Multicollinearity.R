@@ -1,18 +1,7 @@
 #' # Multicollinearity 
 #' 
-#' 
-#' **Learning objectives**
-#' 
-#' 1. Be able to describe and identify different forms of multicollinearity.
-#' 2. Understand the effects of multicollinearity on parameter estimates and their standard errors. 
-#' 3. Be able to evaluate predictors for multicollinearity using variance inflation factors.
-#' 4. Understand some strategies for dealing with multicollinearity.
-#' 
-#' ## R Packages
-#' 
-#' We begin by loading the `dplyr` package:
-#' 
-## ----warning=FALSE, message=FALSE---------------------
+#'  
+#+ warning=FALSE, message=FALSE
 library(dplyr) # for data wrangling
 
  
