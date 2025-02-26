@@ -7,7 +7,7 @@
 #+warning=FALSE, message=FALSE
   library(Data4Ecologists)
   
-#' Read in data (and write them to output data file)
+#' Read in data 
   data(slugs)
    
 #' Lets start off by assuming the distribution is the same for 
@@ -27,12 +27,12 @@
  nvals<-length(lambda.test) # number of lambdas to explore
  L.vals<-matrix(NA, nvals, 1)
  for(i in 1:nvals){
-   L.vals[i]<-Like.s(lambda.test[i], slugs)
+   L.vals[i]<-Like.s(lambda.test[i], dat = slugs)
  }
  
 #' Instead of using a loop, we can use sapply to calculate the 
 #' likelihood for several different values of lambda.
- L.vals<-sapply(1:nvals, FUN=function(x){Like.s(lambda.test[x], slugs)}) 
+ L.vals<-sapply(1:nvals, FUN=function(x){Like.s(lambda.test[x], dat = slugs)}) 
  minus.logL.vals<-sapply(1:nvals, FUN=function(x){minus.logL.s(lambda.test[x], slugs)}) 
   
 #' ## Finding the MLE numerically 

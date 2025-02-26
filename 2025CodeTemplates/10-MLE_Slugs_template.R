@@ -4,7 +4,7 @@
 #+warning=FALSE, message=FALSE
   library(Data4Ecologists)
   
-#' Read in data (and write them to output data file)
+#' Read in data  
   data(slugs)
    
 #' Lets start off by assuming the distribution is the same for 
@@ -37,8 +37,8 @@ for (i in 1:nvals){
   
 #' Instead of using a loop, we can use sapply to calculate the 
 #' likelihood for several different values of lambda.
- L.vals<-sapply(1:nvals, FUN=function(x){Like.s(lambda.test[x], slugs$slugs)}) 
- minus.logL.vals<-sapply(1:nvals, FUN=function(x){minus.logL.s(lambda.test[x], slugs$slugs)}) 
+ L.vals<-sapply(1:nvals, FUN=function(x){Like.s(lambda.test[x], slugs = slugs$slugs)}) 
+ minus.logL.vals<-sapply(1:nvals, FUN=function(x){minus.logL.s(lambda.test[x], slugs = slugs$slugs)}) 
   
 #' ## Finding the MLE numerically 
 #'
