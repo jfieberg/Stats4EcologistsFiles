@@ -86,7 +86,7 @@ beta.hats <- coef(glmPdace)
 ses <- sqrt(diag(vcov(glmPdace)))
 round(cbind(beta.hats-1.96*ses, beta.hats+1.96*ses), 3)
 
-#' Or, can use profile likelihood intervals
+#' Or, can use confint
 confint(glmPdace)
 
 #' When calculating CIs for exp(beta), its best to:
