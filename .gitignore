@@ -2,10 +2,8 @@
 !.gitignore
 !FW8051Data
 !Slides
-!CodeTemplates
-!CodeTemplates/*.*
-!Solutions
-!Solutions/*.*
+!CodeTemplates/** 
+!Solutions/**
 #HandoutsofSlides/*.*
 CodeTemplates/*.*
 !FW8051Data/*.*
