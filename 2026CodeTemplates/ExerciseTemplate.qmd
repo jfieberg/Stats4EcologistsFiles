@@ -1,0 +1,46 @@
+---
+title: "Exercise X.X"
+author: "Your name (or leave blank for HW)"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+format: pdf
+---
+
+ 
+
+## Preamble
+
+Load libraries and set chunk options here.
+
+```{r setup, warning = FALSE, message = FALSE}
+# set global chunk options: images will be 7x5 inches
+# wrap output at 60 characters 
+library(knitr) # for creating reproducible reports
+library(formatR) # for formatting code in output file
+library(here) # to facilitate reading in data using a relative path
+opts_chunk$set(fig.width=7, fig.height=5, tidy.opts = list(width.cutoff = 60),
+               tidy = TRUE)  
+```
+
+## Data
+
+Read in data.
+
+```{r}
+coviddat <- read.csv(here("FW8051Data", "minnesota-history.csv"))
+```
+
+
+
+## Analysis
+
+```{r}
+
+```
+
+
+## Footer
+
+```{r}
+sessionInfo()
+```
+
