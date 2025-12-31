@@ -3,6 +3,7 @@
 !FW8051Data
 !Slides
 !CodeTemplates/** 
+!CodeTemplates/*.* 
 !Solutions/**
 #HandoutsofSlides/*.*
 CodeTemplates/*.*
