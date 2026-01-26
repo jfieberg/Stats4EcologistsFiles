@@ -6,7 +6,7 @@
 !CodeTemplates/
 !Solutions/
 
-# 3. Allow EVERY file inside those specific folders 
+# 3. Allow EVERY file inside those specific folders
 # This overrides the *.* rule for these specific paths
 !FW8051Data/**
 !CodeTemplates/**
@@ -19,3 +19,4 @@
 # 5. Re-ignore the things you definitely don't want
 .Rproj.user
 /.quarto/
+**/*.quarto_ipynb
