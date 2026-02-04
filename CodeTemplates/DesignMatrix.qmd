@@ -1,0 +1,65 @@
+---
+title: "Design matrix"
+author: John Fieberg
+format:
+  html:
+    embed-resources: true
+---
+
+A few notes on the design matrix.  Turns out that, with linear regressionm we can solve for $\hat{\beta}$, the parameters that minimize the sum of squared errors analytically (here is one place where you can find the [derivation](https://max.pm/posts/ols_matrix/)). The solution is:
+
+$$\hat{\beta} = (X^TX)^{-1}X^TY$$
+
+
+where $X$ is the design matrix and $X^T$ is its [transponse](https://en.wikipedia.org/wiki/Transpose) obtained by switching the row and column indices of the matrix. 
+
+We can show this in R using say the lionnose data 
+
+```{r}
+#| warning: false
+#| message: false
+library(abd)
+data(Lionnoses)
+```
+
+```{r}
+lmlion <- lm(age~proportion.black, data = LionNoses)
+summary(lmlion)
+```
+
+Let's save the design matrix as `X`, create its transpose using `t(X)`, and determine $X^TX$ using matrix multiplication in R using `%*%`:
+```{r}
+X <- model.matrix(lmlion)
+Xt <- t(X)
+XtX <- Xt%*%X
+```
+
+Then, we can find $(X^TX)^{-1}$ using the `solve` function in R and make sure that we do indeed have an inverse by multiplying $(X^TX)$ by $(X^TX)^{-1}$ and seeing that we get 1's on the diagonal and 0's elsewhere (at least to machine precision $\approx 1 E^{-16}$):
+
+```{r}
+XtXinv <- solve(XtX)
+XtX%*%XtXinv
+```
+
+Now, we can verify that we get $\hat{\beta}$ using the above analytical formula:
+```{r}
+Y <- matrix(LionNoses$age)
+(XtXinv%*%Xt)%*%Y
+summary(lmlion)
+```
+
+Also, note that the estimated variance covariance matrix of $\hat{\beta}$ is given by $\hat{\sigma}^2(X^TX)^{-1}$.  We can verify this as follows:
+
+```{r}
+(sigma.hat <- summary(lmlion)$sigma)
+(varhat <- sigma.hat^2*XtXinv)
+vcov(lmlion)
+```
+And, if you forgot how to interpret this matrix, note that the diagonals give us estimates of var($\hat{\beta}_0$) and var($\hat{\beta}_1$) and the offdiagonls tell us how $\hat{\beta}_0$ and $\hat{\beta}_1$  covary.  If we take the square root of the diagonals, we get our estimated standard errors!
+
+```{r}
+sqrt(diag(varhat))
+summary(lmlion)
+```
+
+
