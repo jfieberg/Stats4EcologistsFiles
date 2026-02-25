@@ -111,12 +111,16 @@ minus.logL.s<-function(lambda, slugs){
 #' ## Separate lambdas for the two fields
 #' 
 #' Create log-likelihood function
-  minus.logL.2<-function(lambdas, dat){
-   
+  minus.logL.2<-function(params, slugcounts, fields){
+    beta0 <- params[1]
+    beta1 <- params[2]
+    log.lambda <- beta0 + beta1*I(fields == "Rookery")
+    lambdas<-exp(log.lambda)
+    neg.logl<- -sum(dpois(slugcounts, lambda=lambdas, log=TRUE))
   }
 
 #' Now, estimate the lambdas using optim
-  mle.fit.2<-optim(par=c(2,2), fn=minus.logL.2, slugs=slugs, method="BFGS", hessian=T)  
+  mle.fit.2<-optim(par=c(2,2), fn=minus.logL.2, slugcounts=slugs$slugs, fields = slugs$field, method="BFGS", hessian=T)  
   mle.fit.2  
   
 #' Likelihood Ratio Test: 2*(LogL[full]- logL[reduced]), which we compare to a chisq with 1 df
