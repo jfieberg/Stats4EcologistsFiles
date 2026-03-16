@@ -1,4 +1,13 @@
-#' # Bayesian Linear Model
+#' ---
+#' title: "Bayesian Linear Model"
+#' author: ""
+#' format: 
+#'  html:
+#'   toc: true
+#'   embed-resources: true
+#' --- 
+#' 
+
 
 #' ## Preamble
 #' 
@@ -12,16 +21,22 @@ library(patchwork) # for multi-panel plots
 library(dplyr) # for data wrangling
 library(WVPlots) # for shading of posterior density
 
+ 
 #' Write out the model
 linreg<-function(){
 
 # Priors
- 
+ beta0 ~ dnorm(0,0.001)
+ beta1 ~ dnorm(0,0.001)
+ sigma ~ dunif(0, 100)
+
 # Derived quantities
-  
+ tau <- 1/ (sigma * sigma)
+
 # Likelihood
  for (i in 1:n) {
-
+    age[i] ~ dnorm(mu[i], tau) 
+    mu[i] <- beta0 + beta1*proportion.black[i]
  }
 
 # Assess model fit using a sums-of-squares-type discrepancy
@@ -69,6 +84,7 @@ lmbayes <- jags(data = jags.data,
 #' Make sure we have reached convergence and density and traceplots look OK
 MCMCsummary(lmbayes, params = c("beta0", "beta1", "sigma"))
 
+
 #+ fig.height=8, fig.width=4, fig.alt = "Density and trace plots"
 MCMCtrace(lmbayes, params = c("beta0", "beta1", "sigma"), ind = TRUE, pdf = FALSE) 
 
@@ -86,14 +102,13 @@ jagslmfit <- data.frame(resid = lmresids,
                         fitted = lmfitted, 
                         std.abs.resid = sqrt(abs(lmresids/lmsigma))) 
 
-
 #' Compare residual plots 
 #+ bayesresids, fig.height=4, fig.width=12, out.width = "100%", fig.align='center'
 p1 <- ggplot(jagslmfit, aes(fitted, resid)) + geom_point() + 
-  geom_hline(yintercept = 0) + geom_smooth()
+         geom_hline(yintercept = 0) + geom_smooth()
 p2 <- ggplot(jagslmfit, aes(sample = resid)) + stat_qq() + stat_qq_line()
 p3 <- ggplot(jagslmfit, aes(fitted, std.abs.resid)) + geom_point() + 
-  geom_smooth() + ylab("sqrt(|Standardized Residuals|)")
+         geom_smooth() + ylab("sqrt(|Standardized Residuals|)")
 p1 + p2 + p3
 
 
@@ -179,7 +194,7 @@ for(i in 1:length(prop.black)){
   # Estimate the mean age for the current value of prop.black and for
   #    each MCMC sample of beta0 and beta1
   age.inds <- betas$beta0 + rep(prop.black[i], nmcmc)*betas$beta1 + 
-    rnorm(nmcmc, mean = 0, sd = sigmap)
+                     rnorm(nmcmc, mean = 0, sd = sigmap)
   # Now for prediction intervals using the quantiles of the age values
   pred.int[i,] <- quantile(age.inds, prob = c(0.025, 0.975))
 }
@@ -211,10 +226,10 @@ PI <- MCMCpstr(lmbayes, params = c("y.new"),
 #+ bayesplotcred2, fig.align='center', out.width = "55%", fig.height = 5, fig.width =6 
 phats2 <- data.frame(est =MCMCpstr(lmbayes, params = c("mu"), func = mean)$mu, 
                      proportion.black = LionNoses$proportion.black,
-                     LCL = CI[,1], 
-                     UCL = CI[,2], 
-                     LPL = PI[,1], 
-                     UPL = PI[,2])
+                    LCL = CI[,1], 
+                    UCL = CI[,2], 
+                    LPL = PI[,1], 
+                    UPL = PI[,2])
 ggplot(phats2, aes(proportion.black, est)) +
   geom_line(aes(proportion.black, LCL), col = "red", lty = 2) +
   geom_line(aes(proportion.black, UCL), col = "red", lty = 2) +
