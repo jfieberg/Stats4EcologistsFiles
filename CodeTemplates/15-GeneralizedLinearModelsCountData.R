@@ -111,7 +111,9 @@ residualPlots(glmPdace)
 #' Can also use check_model
 #+ out.width = "60%", fig.height = 9, fig.width =6 
 performance::check_model(glmPdace)
-performance::check_model(glmPdace, check = c("pp_check", "overdispersion", "qq", "homogeneity"))
+performance::check_model(glmPdace, check = c("pp_check", "overdispersion", "qq", "homogeneity"),
+                         type = "density")
+
 performance::check_overdispersion(glmPdace) 
 
 #' See also the Dharma package (in book) 
@@ -192,7 +194,8 @@ residualPlot(glmNBdace, main = "Negative Binomial model")
 
 #+ out.width = "90%", fig.height = 9, fig.width =6 
 check_model(glmNBdace) 
-performance::check_model(glmNBdace, check = c("pp_check", "overdispersion", "qq", "homogeneity"))
+performance::check_model(glmNBdace, check = c("pp_check", "overdispersion", "qq", "homogeneity"),
+                         type = "density")
 
 
 #' ## Goodness of fit test for negative binomial model
