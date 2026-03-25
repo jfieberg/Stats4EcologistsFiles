@@ -31,18 +31,27 @@ data("longnosedace")
 pois.fit<-function(){
   
   # Priors for regression parameters
-  for(i in 1:np){
-    beta[i] ~ dnorm(0,0.001)
-  }  
+  for(i in 1:7){
+    beta[i] ~ dnorm(0, 0.001)
+  }
+  # Likelihood 
   for(i in 1:n){
-    log(lambda[i]) <- inprod(beta[], x[i,])
-    longnosedace[i] ~ dpois(lambda[i])
+    dace[i] ~ dpois(lambda[i])
+    log(lambda[i]) <- beta[1] + beta[2]*acreage[i] + beta[3]*so4[i] +
+      beta[4]*no3[i]+ beta[5]*maxdepth[i]+beta[6]*do2[i] + beta[7]*temp[i]
+  }
+  
+  # Fit assessments
+  
+  for(i in 1:n){
+    # Calculate Pearson residuals and squared residuals
+    Presi[i] <- (dace[i]-lambda[i])/sqrt(lambda[i])   # Pearson residuals
+    D[i] <-  pow(Presi[i], 2) # squared residuals
     
-    # Fit assessments
-    Presi[i] <- (longnosedace[i] - lambda[i]) / sqrt(lambda[i]) # Pearson residuals
-    dace.new[i] ~ dpois(lambda[i])    # Replicate data set
-    Presi.new[i] <- (dace.new[i] - lambda[i]) / sqrt(lambda[i]) # Pearson residuals
-    D[i] <- pow(Presi[i], 2)
+    # Have JAGS simulate new observations and calculate
+    # residuals and squared residuals
+    dace.new[i] ~  dpois(lambda[i])
+    Presi.new[i] <- (dace.new[i]-lambda[i])/sqrt(lambda[i])    # Pearson residuals 
     D.new[i] <- pow(Presi.new[i], 2)
   }
   
@@ -52,13 +61,15 @@ pois.fit<-function(){
 } 
 
 
-# Bundle data, here we will use the design matrix from R 
-xmat <- model.matrix(~acreage + do2 + maxdepth + no3 + so4 + temp, 
-                     data = longnosedace)
-
-jagsdata <- list(x = xmat, np = ncol(xmat),
-                 n = nrow(longnosedace), 
-                 longnosedace = longnosedace$longnosedace)
+# Bundle data, here we need to list our response variable,
+# all of our predictor variables, and n= nrow(longnosedace)
+jagsdata <- list(dace=longnosedace$longnosedace, 
+                 acreage =  longnosedace$acreage,
+                 do2 = longnosedace$do2,
+                 maxdepth = longnosedace$maxdepth,
+                 no3 = longnosedace$no3,
+                 so4 = longnosedace$so4,
+                 temp = longnosedace$temp, n = nrow(longnosedace))
 
 
 # Parameters to estimate
@@ -95,6 +106,17 @@ T.extreme <- fitstats$fit.new >= fitstats$fit
 
 
 #' ## Fit negative binomial model using JAGS  
+#' 
+#' This time, we will use the design matrix to make it easier to specify the model.
+#' 
+# Bundle data, here we will use the design matrix from R 
+xmat <- model.matrix(~acreage + do2 + maxdepth + no3 + so4 + temp, 
+                     data = longnosedace)
+
+jagsdata <- list(x = xmat, np = ncol(xmat),
+                 n = nrow(longnosedace), 
+                 longnosedace = longnosedace$longnosedace)
+
 nb.fit<-function(){
   
   # Priors for regression parameters
