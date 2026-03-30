@@ -62,8 +62,11 @@ par(mfrow=c(1,1))
 #' 
 #' This distribution is equivalent to a Student-t distribution with 1 degree 
 #' of freedom and can be specified in JAGS as: `dt(0, pow(2.5,-2), 1)`. 
-#'  
-#'  
+#' 
+#' Note: JAGS version of dt has a precision parameter, whereas dt in R assumes
+#' the precision = 1. This version of the t-distribution is available in the
+#' LaplacesDemon package.
+#' 
 #+ fig.align="center", fig.keep="last", out.width="50%",  message=FALSE, warning=FALSE, fig.alt="Prior distribution"
 library(LaplacesDemon)
 curve(dnorm(x, mean=0, sd=2.5), from=-8, to=8, ylab="Density")
