@@ -76,7 +76,7 @@ summary(lmer.rc)
 
 lmer.rc <- lmer(Richness ~ NAPc + (1 + NAPc | Beach), data=RIKZdat )
 summary(lmer.rc)
-
+ 
 
 #' Try to write down an equation describing the model.
 

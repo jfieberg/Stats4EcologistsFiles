@@ -68,7 +68,11 @@ anova(lmer.ri)
 lmer.rc <- lmer(Richness ~ exposure.c + NAPc + (1+NAPc | Beach), data=RIKZdat)
 summary(lmer.rc)
 
-#' Simulation-based likelihood ratio test
+#' Simulation-based likelihood ratio test. This only works if the models are 
+#' fit before loading lmerTest...
+detach("package:lmerTest", unload = TRUE)
+lmer.ri <- lmer(Richness ~ exposure.c + NAPc + (1|Beach), data=RIKZdat) #lme4 package
+lmer.rc <- lmer(Richness ~ exposure.c + NAPc + (1+NAPc | Beach), data=RIKZdat)
 lrsimtest <- pbkrtest::PBmodcomp(lmer.rc, lmer.ri, nsim = 500)
 summary(lrsimtest)
 
