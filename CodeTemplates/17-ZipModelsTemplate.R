@@ -15,7 +15,7 @@ library(patchwork) # for creating multi-panel plots
 library(ggplot2) # for plotting
 library(R2jags) # for interfacing with JAGS
 library(MCMCvis) # for summarizing MCMC output
-#library(mcmcplots) # for visualizing MCMC output
+library(mcmcplots) # for visualizing MCMC output
 library(sjPlot) # for creating tables
 library(modelsummary) # for creating tables 
 library(dplyr) # for data wrangling
@@ -208,9 +208,9 @@ MCMCsummary(out.zp, params = c("beta.zi", "beta.c"))
 
 
 #' Plot output
-#+ out.width = "100%", fig.alt = "Density and trace plots" 
-MCMCtrace(out.zp, params=c("beta.zi", "beta.c"), pdf = FALSE, ind = TRUE)
-
+#+ out.width = "100%" 
+denplot(out.zp, parms=c("beta.zi", "beta.c"), ask=FALSE)
+traplot(out.zp, parms=c("beta.zi", "beta.c"), ask=FALSE)
 
  
 
@@ -243,7 +243,30 @@ znb<-function(){
     mu.eff[i]<-mu[i]*I.fish[i]
     p[i]<-theta/(theta+mu.eff[i])
     count[i]~dnegbin(p[i], theta)
+  
+  # Mean and variances of the observations
+  # Can derive using Var(Y)= E[Var[Y|Z]]+Var[E[Y|z]]
+  # Gives equivalent as psi*(mu+mu^2/theta)+mu^2*(psi*(1-psi))
+    Ey[i]<-mu[i]*psi[i]  
+    Vary[i]<-psi[i]*(mu[i])*(1+mu[i]*(1-psi[i] + 1/theta))
+   
+  
+  # Generate "new" data
+    I.fish.new[i]~dbin(psi[i],1)
+    mu.eff.new[i]<-mu[i]*I.fish.new[i]
+    p.new[i]<-theta/(theta+mu.eff.new[i])
+    count.new[i]~dnegbin(p.new[i], theta)
+  
+  # Pearson residuals
+    presi[i]<-(count[i]-Ey[i])/sqrt(Vary[i]) # Pearson Resid
+    presi.new[i]<-(count.new[i]-Ey[i])/sqrt(Vary[i])
+
+  # Discrepancy measures
+    D[i]<-pow(presi[i], 2)
+    D.new[i]<-pow(presi.new[i],2)
   }
+  fit<-sum(D[])
+  fit.new<-sum(D.new[])
 }
 
 # Bundle data
@@ -253,7 +276,8 @@ jagsdata <- list(count=fish$count, child=fish$child,
                  I.fish=I.fish )
                  
 # Parameters to estimate
-params <- c("beta.zi", "beta.c","psi", "mu", "theta", "I.fish")
+params <- c("beta.zi", "beta.c", "Ey", "psi", "mu", "presi",
+            "presi.new", "fit", "fit.new", "theta", "I.fish")
 
 # MCMC settings
 nc <- 3
@@ -268,10 +292,17 @@ out.znb <- jags.parallel(data = jagsdata, parameters.to.save = params,
 MCMCsummary(out.znb, params = c("beta.zi", "beta.c", "theta"))
 
 
-
+ 
 #' Plot output
 #+ out.width = "100%", fig.alt = "Density and trace plots" 
-MCMCtrace(out.znb, params=c("beta.zi", "beta.c"), pdf = FALSE, ind = TRUE)
+MCMCtrace(out.zp, params=c("beta.zi", "beta.c"), pdf = FALSE, ind = TRUE)
+
+
+#' Bayesian p-value
+fitstats <- MCMCpstr(out.znb, params = c("fit", "fit.new"), type = "chains") 
+T.extreme <- fitstats$fit.new >= fitstats$fit
+(p.val <- mean(T.extreme))  
+
 
 #' Infer who went fishing! 
 fish$I.fish.hat<-out.znb$BUGSoutput$mean$I.fish
@@ -299,4 +330,5 @@ m.zinb.TMB <- glmmTMB(count ~ child + camper + persons, ziformula = ~ child,
                     data = fish, family = nbinom2)
 m.zinb
 m.zinb.TMB
+
 
